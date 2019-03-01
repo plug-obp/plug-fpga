@@ -40,6 +40,7 @@ entity to_see is
 		data_out		: out std_logic_vector(DATA_WIDTH- 1 downto 0);   -- the data that is read if read_enable
 		is_empty 		: out std_logic; 								-- is_empty is asserted when no elements are in
 		is_full			: out std_logic 								-- is_full is asserted when data_count == CAPACITY
+		swapped			: out std_logic;								-- true if a FIFO swap was detected
 	);
 end to_see;
 architecture a of to_see is begin end architecture;
