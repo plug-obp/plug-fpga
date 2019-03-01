@@ -17,7 +17,8 @@ entity fifo is
 		data_out		: out std_logic_vector(DATA_WIDTH- 1 downto 0);   -- the data that is read if read_enable
 		is_empty 		: out std_logic; 								-- is_empty is asserted when no elements are in
 		is_full			: out std_logic; 								-- is_full is asserted when data_count == CAPACITY
-		is_error		: out std_logic_vector(1 downto 0) := B"00"
+		push_error		: out std_logic := 0;
+		pop_error		: out std_logic := 0
 	);
 end fifo;
 architecture a of fifo is 
@@ -29,47 +30,26 @@ signal read_ptr, write_ptr : integer range 0 to ADDRESS_WIDTH-1 := 0; -- read an
 signal full_ff, empty_ff : std_logic;
 
 begin 
+-- push
+write_ptr <= (write_ptr + 1) mod CAPACITY 	when rising_edge(clk) and reset = '0' else 
+			0 								when rising_edge(clk) and reset = '1' else
+			unaffected;
 
-update: process (clk) 
-	begin
-		if rising_edge(clk) then
-			if reset = '1' then
-				read_ptr <= 0;
-				write_ptr <= 0;
-				is_error <= B"00";
-			else
-				if push_enable = '1' then
-					if full_ff = '0' then
-						if write_ptr < CAPACITY - 1 then 
-							write_ptr <= write_ptr + 1;
-						else 
-							write_ptr <= 0;
-						end if;
-						memory(write_ptr) <= data_in;
-						is_error <= (others => '0');
-					else
-						is_error <= B"01"; -- write when full
-					end if;
-				end if;
+memory(write_ptr) <= data_in when rising_edge(clk) and reset = '0' and push_enable = '1' and full_ff = '0' else
+					unaffected;
 
-				if pop_enable = '1' then
-					if empty_ff = '0' then
-						if read_ptr < CAPACITY - 1 then
-							read_ptr <= read_ptr + 1;
-						else 
-							read_ptr <= 0;
-						end if;
-						is_error <= (others => '0');
-					else 
-						is_error <= B"10"; --read when empty
-					end if;
-				end if;
-			end if;
-		end if;
-	end process;
+push_error <= '1' when push_enable = '1' and full_ff = '1' else '0';
+
+-- pop
+read_ptr <= (read_ptr + 1) mod CAPACITY 	when rising_edge(clk) and reset = '0' else 
+			0 								when rising_edge(clk) and reset = '1' else
+			unaffected;
 
 data_out <= memory(read_ptr);
 
+pop_error <= '1' when pop_enable = '1' and empty_ff = '1' else '0';
+
+-- status
 full_ff  <= '1' when (write_ptr + 1 = read_ptr) 	else '0';
 empty_ff <= '1' when read_ptr = write_ptr 		else '0';
 
