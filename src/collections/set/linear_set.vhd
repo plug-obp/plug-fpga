@@ -6,16 +6,21 @@ architecture linear_set of set is
     constant CAPACITY :integer := 2**ADDRESS_WIDTH;
     signal memory : T_MEMORY := (others => (others => '0'));
     signal write_ptr : integer range 0 to ADDRESS_WIDTH-1 := 0; -- read and write pointers
-    signal full_ff : std_logic;
+    signal full_ff : std_logic := '0';
+    signal already_in_ff : std_logic := '0';
 
-pure function is_included(memory : T_MEMORY, data_in: std_logic_vector(DATA_WIDTH- 1 downto 0), last_idx : integer) return boolean is
+pure function is_included(
+	memory : T_MEMORY; 
+	data_in: std_logic_vector(DATA_WIDTH- 1 downto 0); 
+	last_idx : integer) 
+return boolean is
     variable idx : integer := 0;
 begin
 	for idx in 0 to last_idx loop
         if memory(idx) = data_in then
             return true;
         end if;
-    end for;
+    end loop;
     return false;
 end;
 
@@ -29,23 +34,25 @@ add_handler : process (clk) is
 			else 
 				if add_enable = '1' and full_ff = '0' then 
                     if (is_included(memory, data_in, write_ptr)) then
-                        already_in <= '1';
+                        already_in_ff <= '1';
                     else
 					    write_ptr <= (write_ptr + 1) mod CAPACITY;
 					    memory(write_ptr) <= data_in;
-                        already_in <= '0';
+                        already_in_ff <= '0';
                     end if;
 				end if;
 			end if;
 		end if;
 	end process;
 
-push_error <= '1' when push_enable = '1' and full_ff = '1' else '0';
+add_error <= '1' when add_enable = '1' and full_ff = '1' else '0';
 
 -- status
 full_ff  <= '1' when (write_ptr = CAPACITY) 	else '0';
 
--- connect full and empty
+already_in <= already_in_ff;
+
+-- connect full 
 is_full <= full_ff;
 
 end architecture;
