@@ -39,8 +39,8 @@ entity to_see is
 		data_in 		: in  std_logic_vector(DATA_WIDTH- 1 downto 0);   -- the data that is added when write_enable
 		data_out		: out std_logic_vector(DATA_WIDTH- 1 downto 0);   -- the data that is read if read_enable
 		is_empty 		: out std_logic; 								-- is_empty is asserted when no elements are in
-		is_full			: out std_logic 								-- is_full is asserted when data_count == CAPACITY
-		swapped			: out std_logic;								-- true if a FIFO swap was detected
+		is_full			: out std_logic; 								-- is_full is asserted when data_count == CAPACITY
+		swapped			: out std_logic								-- true if a FIFO swap was detected
 	);
 end to_see;
 architecture a of to_see is begin end architecture;
@@ -132,18 +132,18 @@ end model_checker;
 architecture a of model_checker is 
 begin
 
-open_stream_1 : entity WORK.open_stream 
-                generic map (ADDRESS_WIDTH => 4, DATA_WIDTH => DATA_WIDTH, CAPACITY => 16)
-                port map (
-                    clk         => clk,
-                    reset       => '0',
-                    read_enable => open,
-                    write_enable=> open,
-		            data_in 	=> open,
-                    data_out	=> open,
-                    size		=> open,
-                    is_empty 	=> open,
-                    is_full		=> open
-                    );
+--open_stream_1 : entity WORK.open_stream 
+--                generic map (ADDRESS_WIDTH => 4, DATA_WIDTH => DATA_WIDTH, CAPACITY => 16)
+--                port map (
+--                    clk         => clk,
+--                    reset       => '0',
+--                    read_enable => open,
+--                    write_enable=> open,
+--		            data_in 	=> open,
+--                    data_out	=> open,
+--                    size		=> open,
+--                    is_empty 	=> open,
+--                    is_full		=> open
+--                    );
 
 end architecture;

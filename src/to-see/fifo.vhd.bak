@@ -36,7 +36,7 @@ write_ptr <= (write_ptr + 1) mod CAPACITY 	when rising_edge(clk) and reset = '0'
 			write_ptr;
 
 memory(write_ptr) <= data_in when rising_edge(clk) and reset = '0' and push_enable = '1' and full_ff = '0' else
-					memory(write_ptr);
+					unaffected;
 
 push_error <= '1' when push_enable = '1' and full_ff = '1' else '0';
 

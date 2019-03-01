@@ -1,11 +1,11 @@
 -------------------------------------------------------------------------------
 -- File Downloaded from http://www.nandland.com
 -------------------------------------------------------------------------------
- 
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
- 
+
 entity fifo_tb is
 end fifo_tb;
 
@@ -18,11 +18,12 @@ architecture behave of fifo_tb is
  signal r_CLOCK  : std_logic := '0';
  signal r_WR_EN  : std_logic := '0';
  signal r_WR_DATA : std_logic_vector(c_WIDTH-1 downto 0) := X"A5";
- signal w_FULL  : std_logic;
+ signal w_FULL : std_logic;
  signal r_RD_EN  : std_logic := '0';
  signal w_RD_DATA : std_logic_vector(c_WIDTH-1 downto 0);
  signal w_EMPTY  : std_logic;
-	signal w_ERROR : std_logic_vector(1 downto 0);
+ signal r_ERROR : std_logic;
+ signal w_ERROR : std_logic;
 
 begin
 
@@ -42,7 +43,8 @@ fifo_0 : entity work.fifo
 		data_out	=>	w_RD_DATA,
 		is_empty 	=>	w_EMPTY,
 		is_full		=>	w_FULL,
-		is_error	=>	w_ERROR
+		push_error	=>	w_ERROR,
+		pop_error   => r_ERROR
 	);
 
  r_CLOCK <= not r_CLOCK after 5 ns;
@@ -83,6 +85,4 @@ fifo_0 : entity work.fifo
   wait until r_CLOCK = '1';
 
  end process;
-
- 
 end behave;
