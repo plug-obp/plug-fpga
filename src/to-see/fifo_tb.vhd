@@ -27,7 +27,7 @@ architecture behave of fifo_tb is
 
 begin
 
-fifo_0 : entity work.fifo
+fifo_0 : entity work.fifo(b)
   generic map
 	(
 		ADDRESS_WIDTH => 4,

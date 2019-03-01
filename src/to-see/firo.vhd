@@ -20,8 +20,8 @@ entity firo is
 		data_out		: out std_logic_vector(DATA_WIDTH- 1 downto 0);   -- the data that is read if read_enable
 		is_empty 		: out std_logic; 								-- is_empty is asserted when no elements are in
 		is_full			: out std_logic; 								-- is_full is asserted when data_count == CAPACITY
-		push_error		: out std_logic := 0;
-		pop_error		: out std_logic := 0
+		push_error		: out std_logic;
+		pop_error		: out std_logic
 	);
 end firo;
 architecture a of firo is 
@@ -32,7 +32,7 @@ signal memory : T_MEMORY := (others => (others => '0'));
 signal read_ptr, write_ptr, rnd_ptr : integer range 0 to ADDRESS_WIDTH-1 := 0; -- read and write pointers
 signal full_ff, empty_ff : std_logic;
 
-pure function offset_read_ptr(ridx, widx, rnd : integer) : integer is
+pure function offset_read_ptr(ridx, widx, rnd : integer) return integer is
 begin
 	if (ridx <= widx) then 
 		return ridx + (rnd mod (widx - ridx));
@@ -53,31 +53,31 @@ push_handler: process (clk)
 					write_ptr <= (write_ptr + 1) mod CAPACITY;
 					memory(write_ptr) <= data_in;
 				end if;
-			end if
+			end if;
 		end if;
-	end; 
+	end process; 
 
 push_error <= '1' when push_enable = '1' and full_ff = '1' else '0';
 
-random_read : instance rng 
-				generic map (SIZE => ADDRESS_WIDTH, SEED => SEED)
+random_read : entity WORK.rng 
+				generic map (SIZEM => ADDRESS_WIDTH, SEED => SEED)
 				port map (clk => clk, offset_read_ptr(read_ptr, write_ptr, random_out) => rnd_ptr);
 
 pop_handler: process (clk)
 	begin
 		if rising_edge(clk) then
 			if reset = '1' then
-				read_ptr <= 0
+				read_ptr <= 0;
 			else
 				if pop_enable = '1' and empty_ff = '0' then
 					read_ptr <= (read_ptr + 1) mod CAPACITY;
 					--swap the memory slots
 					memory(read_ptr) <= memory(rnd_ptr);
 					memory(rnd_ptr) <= memory(read_ptr);
-				end;
+				end if;
 			end if;
 		end if;
-	end;
+	end process;
 
 pop_error <= '1' when pop_enable = '1' and empty_ff = '1' else '0';
 
