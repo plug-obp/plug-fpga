@@ -20,8 +20,8 @@ begin
 end;
 
 begin 
--- push
-push_handler : process (clk) is
+-- add
+add_handler : process (clk) is
 	begin
 		if rising_edge(clk) then
 			if reset = '1' then
