@@ -29,23 +29,23 @@ begin
 
 fifo_0 : entity work.fifo(b)
   generic map
-	(
-		ADDRESS_WIDTH => 4,
-		DATA_WIDTH 	=>	8
-	)
-	port map
-	( 
-		clk 		=>	r_CLOCK,
-		reset 		=>	r_RESET,
-		pop_enable 	  => r_RD_EN,
-		push_enable	   => r_WR_EN,
-		data_in 	=> r_WR_DATA,
-		data_out	=>	w_RD_DATA,
-		is_empty 	=>	w_EMPTY,
-		is_full		=>	w_FULL,
-		push_error	=>	w_ERROR,
-		pop_error   => r_ERROR
-	);
+  (
+    ADDRESS_WIDTH => 4,
+    DATA_WIDTH     =>    8
+  )
+  port map
+  ( 
+    clk         =>    r_CLOCK,
+    reset         =>    r_RESET,
+    pop_enable       => r_RD_EN,
+    push_enable       => r_WR_EN,
+    data_in     => r_WR_DATA,
+    data_out    =>    w_RD_DATA,
+    is_empty     =>    w_EMPTY,
+    is_full        =>    w_FULL,
+    push_error    =>    w_ERROR,
+    pop_error   => r_ERROR
+  );
 
  r_CLOCK <= not r_CLOCK after 5 ns;
 
