@@ -1,25 +1,26 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 entity rng is
     generic (
-        SIZE : integer := 32;
-        SEED : std_logic_vector (SIZE-1 downto 0);
+        SIZEM : integer := 32;
+        SEED : integer := 0
     );
     port (
         clk : in std_logic;
-        random_out : out std_logic_vector(SIZE-1 downto 0)
+        random_out : out std_logic_vector(SIZEM-1 downto 0)
     );
 end entity;
 
 architecture a of rng is
 
-signal state : std_logic_vector (SIZE-1 downto 0) := SEED;
+signal state : std_logic_vector (SIZEM-1 downto 0) := std_logic_vector(to_unsigned(SEED, SIZEM));
 
 begin
 
     process (clk) is
-        variable x : std_logic_vector (SIZE-1 downto 0) := SEED;
+        variable x : std_logic_vector (SIZEM-1 downto 0) := std_logic_vector(to_unsigned(SEED, SIZEM));
     begin
         if (rising_edge(clk)) then
             x := state;
@@ -31,5 +32,5 @@ begin
         
     end process;
 
-    data_out <= state;
+    random_out <= state;
 end;

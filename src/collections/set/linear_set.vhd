@@ -16,7 +16,8 @@ pure function is_included(
 return boolean is
     variable idx : integer := 0;
 begin
-	for idx in 0 to last_idx loop
+	for idx in 0 to CAPACITY loop
+	   if idx > last_idx then exit; end if;
         if memory(idx) = data_in then
             return true;
         end if;
