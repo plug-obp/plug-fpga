@@ -22,6 +22,7 @@ entity rng is
     );
     port (
         clk : in std_logic;
+	next_random : in std_logic;
         random_out : out std_logic_vector(p.width-1 downto 0)
     );
     
@@ -29,7 +30,7 @@ end entity;
 
 architecture a of rng is
 
-signal state : std_logic_vector (p.width-1 downto 0) := std_logic_vector(to_unsigned(SEED, p.width));
+signal state : UNSIGNED (p.width-1 downto 0) := (to_unsigned(SEED, p.width));
 
 begin
 
@@ -37,14 +38,15 @@ begin
         variable x : UNSIGNED (p.width-1 downto 0) := to_unsigned(SEED, p.width);
     begin
         if (rising_edge(clk)) then
-            x := unsigned(state);
-            x := x xor shift_left(x, p.a);
-            x := x xor shift_right(x, p.b);
-            x := x xor shift_legt(x, p.c);
-            state <= std_logic_vector(x);
+	    if next_random = '1' then
+            	x := x xor shift_left(x, p.a);
+            	x := x xor shift_right(x, p.b);
+            	x := x xor shift_left(x, p.c);
+            	state <= x;
+	    end if;
         end if;
         
     end process;
 
-    random_out <= state;
+    random_out <= std_logic_vector(state);
 end;
