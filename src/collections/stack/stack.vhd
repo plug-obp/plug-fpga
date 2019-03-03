@@ -21,12 +21,11 @@ entity stack is
     );
 end stack;
 architecture a of stack is 
-
-type T_MEMORY is array (0 to 2**ADDRESS_WIDTH - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
-constant CAPACITY :integer := 2**ADDRESS_WIDTH;
-signal memory : T_MEMORY := (others => (others => '0'));
-signal stack_ptr : integer range 0 to ADDRESS_WIDTH-1 := 0; -- stack pointer
-signal full_ff, empty_ff : std_logic;
+    constant CAPACITY :integer := 2**ADDRESS_WIDTH;
+    type T_MEMORY is array (0 to CAPACITY - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
+    signal memory : T_MEMORY := (others => (others => '0'));
+    signal stack_ptr : integer range 0 to (CAPACITY-1) := 0; -- stack pointer
+    signal full_ff, empty_ff : std_logic;
 
 begin 
 

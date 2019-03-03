@@ -2,10 +2,10 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 architecture linear_set of set is
-    type T_MEMORY is array (0 to 2**ADDRESS_WIDTH - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
     constant CAPACITY :integer := 2**ADDRESS_WIDTH;
+    type T_MEMORY is array (0 to CAPACITY - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
     signal memory : T_MEMORY := (others => (others => '0'));
-    signal write_ptr : integer range 0 to ADDRESS_WIDTH-1 := 0; -- read and write pointers
+    signal write_ptr : integer range 0 to CAPACITY-1 := 0; -- read and write pointers
     signal full_ff : std_logic := '0';
     signal already_in_ff : std_logic := '0';
 

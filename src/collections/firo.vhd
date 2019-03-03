@@ -25,12 +25,11 @@ entity firo is
     );
 end firo;
 architecture a of firo is 
-
-type T_MEMORY is array (0 to 2**ADDRESS_WIDTH - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
-constant CAPACITY :integer := 2**ADDRESS_WIDTH;
-signal memory : T_MEMORY := (others => (others => '0'));
-signal read_ptr, write_ptr, rnd_ptr : integer range 0 to ADDRESS_WIDTH-1 := 0; -- read and write pointers
-signal full_ff, empty_ff : std_logic;
+    constant CAPACITY :integer := 2**ADDRESS_WIDTH;
+    type T_MEMORY is array (0 to CAPACITY - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
+    signal memory : T_MEMORY := (others => (others => '0'));
+    signal read_ptr, write_ptr, rnd_ptr : integer range 0 to CAPACITY-1 := 0; -- read and write pointers
+    signal full_ff, empty_ff : std_logic;
 
 pure function offset_read_ptr(ridx, widx, rnd : integer) return integer is
 begin
