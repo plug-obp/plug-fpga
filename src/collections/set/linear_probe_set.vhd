@@ -80,9 +80,9 @@ add_handler : process (clk) is
     begin
         if rising_edge(clk) then
             if reset = '1' then
-		for idx in 0 to CAPACITY-1 loop
-                	memory(idx).is_set <= false;
-		end loop;
+                for idx in 0 to CAPACITY-1 loop
+                            memory(idx).is_set <= false;
+                end loop;
             else 
                 if add_enable = '1' and full_ff = '0' then 
                     index := index_of(memory, data_in, hash_con(data_in));
