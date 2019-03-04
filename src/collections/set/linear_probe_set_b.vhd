@@ -19,7 +19,7 @@ architecture linear_probe_set_b of set is
     
     pure function hash_con(
         object : std_logic_vector(DATA_WIDTH-1 downto 0)) 
-    return unsigned(ADDRESS_WIDTH-1 downto 0) is
+    return unsigned is
     begin
         if (DATA_WIDTH <= ADDRESS_WIDTH) then
             return resize(unsigned(object), ADDRESS_WIDTH);
@@ -32,18 +32,18 @@ begin
 
 -- index_of
 sync : process (clk)
-        variable idx : integer;
+        variable idx : unsigned(CAPACITY-1 downto 0);
     begin
         if rising_edge(clk) then
             if reset = '1' then
                 memory <= (others => (data => (others => '0'), is_set => FALSE));
-                full <= '0';
+                full_ff <= '0';
                 already_in_ff <= '0';
-                index <= 0;
-                start <= 0;
+                index <= (others => '0');
+                start <= (others => '0');
             else
                 if add_enable = '1' and full_ff = '0' and not found then 
-                    idx := hash mod CAPACITY;
+                    idx := hash_con(data_in) mod CAPACITY;
                     index <= idx;
                     next_index <= idx;
                 end if;
@@ -77,12 +77,12 @@ set_output : process (index)
     begin
         --handle add
         if add_enable = '1' and full_ff = '0' then
-            element := memory(index)
+            element := memory(to_integer(index));
             if (element.is_set = false) then
                 found <= true;
-                memory(index) <= (data => data_in, is_set => true);
+                memory(to_integer(index)) <= (data => data_in, is_set => true);
                 already_in_ff <= '0';
-            elsif (element.data = object) then
+            elsif (element.data = data_in) then
                 found <= true;
                 already_in_ff <= '1';
             end if;
@@ -91,7 +91,7 @@ set_output : process (index)
 
 add_error <= '1' when add_enable = '1' and full_ff = '1' else '0';
 
-already_in <= already_in_ff;
+is_in <= already_in_ff;
 
 -- connect full 
 is_full <= full_ff;

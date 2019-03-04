@@ -103,7 +103,7 @@ add_handler : process (clk) is
 
 add_error <= '1' when add_enable = '1' and full_ff = '1' else '0';
 
-already_in <= already_in_ff;
+is_in <= already_in_ff;
 
 -- connect full 
 is_full <= full_ff;
