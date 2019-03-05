@@ -1,7 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-architecture linear_set of set is
+architecture linear_set_a of set is
     constant CAPACITY :integer := 2**ADDRESS_WIDTH;
     type T_MEMORY is array (0 to CAPACITY - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
     signal memory : T_MEMORY := (others => (others => '0'));
