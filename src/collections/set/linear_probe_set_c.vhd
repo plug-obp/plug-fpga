@@ -36,7 +36,7 @@ architecture linear_probe_set_c of set is
 begin 
 
 -- index_of
-sync : process (clk)
+c_state_update : process (clk)
     begin
         if rising_edge(clk) then
             if reset = '1' then
@@ -58,7 +58,7 @@ base_update : process (clk)
         end if;
     end process;
 
-next_state : process (base, c_state, add_enable, data_in, memory)
+n_state_update : process (base, c_state, add_enable, data_in, memory)
         variable element : T_SET_ELEMENT;
     begin
         n_state <= c_state;
@@ -83,7 +83,7 @@ next_state : process (base, c_state, add_enable, data_in, memory)
             end if;
         end if;
     end process;
-memory_handler : process (clk)
+memory_update : process (clk)
 	begin
 	if rising_edge(clk) then
             if reset = '1' then
