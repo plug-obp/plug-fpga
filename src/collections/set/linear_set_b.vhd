@@ -20,14 +20,10 @@ add_handler : process (clk) is
                 memory <= (others => (others => '0'));
                 write_ptr <= (others => '0');
                 current_ptr <= (others => '0');
-                s_is_full <= false;
                 s_is_added_ok <= false;
                 s_is_in <= false;
-            else 
+            else
                 if add_enable = '1' and s_is_full = '0' then 
-                    if write_ptr = CAPACITY then
-                        s_is_full <= true;
-                    end if;
                     if memory(to_integer(current_ptr)) = data_in then
                         s_is_in <= true;
                         s_is_added_ok <= true;
@@ -45,6 +41,8 @@ add_handler : process (clk) is
             end if;
         end if;
     end process;
+
+    s_is_full <= true when write_ptr = CAPACITY else false;
 
     --output
     is_in     <= '1' when s_is_added_ok and s_is_in else '0';
