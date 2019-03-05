@@ -59,7 +59,7 @@ update: process (clk)
         end if;
     end process;
 
-data_out <= memory(stack_ptr);
+data_out <= memory(stack_ptr - 1);
 
 full_ff  <= '1' when (stack_ptr = CAPACITY - 1)     else '0';
 empty_ff <= '1' when (stack_ptr = 0)         else '0';
