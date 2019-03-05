@@ -1,3 +1,6 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 entity simple_state is
     port (
         clk : in std_logic;
@@ -9,7 +12,7 @@ entity simple_state is
 end entity;
 
 architecture a of simple_state is 
-    signal state : std_logic_vector(3 downto 0) := (others => '0');
+    signal state : unsigned(3 downto 0) := (others => '0');
 begin
     state_update : process (clk, rst_n) is
     begin
@@ -18,7 +21,7 @@ begin
         elsif rising_edge(clk) then
             if rst = '1' then
                 state <= (others => '0');
-            elsif count = 1 then
+            elsif count = '1' then
                 state <= state + 1; --state changes
             else
                 state <= state; -- state unchanged
@@ -26,11 +29,11 @@ begin
         end if;
     end process;
 
-    dout <= state;
+    dout <= std_logic_vector(state);
 end architecture;
 
 architecture b of simple_state is 
-    signal state_0, state_1 : std_logic_vector(3 downto 0) := (others => '0');
+    signal state_0, state_1 : unsigned(3 downto 0) := (others => '0');
 begin
     state_0_update : process (clk, rst_n) is
     begin
@@ -52,7 +55,7 @@ begin
         elsif rising_edge(clk) then
             if rst = '1' then
                 state_1 <= (others => '0');
-            elsif count = 1 then
+            elsif count = '1' then
                 state_1 <= state_1 + 1; --state changes
             else
                 state_1 <= state_1; -- state unchanged
@@ -60,5 +63,5 @@ begin
         end if;
     end process;
 
-    dout <= state_0;
+    dout <= std_logic_vector(state_0);
 end architecture;
