@@ -1,0 +1,17 @@
+## linear_set_b
+
+### Synthesis report
+
+LUT	118	63400	0.18611987
+FF	291	126800	0.22949527
+IO	23	210	10.952381
+BUFG	1	32	3.125
+
+## linear_probe_set_b
+
+### Synthesis report
+
+LUT	159	63400	0.25078863
+FF	296	126800	0.23343849
+IO	23	210	10.952381
+BUFG	1	32	3.125
