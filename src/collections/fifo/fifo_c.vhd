@@ -21,16 +21,21 @@ begin
         write_ptr <= 0;
         read_ptr <= 0;
         memory <= (others => (others => '0'));
-        empty <= '1';
-        full <= '0';
+        empty <= true;
+        full <= false;
+	data_ready <= '0';
+	data_out <= (others => '0');
     elsif rising_edge(clk) then
         if reset = '1' then
             write_ptr <= 0;
             read_ptr <= 0;
             memory <= (others => (others => '0'));
-            empty <= '1';
-            full <= '0';
+            empty <= true;
+            full <= false;
+	    data_ready <= '0';
+	    data_out <= (others => '0');
         else
+	    data_ready <= '0';
             if push_enable = '1' and pop_enable = '1' then
                 if empty then
                     data_out <= data_in;
@@ -47,7 +52,7 @@ begin
                 data_out <= memory(read_ptr);
                 data_ready <= '1';
                 idx := (read_ptr + 1) mod CAPACITY;
-                read_ptr <= idx
+                read_ptr <= idx;
                 if idx = write_ptr then
                     empty <= true;
                 end if;
@@ -67,7 +72,7 @@ begin
             end if;
         end if;
     end if;
-end;
+end process;
 
 is_full <= '1' when full else '0';
 is_empty <= '1' when empty else '0';

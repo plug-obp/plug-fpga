@@ -92,16 +92,43 @@ scenario : process
 
 		assert is_full = '1' report "after adding CAPACITY elements the FIFO is full" severity error;
 
+		--simultaneous push pop when full
+		wait until rising_edge(clk);
+		do_pop <= '1';
+		do_push <= '1';
+		data_in <= B"1000";
+		wait until rising_edge(clk);
+		do_pop <= '0';
+		do_push <= '0';
+		data_in <= (others => '0');
+		wait until data_ready = '1';
+		assert data_out = B"0001" report "read does not match expected" severity error;
+		wait for CLK_PERIOD/2;
+
 		for i in 1 to CAPACITY loop
-			read_element(std_logic_vector(to_unsigned(i, DATA_WIDTH)));
+			if i = CAPACITY then
+				read_element(B"1000");
+			else
+				read_element(std_logic_vector(to_unsigned(i+1, DATA_WIDTH)));
+			end if;
 			assert is_full = '0' report "the fifo not full if element removed" severity error;
 		end loop;
 
 		assert is_empty = '1' report "after reading CAPACITY elements the FIFO is empty" severity error;
 
-		--rst <= '1';
-		--wait for CLK_PERIOD;
-		--rst <= '0';
+		--simultaneous push pop when empty
+		wait until rising_edge(clk);
+		do_pop <= '1';
+		do_push <= '1';
+		data_in <= (others => '1');
+		wait until rising_edge(clk);
+		do_pop <= '0';
+		do_push <= '0';
+		data_in <= (others => '0');
+		wait until data_ready = '1';
+		assert data_out = B"1111" report "read does not match expected" severity error;
+		wait for CLK_PERIOD/2;
+
 		simulation_end <= true;
 		wait;
 	end process;
