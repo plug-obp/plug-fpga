@@ -27,7 +27,7 @@ begin
 
     clk <= not clk after CLK_PERIOD/2 when not simulation_end else '0';
 
-dut : entity work.fifo(b)    
+dut : entity work.fifo(c)    
     generic map (ADDRESS_WIDTH => ADDRESS_WIDTH, DATA_WIDTH => DATA_WIDTH)
 	port map ( 
 		clk => clk,
