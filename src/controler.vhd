@@ -32,7 +32,7 @@ entity controler is
 end entity;
 
 architecture a of controler is
-    type STATE_T is enum (S0, INITIALIZATION, RUNNING, DONE, OPEN_FULL, CLOSED_FULL);
+    type STATE_T is (S0, INITIALIZATION, RUNNING, DONE, OPEN_FULL, CLOSED_FULL);
     signal open_at_end_s : boolean := false;
     signal execute_at_end_s : boolean := false;
     signal fireable_at_end_s : boolean := false;
