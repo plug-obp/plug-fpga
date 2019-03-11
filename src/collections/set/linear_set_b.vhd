@@ -1,5 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 architecture linear_set_b of set is
     constant CAPACITY :integer := 2**ADDRESS_WIDTH;
@@ -23,17 +24,17 @@ add_handler : process (clk) is
                 s_is_added_ok <= false;
                 s_is_in <= false;
             else
-                if add_enable = '1' and s_is_full = '0' then 
+                if add_enable = '1' and not s_is_full then 
                     if memory(to_integer(current_ptr)) = data_in then
                         s_is_in <= true;
                         s_is_added_ok <= true;
                         current_ptr <= (others => '0');
                     elsif current_ptr + 1 = write_ptr then
                         write_ptr <= write_ptr + 1;
-                        memory(write_ptr) <= data_in;
+                        memory(to_integer(write_ptr)) <= data_in;
                         s_is_in <= false;
                         s_is_added_ok <= true;
-                        current_ptr <= (others => '0')
+                        current_ptr <= (others => '0');
                     else
                         current_ptr <= current_ptr + 1;
                     end if;
