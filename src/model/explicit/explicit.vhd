@@ -24,14 +24,14 @@ package alice_bob_pkg is
     pure function config2lv(c : T_CONFIGURATION) return std_logic_vector;
     pure function lv2config(lv : std_logic_vector) return T_CONFIGURATION;
 
-    constant ABPARAMS : T_MODEL_PARAMS := (11, 17, 1, 6);
+    constant AB_PARAMS : T_MODEL_PARAMS := (11, 17, 1, 6);
     -- END ALICE BOB MODEL
 
     -- BEGIN GENERIC EXPLICIT MODEL
-    type T_STATES is array (0 to ABPARAMS.nb_states-1) of T_CONFIGURATION;
-    type T_INITIAL is array (0 to ABPARAMS.nb_initial-1) of integer;
-    type T_FANOUT_BASE is array (0 to ABPARAMS.nb_states) of integer;
-    type T_FANOUT    is array (0 to ABPARAMS.nb_transitions-1) of integer;
+    type T_STATES is array (0 to AB_PARAMS.nb_states-1) of T_CONFIGURATION;
+    type T_INITIAL is array (0 to AB_PARAMS.nb_initial-1) of integer;
+    type T_FANOUT_BASE is array (0 to AB_PARAMS.nb_states) of integer;
+    type T_FANOUT    is array (0 to AB_PARAMS.nb_transitions-1) of integer;
 
     type T_EXPLICIT is record
         states          : T_STATES;         -- the state array
@@ -120,10 +120,14 @@ package body alice_bob_pkg is
     -- END ALICE BOB CONVERSION FUNCTIONS
 end;
 
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+use WORK.alice_bob_pkg.ALL;
 entity explicit_interpreter is
     generic (
-        p : T_MODEL_PARAMS;
-        model : T_EXPLICIT
+        p : T_MODEL_PARAMS := AB_PARAMS;
+        model : T_EXPLICIT := AB_MODEL
     );
     port (
         clk             : in std_logic;                                 -- clock
@@ -144,27 +148,29 @@ architecture a of explicit_interpreter is
     signal started_init : boolean := false;
     signal source : std_logic_vector(p.configuration_width-1 downto 0) := (others => '0');
     signal source_index : integer := 0;
-    signal source_found : boolean := 0;
+    signal source_found : boolean := false;
     signal target_base : integer := 0;
     signal target_offset : integer := 0;
     signal has_nxt : boolean := false;
 begin
 
 update : process (clk, reset_n) is
-        type T_STATE : (START_INIT, PRODUCE_INIT, END_INIT, 
+        type T_STATE is (START_INIT, PRODUCE_INIT, END_INIT, 
                 START_NEXT, LOAD_SOURCE, NO_SOURCE, PRODUCE_NEXT, END_NEXT,
                 DO_NOTHING);
         variable state : T_STATE;
         variable fanout_size : integer := 0;
         procedure reset_state is 
         begin
-            started_init := false;
+            started_init <= false;
             source <= (others => '0');
             source_index <= 0;
             source_found <= false;
             target_base <= 0;
             target_offset <= 0;
             has_nxt <= false;
+	    target_out <= (others => '0');
+	    target_ready <= '0';
         end;
     begin
         if reset_n = '0' then
@@ -182,7 +188,7 @@ update : process (clk, reset_n) is
                         state := PRODUCE_INIT;
                     else
                         state := END_INIT;
-                    end;
+                    end if;
                 elsif next_enable = '1' then
                     if source /= source_in then
                         if p.nb_states > 0 then
@@ -203,11 +209,11 @@ update : process (clk, reset_n) is
                     end if;
                 else
                     state := DO_NOTHING;
-                end;
+                end if;
 
                 case state is
                 when START_INIT =>
-                    started_init := true;
+                    started_init <= true;
                     if p.nb_initial = 0 then
                         has_nxt <= false;
                     else
@@ -230,7 +236,7 @@ update : process (clk, reset_n) is
                         has_nxt <= false;
                     end if;
                 when END_INIT =>
-                    started_init := false;
+                    started_init <= false;
                 when START_NEXT =>
                     source <= source_in;
                     source_found <= false;
@@ -286,11 +292,11 @@ update : process (clk, reset_n) is
                     else
                         has_nxt <= false;
                     end if;
-                when NO_SOURCE | END_NEXT | DO_NOTHING => null
+                when NO_SOURCE | END_NEXT | DO_NOTHING => null;
                 end case;
 
-            end;
-        end;
+            end if;
+        end if;
     end process;
 
 has_next <= '1' when has_nxt else '0';
