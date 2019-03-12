@@ -24,7 +24,7 @@ package alice_bob_pkg is
     pure function config2lv(c : T_CONFIGURATION) return std_logic_vector;
     pure function lv2config(lv : std_logic_vector) return T_CONFIGURATION;
 
-    constant AB_PARAMS : T_MODEL_PARAMS := (11, 17, 1, 6);
+    constant AB_PARAMS : T_MODEL_PARAMS := (11, 17, 2, 6);
     -- END ALICE BOB MODEL
 
     -- BEGIN GENERIC EXPLICIT MODEL
@@ -60,7 +60,7 @@ package alice_bob_pkg is
             9 => (CS,    true,   RETRY,  false),
            10 => (IDLE,  false,  RETRY,  false)
         ),
-        initial => (0 => 0),
+        initial => (0 => 0, 1=>2),
         fanout_base => (0, 2, 4, 6, 7, 8, 10, 12, 13, 14, 15, 17),
         fanout => (
             1, 2,   -- fanout( 0)
@@ -179,6 +179,8 @@ update : process (clk, reset_n) is
             if reset = '1' then
                 reset_state;
             else
+		target_out <= (others => '0');
+		target_ready <= '0';
                 if initial_enable = '1' and next_enable = '1' then
                     state := DO_NOTHING;
                 elsif initial_enable = '1' then
