@@ -16,8 +16,8 @@ begin
 
 handler : process (clk, reset_n) is
         variable idx : integer;
-    begin
-        if reset_n = '0' then
+        procedure reset_state is
+        begin
             write_ptr <= 0;
             read_ptr <= 0;
             memory <= (others => (others => '0'));
@@ -25,15 +25,13 @@ handler : process (clk, reset_n) is
             full <= false;
             data_ready <= '0';
             data_out <= (others => '0');
+        end;
+    begin
+        if reset_n = '0' then
+            reset_state;
         elsif rising_edge(clk) then
             if reset = '1' then
-                write_ptr <= 0;
-                read_ptr <= 0;
-                memory <= (others => (others => '0'));
-                empty <= true;
-                full <= false;
-                data_ready <= '0';
-                data_out <= (others => '0');
+                reset_state;
             else
                 data_ready <= '0';
                 if push_enable = '1' and pop_enable = '1' then
