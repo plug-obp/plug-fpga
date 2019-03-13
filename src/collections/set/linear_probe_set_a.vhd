@@ -2,13 +2,12 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
+use set.pkg.all;
+
 architecture linear_probe_set of set is
-    constant CAPACITY :integer := 2**ADDRESS_WIDTH;
-    type T_SET_ELEMENT is record
-        data : std_logic_vector(DATA_WIDTH-1 downto 0);
-        is_set : boolean;
-    end record;
-    type T_MEMORY is array (0 to CAPACITY - 1) of T_SET_ELEMENT;
+
+
+
     signal memory : T_MEMORY := (others => (data => (others => '0'), is_set => FALSE));
     signal full_ff : std_logic := '0';
     signal already_in_ff : std_logic := '0';
@@ -46,7 +45,7 @@ architecture linear_probe_set of set is
     end function;
 
 --    pure function hash(
---        object : std_logic_vector(DATA_WIDTH - 1 downto 0)) 
+--        object : std_logic_vector(DATA_WIDTH - 1 downto 0))
 --    return integer is
 --        constant NB_CHUNKS : integer := ((DATA_WIDTH + (ADDRESS_WIDTH/2))/ ADDRESS_WIDTH);
 --        variable hash : unsigned(ADDRESS_WIDTH-1 downto 0) := (others => '0');
@@ -61,9 +60,9 @@ architecture linear_probe_set of set is
 --            return to_integer(hash);
 --        end if;
 --    end;
-    
+
     pure function hash_con(
-        object : std_logic_vector(DATA_WIDTH-1 downto 0)) 
+        object : std_logic_vector(DATA_WIDTH-1 downto 0))
     return integer is
     begin
         if (DATA_WIDTH <= ADDRESS_WIDTH) then
@@ -73,7 +72,7 @@ architecture linear_probe_set of set is
         end if;
     end function;
 
-begin 
+begin
 -- add
 add_handler : process (clk) is
         variable index : T_INDEX;
@@ -83,17 +82,17 @@ add_handler : process (clk) is
                 for idx in 0 to CAPACITY-1 loop
                             memory(idx).is_set <= false;
                 end loop;
-            else 
-                if add_enable = '1' and full_ff = '0' then 
+            else
+                if add_enable = '1' and full_ff = '0' then
                     index := index_of(memory, data_in, hash_con(data_in));
-                    if index.is_valid then 
+                    if index.is_valid then
                         if index.is_found then
                             already_in_ff <= '1';
                         else
                             memory(index.ptr) <= (data => data_in, is_set => true);
                             already_in_ff <= '0';
                         end if;
-                    else 
+                    else
                         full_ff <= '1';
                     end if;
                 end if;
@@ -105,7 +104,7 @@ add_error <= '1' when add_enable = '1' and full_ff = '1' else '0';
 
 is_in <= already_in_ff;
 
--- connect full 
+-- connect full
 is_full <= full_ff;
 
 end architecture;
