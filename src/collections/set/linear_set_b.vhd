@@ -13,10 +13,16 @@ architecture linear_set_b of set is
     signal s_is_in : boolean := false;
 begin 
 -- add
-add_handler : process (clk) is
+add_handler : process (clk, reset_n) is
         variable element : std_logic_vector (DATA_WIDTH - 1 downto 0);
     begin
-        if rising_edge(clk) then
+	if reset_n = '0' then
+		memory <= (others => (others => '0'));
+                write_ptr <= (others => '0');
+                current_ptr <= (others => '0');
+                s_is_added_ok <= false;
+                s_is_in <= false;
+        elsif rising_edge(clk) then
             if reset = '1' then
                 memory <= (others => (others => '0'));
                 write_ptr <= (others => '0');
@@ -47,7 +53,7 @@ add_handler : process (clk) is
 
     --output
     is_in     <= '1' when s_is_added_ok and s_is_in else '0';
-    add_ok    <= '1' when s_is_added_ok else '0';
+    add_done  <= '1' when s_is_added_ok else '0';
     add_error <= '1' when add_enable = '1' and s_is_full else '0';
     is_full   <= '1' when s_is_full else '0';
 

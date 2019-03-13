@@ -9,10 +9,11 @@ entity set is
     port (
         clk             : in  std_logic;                               -- clock
         reset           : in  std_logic;                               -- when reset is asserted the stream is emptied: size = 0, is_empty = 1, is_full = 0
-        add_enable      : in  std_logic;                               -- write enable 
+        reset_n		: in  std_logic;
+	add_enable      : in  std_logic;                               -- write enable 
         data_in         : in  std_logic_vector(DATA_WIDTH- 1 downto 0);-- the data that is added when write_enable
         is_in           : out std_logic;                              -- already_in is asserted if the last data_in handled was already in the set
-        add_ok          : out std_logic;
+        add_done        : out std_logic;
         add_error       : out std_logic;
         is_full         : out std_logic                               -- is_full is asserted when data_count == CAPACITY
 );

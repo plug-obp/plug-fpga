@@ -126,6 +126,7 @@ use IEEE.NUMERIC_STD.ALL;
 use WORK.alice_bob_pkg.ALL;
 entity explicit_interpreter is
     generic (
+	CONFIG_WIDTH : integer := AB_PARAMS.configuration_width;
         p : T_MODEL_PARAMS := AB_PARAMS;
         model : T_EXPLICIT := AB_MODEL
     );
@@ -142,6 +143,8 @@ entity explicit_interpreter is
         target_ready    : out std_logic;                                -- next out can be read
         has_next        : out std_logic                                 -- no more configuration available
     );
+begin
+	assert CONFIG_WIDTH = p.configuration_width report "configuration width not equal to model configuration width" severity error;
 end entity;
 
 architecture a of explicit_interpreter is
