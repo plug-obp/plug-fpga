@@ -125,7 +125,7 @@ entity mc is
     );
 end entity;
 
-architecture a of mc is
+architecture arch_v0 of mc is
     signal initial : std_logic;
     signal open_empty, open_full, open_swap : std_logic;
     signal closed_full, add_done: std_logic;
