@@ -28,7 +28,7 @@ architecture arch_v1 of mc_sem_and_closed is
     signal target_ready : std_logic;
     
     --computed signals
-    signal initial_c, next_c : std_logic;
+    signal initial_c, next_c, target_ready_c : std_logic;
 
     --registers
     signal previous_is_added_r : std_logic := '1';
@@ -63,7 +63,7 @@ closed_inst : closed_stream
         reset       => reset,
         reset_n     => reset_n,
 
-        add_enable  => target_ready,
+        add_enable  => target_ready_c,
         data_in     => target,
         is_in       => target_is_known,
         add_done    => previous_is_added_c,
@@ -72,6 +72,7 @@ closed_inst : closed_stream
 
 initial_c   <= '1' when previous_is_added_r = '1' and initial_enable = '1'                            else '0';
 next_c      <= '1' when previous_is_added_r = '1' and initial_enable = '0' and source_enable = '1'    else '0';
+target_ready_c <= '1' when target_ready and previous_is_added_r else '0';
 
 semantics_inst : semantics
     generic map (CONFIG_WIDTH => DATA_WIDTH)
