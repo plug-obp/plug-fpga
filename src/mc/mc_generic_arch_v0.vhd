@@ -1,3 +1,4 @@
+use work.mc_components.all;
 architecture arch_v0 of mc_generic is
     signal initial : std_logic;
     signal open_empty, open_full : std_logic;
