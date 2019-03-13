@@ -182,8 +182,6 @@ update : process (clk, reset_n) is
             if reset = '1' then
                 reset_state;
             else
-		target_out <= (others => '0');
-		target_ready <= '0';
                 if initial_enable = '1' and next_enable = '1' then
                     state := DO_NOTHING;
                 elsif initial_enable = '1' then
