@@ -13,7 +13,7 @@ entity mc_sem_and_closed is
         reset_n         : in std_logic;
 
         initial_enable  : in std_logic;
-        source_enable   : in std_logic;
+        source_ready   : in std_logic;
         source_in       : in std_logic_vector (DATA_WIDTH - 1 downto 0);
         target_is_known : out std_logic;
         closed_is_full  : out std_logic;
@@ -23,21 +23,21 @@ end entity;
 
 use WORK.mc_components.ALL;
 architecture arch_v1 of mc_sem_and_closed is
-    signal previous_is_added_c : std_logic;
+    signal previous_is_added : std_logic;
     signal target : std_logic_vector(DATA_WIDTH-1 downto 0);
     signal target_ready : std_logic;
     
     --computed signals
-    signal initial_c, next_c, target_ready_c : std_logic;
+    signal initial_c, next_c : std_logic;
 
     --registers
-    signal previous_is_added_r : std_logic := '1';
+    signal first_r : boolean := true;
 begin
 
 process (clk, reset_n) is
     procedure state_reset is
     begin
-        previous_is_added_r <= '1';
+        first_r <= true;
     end;
 begin
     if reset_n = '0' then
@@ -46,10 +46,8 @@ begin
         if reset = '1' then
             state_reset;
         else
-            if target_ready = '1' and previous_is_added_c = '0' then
-                previous_is_added_r <= '0';
-            elsif previous_is_added_c = '1' then
-                previous_is_added_r <= '1';
+            if target_ready = '1' then
+                first_r <= false;
             end if;
         end if;
     end if;
@@ -63,16 +61,15 @@ closed_inst : closed_stream
         reset       => reset,
         reset_n     => reset_n,
 
-        add_enable  => target_ready_c,
+        add_enable  => target_ready,
         data_in     => target,
         is_in       => target_is_known,
-        add_done    => previous_is_added_c,
+        add_done    => previous_is_added,
         is_full     => closed_is_full
     );
 
-initial_c   <= '1' when previous_is_added_r = '1' and initial_enable = '1'                            else '0';
-next_c      <= '1' when previous_is_added_r = '1' and initial_enable = '0' and source_enable = '1'    else '0';
-target_ready_c <= '1' when target_ready = '1' and previous_is_added_r = '1' else '0';
+initial_c   	<= '1' when (previous_is_added = '1' or first_r) and initial_enable = '1' else '0';
+next_c      	<= '1' when (previous_is_added = '1' or first_r) and initial_enable = '0' and source_ready = '1' else '0';
 
 semantics_inst : semantics
     generic map (CONFIG_WIDTH => DATA_WIDTH)

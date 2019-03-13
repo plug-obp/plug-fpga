@@ -19,7 +19,7 @@ architecture linear_set_b of set is
 begin 
 -- add
 add_handler : process (clk, reset_n) is
-        type T_STATE : (NONE, ADD_NEW, ADD_FOUND, ADD_SEARCH);
+        type T_STATE is (NONE, ADD_NEW, ADD_FOUND, ADD_SEARCH);
         variable state : T_STATE := NONE;
         procedure state_reset is
         begin
