@@ -72,7 +72,7 @@ closed_inst : closed_stream
 
 initial_c   <= '1' when previous_is_added_r = '1' and initial_enable = '1'                            else '0';
 next_c      <= '1' when previous_is_added_r = '1' and initial_enable = '0' and source_enable = '1'    else '0';
-target_ready_c <= '1' when target_ready and previous_is_added_r else '0';
+target_ready_c <= '1' when target_ready = '1' and previous_is_added_r = '1' else '0';
 
 semantics_inst : semantics
     generic map (CONFIG_WIDTH => DATA_WIDTH)
