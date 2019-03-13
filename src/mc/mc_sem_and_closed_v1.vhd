@@ -1,8 +1,8 @@
 entity mc_sem_and_closed is 
     generic (
         DATA_WIDTH              : integer := 6;
-        OPEN_ADDRESS_WIDTH      : integer := 8;
-        CLOSED_ADDRESS_WIDTH    : integer := 10
+        OPEN_ADDRESS_WIDTH      : integer := 4;
+        CLOSED_ADDRESS_WIDTH    : integer := 4
     );
     port (
         initial_enable  : in std_logic;
@@ -61,11 +61,11 @@ use work.all;
 
 configuration exhaustive_linear_set_v1 of mc_generic is
     for arch_v1
-        for closed_inst : closed_stream
+        for closed_inst : work.mc_components.closed_stream
             use entity work.set(linear_set_b);
         end for;
 
-        for semantics_inst : semantics
+        for semantics_inst : work.mc_components.semantics
             use entity work.explicit_interpreter(a);
         end for;
     end for;

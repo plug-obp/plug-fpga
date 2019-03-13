@@ -1,6 +1,7 @@
 architecture arch_v0 of mc_generic is
     signal initial : std_logic;
-    signal open_empty, open_full, open_swap : std_logic;
+    signal open_empty, open_full : std_logic;
+    signal open_swap : std_logic := '0';
     signal closed_full, add_done: std_logic;
     signal has_next : std_logic;
     signal check_ready, check_status : std_logic;

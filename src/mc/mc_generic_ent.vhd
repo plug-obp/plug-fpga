@@ -4,8 +4,8 @@ use work.mc_components.all;
 entity mc_generic is
     generic (
         DATA_WIDTH              : integer := 6;
-        OPEN_ADDRESS_WIDTH      : integer := 8;
-        CLOSED_ADDRESS_WIDTH    : integer := 10
+        OPEN_ADDRESS_WIDTH      : integer := 4;
+        CLOSED_ADDRESS_WIDTH    : integer := 4
     );
     port (
         clk             : in std_logic;                                 -- clock
