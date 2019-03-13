@@ -46,7 +46,11 @@ begin
         if reset = '1' then
             state_reset;
         else
-            previous_is_added_r <= previous_is_added_c;
+            if target_ready = '1' and previous_is_added_c = '0' then
+                previous_is_added_r <= '0';
+            elsif previous_is_added_c = '1' then
+                previous_is_added_r <= '1';
+            end if;
         end if;
     end if;
 end process;
