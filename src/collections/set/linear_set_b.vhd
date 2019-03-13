@@ -43,6 +43,7 @@ add_handler : process (clk, reset_n) is
                         current_ptr <= (others => '0');
                     else
                         current_ptr <= current_ptr + 1;
+                        s_is_added_ok <= false;
                     end if;
                 end if;
             end if;
