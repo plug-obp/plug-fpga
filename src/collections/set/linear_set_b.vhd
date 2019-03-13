@@ -15,20 +15,20 @@ begin
 -- add
 add_handler : process (clk, reset_n) is
         variable element : std_logic_vector (DATA_WIDTH - 1 downto 0);
+        procedure state_reset is
+        begin
+            memory <= (others => (others => '0'));
+            write_ptr <= (others => '0');
+            current_ptr <= (others => '0');
+            s_is_added_ok <= false;
+            s_is_in <= false;
+        end;
     begin
-	if reset_n = '0' then
-		memory <= (others => (others => '0'));
-                write_ptr <= (others => '0');
-                current_ptr <= (others => '0');
-                s_is_added_ok <= false;
-                s_is_in <= false;
+	    if reset_n = '0' then
+            state_reset;
         elsif rising_edge(clk) then
             if reset = '1' then
-                memory <= (others => (others => '0'));
-                write_ptr <= (others => '0');
-                current_ptr <= (others => '0');
-                s_is_added_ok <= false;
-                s_is_in <= false;
+                state_reset; 
             else
                 if add_enable = '1' and not s_is_full then 
                     if memory(to_integer(current_ptr)) = data_in then
