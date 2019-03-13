@@ -6,8 +6,8 @@ architecture linear_set_b of set is
     constant CAPACITY :integer := 2**ADDRESS_WIDTH;
     type T_MEMORY is array (0 to CAPACITY - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
     signal memory : T_MEMORY := (others => (others => '0'));
-    signal write_ptr : unsigned(CAPACITY downto 0);
-    signal current_ptr : unsigned(CAPACITY-1 downto 0);
+    signal write_ptr : unsigned(CAPACITY downto 0) := (others => '0');
+    signal current_ptr : unsigned(CAPACITY downto 0) := (others => '0');
     signal s_is_full : boolean := false;
     signal s_is_added_ok : boolean := false;
     signal s_is_in : boolean := false;
@@ -35,7 +35,7 @@ add_handler : process (clk, reset_n) is
                         s_is_in <= true;
                         s_is_added_ok <= true;
                         current_ptr <= (others => '0');
-                    elsif current_ptr + 1 = write_ptr then
+                    elsif current_ptr = write_ptr then
                         write_ptr <= write_ptr + 1;
                         memory(to_integer(write_ptr)) <= data_in;
                         s_is_in <= false;
