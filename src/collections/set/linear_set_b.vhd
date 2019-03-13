@@ -2,6 +2,11 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
+--State-machine design similar to :
+    --Zabolotny, Wojciech M. "Clock-efficient and maintainable implementation of complex state machines in vhdl." 
+    --Photonics Applications in Astronomy, Communications, Industry, and High-Energy Physics Experiments 2006. Vol. 6347. 
+    --International Society for Optics and Photonics, 2006.
+
 architecture linear_set_b of set is
     constant CAPACITY :integer := 2**ADDRESS_WIDTH;
     type T_MEMORY is array (0 to CAPACITY - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
@@ -14,7 +19,8 @@ architecture linear_set_b of set is
 begin 
 -- add
 add_handler : process (clk, reset_n) is
-        variable element : std_logic_vector (DATA_WIDTH - 1 downto 0);
+        type T_STATE : (NONE, ADD_NEW, ADD_FOUND, ADD_SEARCH);
+        variable state : T_STATE := NONE;
         procedure state_reset is
         begin
             memory <= (others => (others => '0'));
@@ -30,22 +36,37 @@ add_handler : process (clk, reset_n) is
             if reset = '1' then
                 state_reset; 
             else
+                --reset state
+                state := NONE;
+
+                --variable-driven state identification
                 if add_enable = '1' and not s_is_full then 
-                    if memory(to_integer(current_ptr)) = data_in then
-                        s_is_in <= true;
-                        s_is_added_ok <= true;
-                        current_ptr <= (others => '0');
-                    elsif current_ptr = write_ptr then
-                        write_ptr <= write_ptr + 1;
-                        memory(to_integer(write_ptr)) <= data_in;
-                        s_is_in <= false;
-                        s_is_added_ok <= true;
-                        current_ptr <= (others => '0');
+                    if current_ptr = write_ptr then --empty slot found
+                        state := ADD_NEW;
+                    elsif memory(to_integer(current_ptr)) = data_in then --data_in was found in the set
+                        state := ADD_FOUND;
                     else
-                        current_ptr <= current_ptr + 1;
-                        s_is_added_ok <= false;
+                        state := ADD_SEARCH; --data_in not found, continue search
                     end if;
                 end if;
+
+                --next_state and output update
+                case state is
+                when NONE => null;
+                when ADD_NEW =>
+                    write_ptr <= write_ptr + 1;
+                    memory(to_integer(write_ptr)) <= data_in;
+                    s_is_in <= false;
+                    s_is_added_ok <= true;
+                    current_ptr <= (others => '0'); --restart the current_ptr for the next search
+                when ADD_FOUND =>
+                    s_is_in <= true;
+                    s_is_added_ok <= true;
+                    current_ptr <= (others => '0'); --restart the current_ptr for the next search
+                when ADD_SEARCH =>
+                    current_ptr <= current_ptr + 1;
+                    s_is_added_ok <= false;
+                end case;
             end if;
         end if;
     end process;
