@@ -1,6 +1,6 @@
 use work.all;
 
-configuration exhaustive_linear_set of mc is
+configuration exhaustive_linear_set of mc_generic is
     for arch_v0
         for open_inst : open_stream
             use entity work.fifo(c)

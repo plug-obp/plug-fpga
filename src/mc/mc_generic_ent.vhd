@@ -1,0 +1,21 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use work.mc_components.all;
+entity mc_generic is
+    generic (
+        DATA_WIDTH              : integer := 6;
+        OPEN_ADDRESS_WIDTH      : integer := 8;
+        CLOSED_ADDRESS_WIDTH    : integer := 10
+    );
+    port (
+        clk             : in std_logic;                                 -- clock
+        reset           : in std_logic;
+        reset_n         : in std_logic;
+
+        start           : in std_logic;
+
+        execution_ended : out std_logic;
+        is_verified     : out std_logic
+    );
+end entity;
+
