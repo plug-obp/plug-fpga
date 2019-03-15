@@ -16,10 +16,18 @@ architecture linear_set_c of set is
         current_ptr : unsigned(ADDRESS_WIDTH-1 downto 0);
         data        : std_logic_vector(DATA_WIDTH- 1 downto 0);
     end record;
-
     constant DEFAULT_STATE : T_STATE := (S0, (others => (others => '0')), (others => '0'), (others => '0'), (others => '0'));
+
+    type T_OUTPUT is record
+        is_in : boolean;
+        is_full : boolean;
+        is_done : boolean;
+    end record;
+    constant DEFAULT_OUTPUT : T_OUTPUT := (false, false, false);
+    
     --next state
     signal state_c : T_STATE :=  DEFAULT_STATE;
+    signal output_c : T_OUTPUT := DEFAULT_OUTPUT;
 
     --registers
     signal state_r : T_STATE :=  DEFAULT_STATE;
@@ -39,12 +47,6 @@ begin
 end process;
 
 next_update : process (add_enable, data_in, state_r) is
-    type T_OUTPUT is record
-        is_in : boolean;
-        is_full : boolean;
-        is_done : boolean;
-    end record;
-    constant DEFAULT_OUTPUT : T_OUTPUT := (false, false, false);
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current : T_STATE := DEFAULT_STATE;
 begin
@@ -105,21 +107,37 @@ begin
     --set the state_c
     state_c <= current;
     --set the outputs
-    if the_output.is_in then
-        is_in <= '1';
-    else
-        is_in <= '0';
-    end if;
-    if the_output.is_full then
-        is_full <= '1';
-    else
-        is_full <= '0';
-    end if;
-    if the_output.is_done then
-        add_done <= '1';
-    else
-        add_done <= '0';
-    end if;
+    output_c <= the_output;
 end process;
+
+if HAS_OUTPUT_REGISTER generate
+    registered_output : process (clk, reset_n) is
+        procedure reset_output is
+        begin
+            is_in <= '0';
+            is_full <= '0';
+            is_done <= '0';
+        end; 
+    begin
+        if reset_n = '0' then
+            reset_output;
+        elsif rising_edge(clk) then
+            if reset = '1' then
+                reset_output;
+            else
+                is_in   <= output_c.is_in;
+                is_full <= output_c.is_full;
+                is_done <= output_c.is_done;
+            end if;
+        end if;
+    end process;
+end generate;
+
+if not HAS_OUTPUT_REGISTER generate
+    --non-registered output
+    is_in   <= '1' when output_c.is_in      else '0';
+    is_full <= '1' when output_c.is_full    else '0';
+    is_done <= '1' when output_c.is_done    else '0';
+end generate;
 
 end architecture;

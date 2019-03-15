@@ -4,7 +4,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity set is 
     generic (
         ADDRESS_WIDTH    : integer    := 4;                           -- address width in bits, maximum CAPACITY is 2^(ADDRESS_WIDTH)-1
-        DATA_WIDTH       : integer    := 16                          -- data width in bits, the size of a configuration
+        DATA_WIDTH       : integer    := 16;                          -- data width in bits, the size of a configuration
+        HAS_OUTPUT_REGISTER : boolean := true;
     );
     port (
         clk             : in  std_logic;                               -- clock
