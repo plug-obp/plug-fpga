@@ -95,8 +95,8 @@ closed_inst : closed_stream
         add_enable  => target_ready,
         data_in     => target,
         is_in       => target_is_known,
-        add_done    => previous_is_added,
-        is_full     => closed_is_full
+        is_full     => closed_is_full,
+		is_done    => previous_is_added
     );
 
 --initial_c   	<= '1' when (previous_is_added = '1' or first_r) and init_phase_r = INIT_PHASE else '0';

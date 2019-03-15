@@ -23,7 +23,7 @@ component open_stream is
         is_full         : out std_logic;                                 -- is_full is asserted when data_count == CAPACITY
         is_swapped      : out std_logic
     );
-end component;
+end component; 
 
 component closed_stream is 
     generic (
@@ -36,9 +36,9 @@ component closed_stream is
         reset_n			: in  std_logic;
         add_enable      : in  std_logic;                               -- write enable 
         data_in         : in  std_logic_vector(DATA_WIDTH- 1 downto 0);-- the data that is added when write_enable
-        is_in           : out std_logic;                              -- already_in is asserted if the last data_in handled was already in the set
-        add_done        : out std_logic;
-        is_full         : out std_logic                               -- is_full is asserted when data_count == CAPACITY
+        is_in           : out std_logic;                              -- already_in is asserted if the last data_in handled was already in the set   
+        is_full         : out std_logic;                               -- is_full is asserted when data_count == CAPACITY
+		is_done         : out std_logic
     );
 end component;
 
@@ -57,7 +57,8 @@ component semantics is
 
         target_out      : out std_logic_vector(CONFIG_WIDTH-1 downto 0); -- the output configuration data
         target_ready    : out std_logic;                                -- next out can be read
-        has_next        : out std_logic                                 -- no more configuration available
+        has_next        : out std_logic;                                 -- no more configuration available
+        is_done         : out std_logic
     );
 end component;
 

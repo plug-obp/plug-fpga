@@ -75,8 +75,8 @@ add_handler : process (clk, reset_n) is
 
     --output
     is_in     <= '1' when s_is_added_ok and s_is_in else '0';
-    add_done  <= '1' when s_is_added_ok else '0';
-    add_error <= '1' when add_enable = '1' and s_is_full else '0';
+    is_done  <= '1' when s_is_added_ok else '0';
+    --add_error <= '1' when add_enable = '1' and s_is_full else '0';
     is_full   <= '1' when s_is_full else '0';
 
 end architecture;

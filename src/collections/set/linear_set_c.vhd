@@ -12,11 +12,12 @@ architecture linear_set_c of set is
     type T_STATE is record
         ctrl_state  : T_CONTROL;
         memory      : T_MEMORY;
-        write_ptr   : unsigned(ADDRESS_WIDTH-1 downto 0);
+        write_ptr   : unsigned(ADDRESS_WIDTH-1 downto 0); 
         current_ptr : unsigned(ADDRESS_WIDTH-1 downto 0);
         data        : std_logic_vector(DATA_WIDTH- 1 downto 0);
+		is_full		: boolean;
     end record;
-    constant DEFAULT_STATE : T_STATE := (S0, (others => (others => '0')), (others => '0'), (others => '0'), (others => '0'));
+    constant DEFAULT_STATE : T_STATE := (S0, (others => (others => '0')), (others => '0'), (others => '0'), (others => '0'), false);
 
     type T_OUTPUT is record
         is_in : boolean;
@@ -55,7 +56,7 @@ begin
 
     case current.ctrl_state is
     when S0 =>
-        if add_enable = '1' then
+        if add_enable = '1' and not current.is_full then
             current.data := data_in;
             current.current_ptr := (others => '0');
             if current.current_ptr = current.write_ptr then --first slot is empty
@@ -63,33 +64,35 @@ begin
                 the_output.is_done := true;
                 current.memory(to_integer(current.write_ptr)) := current.data;
 
-                if current.write_ptr + 1 < CAPACITY then
+                if to_integer(current.write_ptr) + 1 < CAPACITY then
                     current.write_ptr := current.write_ptr + 1;
                     the_output.is_full := false;
                 else
+					current.is_full := true;
                     the_output.is_full := true;
                 end if;
-                current.ctrl_state := S0;
             elsif current.memory(to_integer(current.current_ptr)) = current.data then --the first element matches the one we want to add
                 the_output.is_in := true;
                 the_output.is_done := true;
-                current.ctrl_state := S0;
             else --start searching
                 the_output.is_done := false;
                 current.current_ptr := to_unsigned(1,current.current_ptr'LENGTH);
                 current.ctrl_state := SEARCH_SLOT;
             end if;
-        end if;
+        elsif current.is_full then
+			the_output.is_full := true;
+		end if;
     when SEARCH_SLOT => 
         if current.current_ptr = current.write_ptr then --slot is empty
             the_output.is_in   := false;
             the_output.is_done := true;
             current.memory(to_integer(current.write_ptr)) := current.data;
 
-            if current.write_ptr + 1 < CAPACITY then
+            if to_integer(current.write_ptr) + 1 < CAPACITY then
                 current.write_ptr := current.write_ptr + 1;
                 the_output.is_full := false;
             else
+				current.is_full := true;
                 the_output.is_full := true;
             end if;
             current.ctrl_state := S0;
@@ -100,7 +103,6 @@ begin
         else --continue searching
             the_output.is_done := false;
             current.current_ptr := current.current_ptr + 1;
-            current.ctrl_state := SEARCH_SLOT;
         end if;
     end case;
 
@@ -110,7 +112,7 @@ begin
     output_c <= the_output;
 end process;
 
-if HAS_OUTPUT_REGISTER generate
+out_register : if HAS_OUTPUT_REGISTER generate
     registered_output : process (clk, reset_n) is
         procedure reset_output is
         begin
@@ -125,15 +127,15 @@ if HAS_OUTPUT_REGISTER generate
             if reset = '1' then
                 reset_output;
             else
-                is_in   <= output_c.is_in;
-                is_full <= output_c.is_full;
-                is_done <= output_c.is_done;
+				is_in   <= '1' when output_c.is_in      else '0';
+    			is_full <= '1' when output_c.is_full    else '0';
+    			is_done <= '1' when output_c.is_done    else '0';
             end if;
         end if;
     end process;
 end generate;
 
-if not HAS_OUTPUT_REGISTER generate
+no_out_register : if not HAS_OUTPUT_REGISTER generate
     --non-registered output
     is_in   <= '1' when output_c.is_in      else '0';
     is_full <= '1' when output_c.is_full    else '0';
