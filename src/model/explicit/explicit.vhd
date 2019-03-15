@@ -356,28 +356,29 @@ begin
 state_update : process (clk, reset_n) is
 begin
     if reset_n = '0' then
-        state_r := DEFAULT_STATE;
+        state_r <= DEFAULT_STATE;
     elsif rising_edge(clk) then
         if reset = '1' then
-            state_r := DEFAULT_STATE;
+            state_r <= DEFAULT_STATE;
         else
-            state_r := state_c;
+            state_r <= state_c;
         end if;
     end if;
 end process;
 
-next_update : process (state_r) is
+next_update : process (initial_enable, next_enable, source_in, state_r) is
     type T_OUTPUT is record
         target : std_logic_vector(p.configuration_width-1 downto 0);
         target_ready : boolean;
         has_next : boolean;
         is_done : boolean;
     end record;
-    constant DEFAULT_OUTPUT := ((others => '0'), false, false, false);
+    constant DEFAULT_OUTPUT : T_OUTPUT := ((others => '0'), false, false, false);
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current : T_STATE := DEFAULT_STATE;
 begin
     current := state_r;
+	the_output := DEFAULT_OUTPUT;
     case current.ctrl_state is
     when S0             =>
         -- initial request
@@ -389,14 +390,14 @@ begin
                 the_output.has_next := false;
                 the_output.is_done := true;
             else
-                the_output.target_out := initial_at(model, current.target_offset);
-                the_output.target_ready := '1';
-                the_output.is_done := '1';
+                the_output.target := initial_at(model, current.target_offset);
+                the_output.target_ready := true;
+                the_output.is_done := true;
                 if p.nb_initial = 1 then
-                    the_output.has_next := '0';
+                    the_output.has_next := false;
                     current.ctrl_state := S0;
                 else
-                    the_output.has_next := '1';
+                    the_output.has_next := true;
                     current.ctrl_state := WAIT_INIT;
                     current.target_offset := 1;
                 end if;
@@ -411,12 +412,12 @@ begin
                 current.target_offset := 0;
                 current.fanout_size := fanout_size(model, current.source_index);
                 if current.fanout_size = 0 then --deadlock
-                    the_output.target_ready := '0';
+                    the_output.target_ready := false;
                     the_output.has_next := false;
                     the_output.is_done := true;
                     current.ctrl_state := S0;
                 else
-                    the_output.target_out := target_at(model, current.target_base + current.target_offset);
+                    the_output.target := target_at(model, current.target_base + current.target_offset);
                     the_output.target_ready := true;
                     the_output.is_done := true;
                     if current.fanout_size > 1 then
@@ -437,9 +438,9 @@ begin
         end if;
     when WAIT_INIT      =>
         if initial_enable = '1' then
-            the_output.target_out := initial_at(model, current.target_offset);
+            the_output.target := initial_at(model, current.target_offset);
             the_output.target_ready := true;
-            the_output.is_done := '1';
+            the_output.is_done := true;
 
             if current.target_offset + 1 < p.nb_initial then
                 the_output.has_next := true;
@@ -467,7 +468,7 @@ begin
                 the_output.is_done := true;
                 current.ctrl_state := S0;
             else
-                the_output.target_out := target_at(model, current.target_base + current.target_offset);
+                the_output.target := target_at(model, current.target_base + current.target_offset);
                 the_output.target_ready := true;
                 the_output.is_done := true;
                 if current.fanout_size > 1 then
@@ -483,11 +484,11 @@ begin
             the_output.target_ready := false;
             the_output.is_done := false;
             current.source_index := current.source_index + 1;
-            current.ctrl_state := LOAD_SOURCE;
+            current.ctrl_state := SEARCH_SOURCE;
         end if;
     when WAIT_NEXT      =>
         if next_enable = '1' then
-            the_output.target_out := target_at(model, current.target_base + current.target_offset);
+            the_output.target := target_at(model, current.target_base + current.target_offset);
             the_output.target_ready := true;
             the_output.is_done := true;
             if current.target_offset + 1 < current.fanout_size then
@@ -510,7 +511,7 @@ begin
     else
         target_ready <= '0';
     end if;
-    if the_output..has_next then
+    if the_output.has_next then
         has_next <= '1';
     else
         has_next <= '0';
