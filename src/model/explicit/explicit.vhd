@@ -379,6 +379,7 @@ next_update : process (initial_enable, next_enable, source_in, state_r) is
 begin
     current := state_r;
 	the_output := DEFAULT_OUTPUT;
+    
     case current.ctrl_state is
     when S0             =>
         -- initial request
