@@ -14,10 +14,10 @@ architecture b of explicit_interpreter is
     constant DEFAULT_STATE : T_STATE := (S0, (others => '0'), 0, 0, 0, 0, false);
 
     type T_OUTPUT is record
-        target          : std_logic_vector(p.configuration_width-1 downto 0)
+        target          : std_logic_vector(p.configuration_width-1 downto 0);
         target_ready    : boolean;
-        has_next        : boolean:
-        is_done         : boolean
+        has_next        : boolean;
+        is_done         : boolean;
     end record;
     constant DEFAULT_OUTPUT : T_OUTPUT := ((others => '0'), false, false, false);
 
@@ -176,23 +176,6 @@ begin
     state_c <= current;
     --set the outputs
     output_c <= the_output;
-   
-    target_out <= the_output.target;
-    if the_output.target_ready then
-        target_ready <= '1';
-    else
-        target_ready <= '0';
-    end if;
-    if the_output.has_next then
-        has_next <= '1';
-    else
-        has_next <= '0';
-    end if;
-    if the_output.is_done then
-        is_done <= '1';
-    else
-        is_done <= '0';
-    end if;
 end process;
 
 out_register : if HAS_OUTPUT_REGISTER generate
@@ -229,5 +212,3 @@ no_out_register : if not HAS_OUTPUT_REGISTER generate
 end generate;
 
 end architecture;
-
-end;

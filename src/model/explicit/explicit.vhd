@@ -152,7 +152,8 @@ use IEEE.NUMERIC_STD.ALL;
 use WORK.alice_bob_pkg.ALL;
 entity explicit_interpreter is
     generic (
-	CONFIG_WIDTH : integer := AB_PARAMS.configuration_width;
+		CONFIG_WIDTH : integer := AB_PARAMS.configuration_width;
+		HAS_OUTPUT_REGISTER : boolean := true;
         p : T_MODEL_PARAMS := AB_PARAMS;
         model : T_EXPLICIT := AB_MODEL
     );
