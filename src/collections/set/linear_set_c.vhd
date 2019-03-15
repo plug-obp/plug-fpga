@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-architecture linear_set_b of set is
+architecture linear_set_c of set is
     constant CAPACITY :integer := 2**ADDRESS_WIDTH;
 
     type T_MEMORY is array (0 to CAPACITY - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
@@ -12,8 +12,8 @@ architecture linear_set_b of set is
     type T_STATE is record
         ctrl_state  : T_CONTROL;
         memory      : T_MEMORY;
-        write_ptr   : unsigned(CAPACITY downto 0);
-        current_ptr : unsigned(CAPACITY downto 0);
+        write_ptr   : unsigned(ADDRESS_WIDTH-1 downto 0);
+        current_ptr : unsigned(ADDRESS_WIDTH-1 downto 0);
         data        : std_logic_vector(DATA_WIDTH- 1 downto 0);
     end record;
 
@@ -28,12 +28,12 @@ begin
 state_update : process (clk, reset_n) is
 begin
     if reset_n = '0' then
-        state_r := DEFAULT_STATE;
+        state_r <= DEFAULT_STATE;
     elsif rising_edge(clk) then
         if reset = '1' then
-            state_r := DEFAULT_STATE;
+            state_r <= DEFAULT_STATE;
         else
-            state_r := state_c;
+            state_r <= state_c;
         end if;
     end if;
 end process;
@@ -55,7 +55,7 @@ begin
     when S0 =>
         if add_enable = '1' then
             current.data := data_in;
-            current.current_ptr := 0;
+            current.current_ptr := (others => '0');
             if current.current_ptr = current.write_ptr then --first slot is empty
                 the_output.is_in := false;
                 the_output.is_done := true;
@@ -63,9 +63,9 @@ begin
 
                 if current.write_ptr + 1 < CAPACITY then
                     current.write_ptr := current.write_ptr + 1;
-                    current.is_full := false;
+                    the_output.is_full := false;
                 else
-                    current.is_full := true;
+                    the_output.is_full := true;
                 end if;
                 current.ctrl_state := S0;
             elsif current.memory(to_integer(current.current_ptr)) = current.data then --the first element matches the one we want to add
@@ -74,10 +74,10 @@ begin
                 current.ctrl_state := S0;
             else --start searching
                 the_output.is_done := false;
-                current.current_ptr := 1;
+                current.current_ptr := to_unsigned(1,current.current_ptr'LENGTH);
                 current.ctrl_state := SEARCH_SLOT;
             end if;
-        end;
+        end if;
     when SEARCH_SLOT => 
         if current.current_ptr = current.write_ptr then --slot is empty
             the_output.is_in   := false;
@@ -86,9 +86,9 @@ begin
 
             if current.write_ptr + 1 < CAPACITY then
                 current.write_ptr := current.write_ptr + 1;
-                current.is_full := false;
+                the_output.is_full := false;
             else
-                current.is_full := true;
+                the_output.is_full := true;
             end if;
             current.ctrl_state := S0;
         elsif current.memory(to_integer(current.current_ptr)) = current.data then --the element matches the one we want to add
@@ -97,7 +97,7 @@ begin
             current.ctrl_state := S0;
         else --continue searching
             the_output.is_done := false;
-            current.current_ptr := 1;
+            current.current_ptr := current.current_ptr + 1;
             current.ctrl_state := SEARCH_SLOT;
         end if;
     end case;
