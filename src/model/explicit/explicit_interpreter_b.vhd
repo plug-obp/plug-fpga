@@ -12,8 +12,18 @@ architecture b of explicit_interpreter is
         has_next        : boolean;
     end record;
     constant DEFAULT_STATE : T_STATE := (S0, (others => '0'), 0, 0, 0, 0, false);
+
+    type T_OUTPUT is record
+        target          : std_logic_vector(p.configuration_width-1 downto 0)
+        target_ready    : boolean;
+        has_next        : boolean:
+        is_done         : boolean
+    end record;
+    constant DEFAULT_OUTPUT : T_OUTPUT := ((others => '0'), false, false, false);
+
     --next state
     signal state_c : T_STATE :=  DEFAULT_STATE;
+    signal output_c : T_OUTPUT := DEFAULT_OUTPUT;
 
     --registers
     signal state_r : T_STATE :=  DEFAULT_STATE;
@@ -33,13 +43,6 @@ begin
 end process;
 
 next_update : process (initial_enable, next_enable, source_in, state_r) is
-    type T_OUTPUT is record
-        target : std_logic_vector(p.configuration_width-1 downto 0);
-        target_ready : boolean;
-        has_next : boolean;
-        is_done : boolean;
-    end record;
-    constant DEFAULT_OUTPUT : T_OUTPUT := ((others => '0'), false, false, false);
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current : T_STATE := DEFAULT_STATE;
 begin
@@ -172,6 +175,8 @@ begin
     --set the state_c
     state_c <= current;
     --set the outputs
+    output_c <= the_output;
+   
     target_out <= the_output.target;
     if the_output.target_ready then
         target_ready <= '1';
@@ -189,5 +194,40 @@ begin
         is_done <= '0';
     end if;
 end process;
+
+out_register : if HAS_OUTPUT_REGISTER generate
+    registered_output : process (clk, reset_n) is
+        procedure reset_output is
+        begin
+            target_out <= (others => '0');
+            target_ready <= '0';
+            has_next <= '0';
+            is_done <= '0';
+        end; 
+    begin
+        if reset_n = '0' then
+            reset_output;
+        elsif rising_edge(clk) then
+            if reset = '1' then
+                reset_output;
+            else
+                target_out      <= output_c.target;
+				target_ready    <= '1' when output_c.target_ready   else '0';
+    			has_next        <= '1' when output_c.has_next       else '0';
+    			is_done         <= '1' when output_c.is_done        else '0';
+            end if;
+        end if;
+    end process;
+end generate;
+
+no_out_register : if not HAS_OUTPUT_REGISTER generate
+    --non-registered output
+    target_out      <= output_c.target;
+    target_ready    <= '1' when output_c.target_ready   else '0';
+    has_next        <= '1' when output_c.has_next       else '0';
+    is_done         <= '1' when output_c.is_done        else '0';
+end generate;
+
+end architecture;
 
 end;
