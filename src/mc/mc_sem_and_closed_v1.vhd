@@ -162,11 +162,29 @@ next_update : process (ask_next, t_ready, t_produced, has_next, s_ready, current
     end process;
 
 --with register on controler output
---i_en <= next_output.i_en when rising_edge(clk) else '0';
---n_en <= next_output.n_en when rising_edge(clk) else '0';
---ask_src <= next_output.ask_src when rising_edge(clk) else '0';
---is_deadlock <= next_output.is_deadlock when rising_edge(clk) else '0';
-
+--registered_output : process (clk, reset_n) is
+--        procedure reset_output is
+--        begin
+--            i_en <= '0';
+--            n_en <= '0';
+--            ask_src <= '0';
+--            is_deadlock <= '0';
+--        end; 
+--    begin
+--        if reset_n = '0' then
+--            reset_output;
+--        elsif rising_edge(clk) then
+--            if reset = '1' then
+--                reset_output;
+--            else
+--                i_en <= next_output.i_en;
+--				n_en <= next_output.n_en;
+--				ask_src <= next_output.ask_src;
+--				is_deadlock <= next_output.is_deadlock;
+--            end if;
+--        end if;
+--    end process;
+--
 --without register on the controler output
 i_en <= next_output.i_en;
 n_en <= next_output.n_en;
