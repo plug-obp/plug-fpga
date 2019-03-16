@@ -9,9 +9,8 @@ architecture b of explicit_interpreter is
         fanout_size     : integer;
         target_base     : integer;
         target_offset   : integer;
-        has_next        : boolean;
     end record;
-    constant DEFAULT_STATE : T_STATE := (S0, (others => '0'), 0, 0, 0, 0, false);
+    constant DEFAULT_STATE : T_STATE := (S0, (others => '0'), 0, 0, 0, 0);
 
     type T_OUTPUT is record
         target          : std_logic_vector(p.configuration_width-1 downto 0);
