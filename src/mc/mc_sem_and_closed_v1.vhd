@@ -19,7 +19,7 @@ entity mc_sem_and_closed is
         ask_src         : out std_logic; -- source enable request towards fifo
         target_is_known : out std_logic;
         closed_is_full  : out std_logic;
-        deadlock        : out std_logic
+        is_deadlock        : out std_logic
     );
 end entity;
 
@@ -29,7 +29,8 @@ architecture arch_v1 of mc_sem_and_closed is
     signal target : std_logic_vector(DATA_WIDTH-1 downto 0);
     signal t_ready : std_logic;
     signal has_next : std_logic; 
-    signal t_produced : std_logic;   
+    signal t_produced : std_logic;  
+	signal c_is_full : std_logic; 
 
     --computed signals
     signal i_en, n_en : std_logic;
@@ -46,14 +47,16 @@ architecture arch_v1 of mc_sem_and_closed is
         i_en        : std_logic;
         n_en        : std_logic;
         ask_src     : std_logic;
-        deadlock    : std_logic;
+        is_deadlock    : std_logic;
     end record;
     constant DEFAULT_OUTPUT : T_OUTPUT := ('0', '0', '0', '0');
     signal next_output : T_OUTPUT := DEFAULT_OUTPUT;
     
 begin
 
-ask_next <= true when (closed_is_full = '0' and previous_is_added = '1') or start = '1' else '0';
+closed_is_full <= c_is_full;
+ask_next <= true when (c_is_full = '0' and previous_is_added = '1') or start = '1' else false;
+
 
 state_update : process (clk, reset_n) is
     begin
@@ -70,7 +73,7 @@ state_update : process (clk, reset_n) is
 
 next_update : process (ask_next, t_ready, t_produced, has_next, s_ready, current_state) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
-    variable phase_v : T_PHASE := S0;
+    variable phase_v : T_STATE := S0;
     begin
         phase_v := current_state;
         the_output := DEFAULT_OUTPUT;
@@ -82,9 +85,9 @@ next_update : process (ask_next, t_ready, t_produced, has_next, s_ready, current
                 phase_v := I_PHASE;
             end if;
         when I_PHASE =>
-            if t_produced = '1' and t_ready = '0' and  then
-                the_output.deadlock := '1';
-                phase_v := DEADLOCK;
+            if t_produced = '1' and t_ready = '0'  then
+                the_output.is_deadlock := '1';
+                phase_v := I_DEADLOCK;
             else
                 if t_produced = '1' and has_next = '1' then 
                     if ask_next then
@@ -93,47 +96,47 @@ next_update : process (ask_next, t_ready, t_produced, has_next, s_ready, current
                         phase_v := I_MORE;
                     end if;
                 elsif t_produced = '1' and has_next = '0' then
-                    the_output.ask_src := '1'
-                    if ask_next and s_ready then
+                    the_output.ask_src := '1';
+                    if ask_next and s_ready = '1' then
                         the_output.n_en := '1';
                         phase_v := SERVED_REQ;
                     elsif ask_next then
                         phase_v := WAIT_SRC;
-                    elsif s_ready then
+                    elsif s_ready = '1' then
                         phase_v := WAIT_REQ;
                     else
                         phase_v := T_END;
                     end if;
                 end if;
             end if;
-        case I_MORE     =>
+        when I_MORE     =>
             if ask_next then
                 the_output.i_en := '1';
                 phase_v := I_PHASE;
             end if;
-        case I_DEADLOCK => null; 
-        case T_END    =>
-            if ask_next and s_ready then
+        when I_DEADLOCK => null; 
+        when T_END    =>
+            if ask_next and s_ready = '1' then
                 the_output.n_en := '1';
                 phase_v := SERVED_REQ;
-            elsif s_ready then
+            elsif s_ready = '1' then
                 phase_v := WAIT_REQ;
             elsif ask_next then
                 phase_v := WAIT_SRC;
             end if;
-        case WAIT_SRC   =>
+        when WAIT_SRC   =>
             if s_ready = '1' then
                 the_output.n_en := '1';
                 phase_v := SERVED_REQ;
             end if;
-        case WAIT_REQ   =>
-            if ask_next = '1' then
+        when WAIT_REQ   =>
+            if ask_next then
                 the_output.n_en := '1';
                 phase_v := SERVED_REQ;
             end if;
-        case SERVED_REQ =>
-            if t_produced = '1' and t_ready = '0' and  then
-                the_output.deadlock := '1';
+        when SERVED_REQ =>
+            if t_produced = '1' and t_ready = '0'  then
+                the_output.is_deadlock := '1';
                 phase_v := T_END;
             else
                 if t_produced = '1' and has_next = '1' then 
@@ -143,11 +146,11 @@ next_update : process (ask_next, t_ready, t_produced, has_next, s_ready, current
                         phase_v := T_MORE;
                     end if;
                 elsif t_produced = '1' and has_next = '0' then
-                    the_output.ask_src := '1'
+                    the_output.ask_src := '1';
                     phase_v := T_END;
                 end if;
             end if;
-        case T_MORE     =>
+        when T_MORE     =>
             if ask_next then
                 the_output.n_en := '1';
                 phase_v := SERVED_REQ;
@@ -159,10 +162,17 @@ next_update : process (ask_next, t_ready, t_produced, has_next, s_ready, current
     end process;
 
 --with register on controler output
---(i_en, n_en, ask_src, deadlock) <= (next_output.i_en, next_output.n_en, next_output.ask_src, next_output.deadlock) when rising_edge(clk) else (others => '0');
+--i_en <= next_output.i_en when rising_edge(clk) else '0';
+--n_en <= next_output.n_en when rising_edge(clk) else '0';
+--ask_src <= next_output.ask_src when rising_edge(clk) else '0';
+--is_deadlock <= next_output.is_deadlock when rising_edge(clk) else '0';
 
 --without register on the controler output
-(i_en, n_en, ask_src, deadlock) <= (next_output.i_en, next_output.n_en, next_output.ask_src, next_output.deadlock);
+i_en <= next_output.i_en;
+n_en <= next_output.n_en;
+ask_src <= next_output.ask_src;
+is_deadlock <= next_output.is_deadlock;
+
 
 --TODO: should be renamed to closed_set
 closed_inst : closed_stream 
@@ -175,7 +185,7 @@ closed_inst : closed_stream
         add_enable  => t_ready,
         data_in     => target,
         is_in       => target_is_known,
-        is_full     => closed_is_full,
+        is_full     => c_is_full,
 		is_done    => previous_is_added
     );
 
