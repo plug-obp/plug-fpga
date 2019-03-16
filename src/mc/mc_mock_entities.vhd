@@ -33,12 +33,12 @@ entity closed_stream is
     port (
         clk             : in  std_logic;                               -- clock
         reset           : in  std_logic;                               -- when reset is asserted the stream is emptied: size = 0, is_empty = 1, is_full = 0
-        reset_n         : in  std_logic;
+        reset_n			: in  std_logic;
         add_enable      : in  std_logic;                               -- write enable 
         data_in         : in  std_logic_vector(DATA_WIDTH- 1 downto 0);-- the data that is added when write_enable
-        is_in           : out std_logic;                              -- already_in is asserted if the last data_in handled was already in the set
-        add_done        : out std_logic;
-        is_full         : out std_logic                               -- is_full is asserted when data_count == CAPACITY
+        is_in           : out std_logic;                              -- already_in is asserted if the last data_in handled was already in the set   
+        is_full         : out std_logic;                               -- is_full is asserted when data_count == CAPACITY
+		is_done         : out std_logic                              -- is_full is asserted when data_count == CAPACITY
     );
 end entity;
 architecture a of closed_stream is begin end architecture;
@@ -60,7 +60,8 @@ entity semantics is
 
         target_out      : out std_logic_vector(CONFIG_WIDTH-1 downto 0); -- the output configuration data
         target_ready    : out std_logic;                                -- next out can be read
-        has_next        : out std_logic                                 -- no more configuration available
+        has_next        : out std_logic;                                 -- no more configuration available
+        is_done         : out std_logic
     );
 end entity;
 architecture a of semantics is begin end architecture;
