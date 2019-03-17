@@ -88,7 +88,7 @@ begin
             the_output.ask_push := '1';
             the_output.t_out := current.target;
             current.target := t_in;
-        elsif (t_ready = '1' or is_scheduled = '1') and schedule_en = '0' then
+        elsif is_scheduled = '1' and schedule_en = '0' then
             current.ctrl_state := ERR;
         elsif schedule_en = '1' and is_scheduled = '1' then
             the_output.ask_push := '1';
@@ -98,6 +98,8 @@ begin
             the_output.ask_push := '1';
             the_output.t_out := current.target;
             current.ctrl_state := S_OK;
+        elsif t_ready = '1' then
+            current.target := t_in;
         end if;
     when S_OK =>
         if t_ready = '1' and schedule_en = '1' and is_scheduled = '1' then
