@@ -18,7 +18,6 @@ component open_stream is
         push_enable     : in  std_logic;                                     -- write enable 
         data_in         : in  std_logic_vector(DATA_WIDTH- 1 downto 0);   -- the data that is added when write_enable
         push_is_done	: out std_logic;
-		pop_is_done		: out std_logic;
         data_out        : out std_logic_vector(DATA_WIDTH- 1 downto 0);   -- the data that is read if read_enable
         data_ready      : out std_logic;
         is_empty        : out std_logic;                                 -- is_empty is asserted when no elements are in

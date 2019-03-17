@@ -33,6 +33,7 @@ handler : process (clk, reset_n) is
             if reset = '1' then
                 reset_state;
             else
+                data_ready <= '0';
                 pop_is_done <= '0';
                 push_is_done <= '0';
                 if push_enable = '1' and pop_enable = '1' then
@@ -41,7 +42,6 @@ handler : process (clk, reset_n) is
                         data_ready <= '1';
                         memory(write_ptr) <= data_in;
                         push_is_done <= '1';
-                        pop_is_done <= '1';
                     else -- full or not full nor empty
                         data_out <= memory(read_ptr);
                         data_ready <= '1';
@@ -49,7 +49,6 @@ handler : process (clk, reset_n) is
                         memory(write_ptr) <= data_in;
                         write_ptr <= (write_ptr + 1) mod CAPACITY;
                         push_is_done <= '1';
-                        pop_is_done <= '1';
                     end if;
                 elsif pop_enable = '1' and not empty then
                     data_out <= memory(read_ptr);
@@ -62,7 +61,6 @@ handler : process (clk, reset_n) is
                     if full then 
                         full <= false;
                     end if;
-                    pop_is_done <= '1';
                 elsif push_enable = '1' and not full then
                     memory(write_ptr) <= data_in;
                     idx := (write_ptr + 1) mod CAPACITY;
