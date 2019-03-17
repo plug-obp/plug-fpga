@@ -22,6 +22,7 @@ entity next_stream is
     );
 end entity;
 
+use WORK.semantics_components.ALL;
 architecture a of next_stream is
     signal t_done : std_logic;
     signal has_next : std_logic;
@@ -31,7 +32,7 @@ architecture a of next_stream is
 begin
 
 semantics_inst : semantics
-    generic map (CONFIG_WIDTH => DATA_WIDTH)
+    generic map (CONFIG_WIDTH => CONFIG_WIDTH)
     port map (
         clk             => clk,
         reset           => reset,
@@ -39,7 +40,7 @@ semantics_inst : semantics
         
         initial_enable  => i_en,
         next_enable     => n_en,
-        source_in       => source_in,
+        source_in       => s_in,
         target_out      => target_out,
         target_ready    => t_ready,
         has_next        => has_next,

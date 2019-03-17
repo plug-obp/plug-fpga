@@ -40,12 +40,12 @@ architecture arch_v1 of mc_sem_and_closed is
 
     --computed signals
     signal i_en, n_en : std_logic;
-    signal ask_next : boolean;
+    signal ask_next : std_logic;
     signal schedule_en : std_logic;
 begin
 
 closed_is_full <= c_is_full;
-ask_next <= true when (c_is_full = '0' and previous_is_added = '1') or start = '1' else false;
+ask_next <= '1' when (c_is_full = '0' and previous_is_added = '1') or start = '1' else '0';
 
 
 --TODO: should be renamed to closed_set
@@ -66,8 +66,8 @@ closed_inst : closed_stream
 next_inst : next_stream
     generic map (
         CONFIG_WIDTH => DATA_WIDTH
-    );
-    port (
+    )
+    port map (
         clk         => clk,
         reset       => reset,
         reset_n     => reset_n,
@@ -82,7 +82,6 @@ next_inst : next_stream
         
         is_deadlock => is_deadlock
     );
-end entity;
 
 schedule_en <= '1' when previous_is_added = '1' and target_is_known = '0' else '0'; 
 sched_inst : scheduler
@@ -132,6 +131,11 @@ configuration exhaustive_linear_set_v1 of mc_sem_and_closed is
 
         for next_inst : work.mc_components.next_stream
             use entity work.next_stream(a);
+			for a
+				for semantics_inst : work.semantics_components.semantics
+					use entity work.explicit_interpreter(b);
+				end for;
+			end for;
         end for;
 
         for sched_inst : work.mc_components.scheduler

@@ -57,7 +57,7 @@ begin
 
             case phase_v is
             when S0 =>
-                if ask_next then
+                if ask_next = '1' then
                     the_output.i_en := '1';
                     phase_v := I_PHASE;
                 end if;
@@ -67,17 +67,17 @@ begin
                     phase_v := I_DEADLOCK;
                 else
                     if t_produced = '1' and has_next = '1' then 
-                        if ask_next then
+                        if ask_next = '1' then
                             the_output.i_en := '1';
                         else 
                             phase_v := I_MORE;
                         end if;
                     elsif t_produced = '1' and has_next = '0' then
                         the_output.ask_src := '1';
-                        if ask_next and s_ready = '1' then
+                        if ask_next = '1' and s_ready = '1' then
                             the_output.n_en := '1';
                             phase_v := SERVED_REQ;
-                        elsif ask_next then
+                        elsif ask_next = '1' then
                             phase_v := WAIT_SRC;
                         elsif s_ready = '1' then
                             phase_v := WAIT_REQ;
@@ -87,18 +87,18 @@ begin
                     end if;
                 end if;
             when I_MORE     =>
-                if ask_next then
+                if ask_next = '1' then
                     the_output.i_en := '1';
                     phase_v := I_PHASE;
                 end if;
             when I_DEADLOCK => null; 
             when T_END    =>
-                if ask_next and s_ready = '1' then
+                if ask_next = '1' and s_ready = '1' then
                     the_output.n_en := '1';
                     phase_v := SERVED_REQ;
                 elsif s_ready = '1' then
                     phase_v := WAIT_REQ;
-                elsif ask_next then
+                elsif ask_next = '1' then
                     phase_v := WAIT_SRC;
                 end if;
             when WAIT_SRC   =>
@@ -107,7 +107,7 @@ begin
                     phase_v := SERVED_REQ;
                 end if;
             when WAIT_REQ   =>
-                if ask_next then
+                if ask_next = '1' then
                     the_output.n_en := '1';
                     phase_v := SERVED_REQ;
                 end if;
@@ -117,7 +117,7 @@ begin
                     phase_v := T_END;
                 else
                     if t_produced = '1' and has_next = '1' then 
-                        if ask_next then
+                        if ask_next = '1' then
                             the_output.n_en := '1';
                         else 
                             phase_v := T_MORE;
@@ -128,7 +128,7 @@ begin
                     end if;
                 end if;
             when T_MORE     =>
-                if ask_next then
+                if ask_next = '1' then
                     the_output.n_en := '1';
                     phase_v := SERVED_REQ;
                 end if;
