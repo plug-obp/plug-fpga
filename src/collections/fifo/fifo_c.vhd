@@ -33,7 +33,6 @@ handler : process (clk, reset_n) is
             if reset = '1' then
                 reset_state;
             else
-                data_ready <= '0';
                 pop_is_done <= '0';
                 push_is_done <= '0';
                 if push_enable = '1' and pop_enable = '1' then
