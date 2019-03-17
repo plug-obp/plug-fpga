@@ -31,10 +31,12 @@ architecture arch_v1 of mc_sem_and_closed is
     signal t_produced : std_logic;  
 	signal c_is_full : std_logic; 
     signal ask_push : std_logic;
-    signal t_out : std_logic;
+    signal t_out : std_logic_vector(DATA_WIDTH-1 downto 0);
     signal target_is_known : std_logic;
     signal s_ready : std_logic;
     signal is_scheduled : std_logic;
+	signal ask_src : std_logic;
+	signal source_in :std_logic_vector (DATA_WIDTH-1 downto 0);
 
     --computed signals
     signal i_en, n_en : std_logic;
@@ -238,7 +240,7 @@ sched_inst : scheduler
 
         t_ready         => t_ready,
         schedule_en     => schedule_en,
-        is_scheduled    =>
+        is_scheduled    => is_scheduled,
 
         t_in            => target,
 
@@ -256,8 +258,8 @@ open_inst : open_stream
         pop_enable  => ask_src,
         push_enable => ask_push,
         data_in     => t_out,
-        push_is_done=> is_scheduled;
-		pop_is_done	=> s_ready;
+        push_is_done=> is_scheduled,
+		pop_is_done	=> s_ready,
         data_out    => source_in,
         data_ready  => s_ready,
         is_empty    => open_empty,

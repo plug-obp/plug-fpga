@@ -99,6 +99,6 @@ component scheduler is
         ask_push : out std_logic;
         t_out : out std_logic_vector(CONFIG_WIDTH-1 downto 0)
     );
-end entity;
+end component;
 
 end package;

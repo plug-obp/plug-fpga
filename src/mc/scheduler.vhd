@@ -36,7 +36,7 @@ type T_CONTROL is (
         ask_push : std_logic;
         t_out : std_logic_vector(CONFIG_WIDTH-1 downto 0);
     end record;
-    constant DEFAULT_OUTPUT : T_OUTPUT := (false, false, false);
+    constant DEFAULT_OUTPUT : T_OUTPUT := ('0', (others => '0'));
     
     --next state
     signal state_c : T_STATE :=  DEFAULT_STATE;

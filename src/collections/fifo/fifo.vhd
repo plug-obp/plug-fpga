@@ -20,6 +20,7 @@ entity fifo is
 		data_out		: out std_logic_vector(DATA_WIDTH- 1 downto 0);   -- the data that is read if read_enable
 		data_ready		: out std_logic;
 		is_empty 		: out std_logic; 								-- is_empty is asserted when no elements are in
-		is_full			: out std_logic 								-- is_full is asserted when data_count == CAPACITY
+		is_full			: out std_logic; 								-- is_full is asserted when data_count == CAPACITY
+		is_swapped 		: out std_logic
 	);
 end fifo;

@@ -82,5 +82,6 @@ handler : process (clk, reset_n) is
 
 is_full <= '1' when full else '0';
 is_empty <= '1' when empty else '0';
+is_swapped <= '0';
 
 end architecture;
