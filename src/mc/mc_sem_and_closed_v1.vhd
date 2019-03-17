@@ -114,7 +114,7 @@ open_inst : open_stream
         push_is_done=> is_scheduled,
 		pop_is_done	=> s_ready,
         data_out    => source_in,
-        data_ready  => s_ready,
+        --data_ready  => s_ready,
         is_empty    => open_empty,
         is_full     => open_full,
         is_swapped  => open_swap

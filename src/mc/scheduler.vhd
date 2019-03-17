@@ -59,7 +59,7 @@ begin
     end if;
 end process;
 
-next_update : process (t_ready, schedule_en, is_scheduled, state_r) is
+next_update : process (t_ready,  t_in,schedule_en, is_scheduled, state_r) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current : T_STATE := DEFAULT_STATE;
 begin
