@@ -17,6 +17,8 @@ component open_stream is
         pop_enable      : in  std_logic;                                     -- read enable 
         push_enable     : in  std_logic;                                     -- write enable 
         data_in         : in  std_logic_vector(DATA_WIDTH- 1 downto 0);   -- the data that is added when write_enable
+        push_is_done	: out std_logic;
+		pop_is_done		: out std_logic;
         data_out        : out std_logic_vector(DATA_WIDTH- 1 downto 0);   -- the data that is read if read_enable
         data_ready      : out std_logic;
         is_empty        : out std_logic;                                 -- is_empty is asserted when no elements are in
@@ -78,29 +80,25 @@ component checker is
     );
 end component;
 
-component controler is
+component scheduler is 
+    generic (
+        CONFIG_WIDTH : integer := 6;
+        HAS_OUTPUT_REGISTER : boolean := true
+    );
     port (
         clk             : in std_logic;                                 -- clock
         reset           : in std_logic;
         reset_n         : in std_logic;
 
-        sem_has_next    : in std_logic;
+        t_ready : in std_logic;
+        schedule_en : in std_logic;
+        is_scheduled : in std_logic;
 
-        open_is_empty   : in std_logic;
-        open_is_full    : in std_logic;
-        open_swap       : in std_logic;
+        t_in : in std_logic_vector(CONFIG_WIDTH-1 downto 0);
 
-        closed_full     : in std_logic;
-        add_done : in std_logic;
-
-        check_ready     : in std_logic;
-        check_status    : in std_logic;
-
-        start           : in std_logic;
-        initialize      : out std_logic;
-        execution_ended : out std_logic;
-        is_verified     : out std_logic
+        ask_push : out std_logic;
+        t_out : out std_logic_vector(CONFIG_WIDTH-1 downto 0)
     );
-end component;
+end entity;
 
 end package;

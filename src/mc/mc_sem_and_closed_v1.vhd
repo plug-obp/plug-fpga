@@ -13,13 +13,12 @@ entity mc_sem_and_closed is
         reset_n         : in std_logic;
 
         start           : in std_logic;
-        s_ready         : in std_logic;  -- source ready from the fifo
-        source_in       : in std_logic_vector (DATA_WIDTH - 1 downto 0);
-
-        ask_src         : out std_logic; -- source enable request towards fifo
-        target_is_known : out std_logic;
+        
         closed_is_full  : out std_logic;
-        is_deadlock        : out std_logic
+        is_deadlock        : out std_logic;
+        open_empty  : out std_logic;
+        open_full : out std_logic;
+        open_swap : out std_logic
     );
 end entity;
 
@@ -31,10 +30,16 @@ architecture arch_v1 of mc_sem_and_closed is
     signal has_next : std_logic; 
     signal t_produced : std_logic;  
 	signal c_is_full : std_logic; 
+    signal ask_push : std_logic;
+    signal t_out : std_logic;
+    signal target_is_known : std_logic;
+    signal s_ready : std_logic;
+    signal is_scheduled : std_logic;
 
     --computed signals
     signal i_en, n_en : std_logic;
     signal ask_next : boolean;
+    signal schedule_en : std_logic;
     
     --registers
     signal first_r : boolean := true;
@@ -222,6 +227,44 @@ semantics_inst : semantics
         has_next        => has_next,
         is_done         => t_produced
     );
+
+schedule_en <= '1' when previous_is_added = '1' and target_is_known = '0' else '0'; 
+sched_inst : scheduler
+    generic map (CONFIG_WIDTH => DATA_WIDTH)
+    port map (
+        clk             => clk,
+        reset           => reset,
+        reset_n         => reset_n,
+
+        t_ready         => t_ready,
+        schedule_en     => schedule_en,
+        is_scheduled    =>
+
+        t_in            => target,
+
+        ask_push        => ask_push,
+        t_out           => t_out
+    );
+
+open_inst : open_stream
+    generic map (ADDRESS_WIDTH => OPEN_ADDRESS_WIDTH, DATA_WIDTH => DATA_WIDTH)
+    port map (
+        clk         => clk,
+        reset       => reset,
+        reset_n     => reset_n,
+
+        pop_enable  => ask_src,
+        push_enable => ask_push,
+        data_in     => t_out,
+        push_is_done=> is_scheduled;
+		pop_is_done	=> s_ready;
+        data_out    => source_in,
+        data_ready  => s_ready,
+        is_empty    => open_empty,
+        is_full     => open_full,
+        is_swapped  => open_swap
+    );
+
 end architecture;
 
 use WORK.ALL;
@@ -233,6 +276,14 @@ configuration exhaustive_linear_set_v1 of mc_sem_and_closed is
 
         for semantics_inst : work.mc_components.semantics
             use entity work.explicit_interpreter(b);
+        end for;
+
+        for sched_inst : work.mc_components.scheduler
+            use entity work.scheduler(a);
+        end for;
+
+        for open_inst : work.mc_components.open_stream
+            use entity work.fifo(c);
         end for;
     end for;
 end configuration;
