@@ -381,7 +381,6 @@ source_index := source_index + 1;<y:LabelModel><y:SmartEdgeLabelModel autoRotati
           <y:Path sx="0.0" sy="0.0" tx="0.0" ty="0.0">
             <y:Point x="1690.8754948383548" y="1155.7944122313766"/>
             <y:Point x="1690.8754948383548" y="1491.1303078966826"/>
-            <y:Point x="1679.1971303126973" y="1496.1353212648214"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>

@@ -49,7 +49,7 @@ semantics_inst : semantics
 
 ctrl_inst : semantics_controler
     port map (
-         clk            => clk,
+        clk             => clk,
         reset           => reset,
         reset_n         => reset_n,
         ask_next        => next_en,
