@@ -1,8 +1,8 @@
 use work.all;
 
-configuration exhaustive_linear_set of mc is
+configuration exhaustive_linear_set of mc_generic is
     for arch_v0
-        for open_inst : open_stream
+        for open_inst : work.mc_components.open_stream
             use entity work.fifo(c)
                 port map (
                     clk 			=> clk,
@@ -18,19 +18,19 @@ configuration exhaustive_linear_set of mc is
                 );
         end for;
 
-        for closed_inst : closed_stream
+        for closed_inst : work.mc_components.closed_stream
             use entity work.set(linear_set_b);
         end for;
 
-        for semantics_inst : semantics
+        for semantics_inst : work.mc_components.semantics
             use entity work.explicit_interpreter(a);
         end for;
 
-        for checher_inst : checker
+        for checher_inst : work.mc_components.checker
             use entity work.checker(a);
         end for;
 
-        for controler_inst : controler
+        for controler_inst : work.mc_components.controler
             use entity work.controler(a);
         end for;
     end for;
