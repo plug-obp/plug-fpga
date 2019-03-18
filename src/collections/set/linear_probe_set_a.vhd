@@ -2,11 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-use set.pkg.all;
-
 architecture linear_probe_set of set is
-
-
 
     signal memory : T_MEMORY := (others => (data => (others => '0'), is_set => FALSE));
     signal full_ff : std_logic := '0';

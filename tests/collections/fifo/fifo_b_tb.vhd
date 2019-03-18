@@ -9,7 +9,7 @@ entity fifo_b_testbench is end entity;
 -- R3 : the FIFO is full iff the is_full is asserted : G is_full <-> write_ptr+1=read_ptr (COUNTER = CAPACITY)
 -- R4 : the FIFO is empty iff the is_empty is asserted : G is_empty <-> write_ptr = read_ptr (COUNTER = 0)
 
- 
+
 architecture test1 of fifo_b_testbench is
     constant CLK_PERIOD : time := 100 ns;
     constant ADDRESS_WIDTH : integer := 2;
@@ -27,9 +27,9 @@ begin
 
     clk <= not clk after CLK_PERIOD/2 when not simulation_end else '0';
 
-dut : entity work.fifo(c)    
+dut : entity work.fifo(c)
     generic map (ADDRESS_WIDTH => ADDRESS_WIDTH, DATA_WIDTH => DATA_WIDTH)
-	port map ( 
+	port map (
 		clk => clk,
 		reset => rst,
 		reset_n => rst_n,
@@ -42,7 +42,7 @@ dut : entity work.fifo(c)
 		is_full	=> is_full
 	);
 
-scenario : process 
+scenario : process
 	procedure async_reset is
 	begin
 		wait until rising_edge(clk);
@@ -81,7 +81,7 @@ scenario : process
 		data_in <= (others => '0');
 		--reset the circuit
 		async_reset;
-		
+
 		assert is_empty = '1' report "after reset the fifo should be empty" severity error;
 		assert is_full = '0' report "after reset the fifo should not be full" severity error;
 
