@@ -54,30 +54,22 @@ begin
         o.data_out := c.memory(c.read_ptr);
         c.read_ptr := (c.read_ptr + 1) mod CAPACITY;
         o.data_ready := '1';
-    elsif push_enable = '1' then
-        if full then
-            o.is_full := '1';
-        else 
-            c.memory(c.write_ptr) := data_in;
-            c.write_ptr := (c.write_ptr + 1) mod CAPACITY;
-            c.empty := false;
-            o.push_is_done := '1';
-            if read_ptr = write_ptr then
-                c.full := true;
-            end if;
+    elsif push_enable = '1' and not full then
+        c.memory(c.write_ptr) := data_in;
+        c.write_ptr := (c.write_ptr + 1) mod CAPACITY;
+        c.empty := false;
+        o.push_is_done := '1';
+        if read_ptr = write_ptr then
+            c.full := true;
         end if;
-    elsif pop_enable = '1' then
-        if empty then
-            o.is_empty := '1';
-        else
-            o.data_out := c.memory(c.read_ptr);
-            c.read_ptr := (c.read_ptr + 1) mod CAPACITY;
-            o.data_ready := '1';
-            c.full := false;
-            o.pop_is_done := '1';
-            if read_ptr = write_ptr then
-                c.empty := true;
-            end if;
+    elsif pop_enable = '1' and not empty then
+        o.data_out := c.memory(c.read_ptr);
+        c.read_ptr := (c.read_ptr + 1) mod CAPACITY;
+        o.data_ready := '1';
+        c.full := false;
+        o.pop_is_done := '1';
+        if read_ptr = write_ptr then
+            c.empty := true;
         end if;
     end if;
 
