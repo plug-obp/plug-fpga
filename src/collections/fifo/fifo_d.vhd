@@ -50,16 +50,15 @@ begin
     c := state_r;
 	o := DEFAULT_OUTPUT;
 
-    if (push_enable = '1' and pop_enable = '1') then
+    if push_enable = '1' and pop_enable = '1' then
         c.memory(c.write_ptr) := data_in;
         c.write_ptr := (c.write_ptr + 1) mod CAPACITY;
         o.data_out := c.memory(c.read_ptr);
         c.read_ptr := (c.read_ptr + 1) mod CAPACITY;
         o.data_ready := '1';
-    elsif (push_enable = '1' and not c.full) then
+    elsif push_enable = '1' and not full then
         c.memory(c.write_ptr) := data_in;
         c.write_ptr := (c.write_ptr + 1) mod CAPACITY;
-        o.push_is_done := '1';
         c.empty := false;
         if c.read_ptr = c.write_ptr then
             c.full := true;
@@ -69,7 +68,8 @@ begin
         c.read_ptr := (c.read_ptr + 1) mod CAPACITY;
         o.data_ready := '1';
         c.full := false;
-        if c.read_ptr = c.write_ptr then
+        o.pop_is_done := '1';
+        if read_ptr = write_ptr then
             c.empty := true;
         end if;
     end if;
