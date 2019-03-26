@@ -2,7 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity fifo_b_testbench is end entity;
+entity fifo_d_testbench is end entity;
 
 -- R1 : the FIFO is always eventually full []<>full
 -- R2 : the FIFO is always eventually empty []<>empty
@@ -10,7 +10,7 @@ entity fifo_b_testbench is end entity;
 -- R4 : the FIFO is empty iff the is_empty is asserted : G is_empty <-> write_ptr = read_ptr (COUNTER = 0)
 
 
-architecture test1 of fifo_b_testbench is
+architecture test1 of fifo_d_testbench is
     constant CLK_PERIOD : time := 100 ns;
     constant ADDRESS_WIDTH : integer := 2;
     constant DATA_WIDTH : integer := 4;
