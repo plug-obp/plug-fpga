@@ -26,6 +26,11 @@ architecture a of scheduler is
 type T_CONTROL is (
         S0, T_OK, S_OK, ERR
     );
+    type T_CONFIG is record
+        data : std_logic_vector(CONFIG_WIDTH-1 downto 0); 
+        is_last : std_logic; 
+    end record; 
+
     type T_STATE is record
         ctrl_state  : T_CONTROL;
         target      : std_logic_vector(CONFIG_WIDTH-1 downto 0);

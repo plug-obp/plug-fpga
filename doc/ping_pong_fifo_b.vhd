@@ -29,7 +29,7 @@ end pingpong_fifo_b;
 
 
 architecture b of pingpong_fifo_b is
-  constant HAS_OUTPUT_REGISTER : boolean := false;
+  constant HAS_OUTPUT_REGISTER : boolean := true;
   constant CAPACITY            : integer := 2**ADDRESS_WIDTH;
   type T_MEMORY is array (0 to CAPACITY - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
   type T_STATE is record
@@ -133,7 +133,7 @@ begin
         c.full := true;
       end if;
 
-    elsif mark_last = '1' and (pop_enable = '1' and not c.empty) then
+    elsif mark_last and (pop_enable = '1' and not c.empty) then
       o.data_out    := c.memory(c.read_ptr);
       o.data_ready  := '1';
       c.full        := false;
@@ -164,7 +164,7 @@ begin
         c.empty := true;
       end if;
 
-    elsif mark_last = '1' then
+    elsif mark_last := '1' then
       c.barrier_ptr := c.write_ptr - 1;
     end if;
 
