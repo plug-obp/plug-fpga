@@ -9,4 +9,4 @@ run 100ns
 force -freeze sim:/mc_top_v1/start 1 0
 run 100ns
 force -freeze sim:/mc_top_v1/start 0 0
-run 10000ns
+run 20000ns
