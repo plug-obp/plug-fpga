@@ -27,8 +27,6 @@ architecture arch_v1 of mc_sem_and_closed is
     signal previous_is_added : std_logic;
     signal target : std_logic_vector(DATA_WIDTH-1 downto 0);
     signal t_ready : std_logic;
-    signal has_next : std_logic; 
-    signal t_produced : std_logic;  
 	signal c_is_full : std_logic; 
     signal ask_push : std_logic;
     signal t_out : std_logic_vector(DATA_WIDTH-1 downto 0);
@@ -39,7 +37,6 @@ architecture arch_v1 of mc_sem_and_closed is
 	signal source_in :std_logic_vector (DATA_WIDTH-1 downto 0);
 
     --computed signals
-    signal i_en, n_en : std_logic;
     signal ask_next : std_logic;
     signal schedule_en : std_logic;
 begin
