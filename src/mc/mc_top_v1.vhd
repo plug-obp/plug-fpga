@@ -1,7 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-entity mc_sem_and_closed is 
+entity mc_top_v1 is 
     generic (
         DATA_WIDTH              : integer := 6;
         OPEN_ADDRESS_WIDTH      : integer := 4;
@@ -23,7 +23,7 @@ entity mc_sem_and_closed is
 end entity;
 
 use WORK.mc_components.ALL;
-architecture arch_v1 of mc_sem_and_closed is
+architecture mc_top_v1_a of mc_top_v1 is
     signal previous_is_added : std_logic;
     signal target : std_logic_vector(DATA_WIDTH-1 downto 0);
     signal t_ready : std_logic;
@@ -117,29 +117,3 @@ open_inst : open_stream
     );
 
 end architecture;
-
-use WORK.ALL;
-configuration exhaustive_linear_set_v1 of mc_sem_and_closed is
-    for arch_v1
-        for closed_inst : work.mc_components.closed_stream
-            use entity work.set(linear_set_c);
-        end for;
-
-        for next_inst : work.mc_components.next_stream
-            use entity work.next_stream(a);
-			for a
-				for semantics_inst : work.semantics_components.semantics
-					use entity work.explicit_interpreter(b);
-				end for;
-			end for;
-        end for;
-
-        for sched_inst : work.mc_components.scheduler
-            use entity work.scheduler(a);
-        end for;
-
-        for open_inst : work.mc_components.open_stream
-            use entity work.fifo(c);
-        end for;
-    end for;
-end configuration;
