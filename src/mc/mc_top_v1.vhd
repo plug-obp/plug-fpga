@@ -72,6 +72,7 @@ next_inst : next_stream
         next_en     => ask_next,
         target_ready => t_ready,
         target_out   => target,
+        target_is_last => open, 
 
         ask_src     => ask_src,
         s_ready     => s_ready,
@@ -108,11 +109,13 @@ open_inst : open_stream
         pop_enable  => ask_src,
         push_enable => ask_push,
         data_in     => t_out,
+        mark_last   => '0', 
         push_is_done=> is_scheduled,
         data_out    => source_in,
         data_ready  => s_ready,
         is_empty    => open_empty,
         is_full     => open_full,
+        is_last     => open, 
         is_swapped  => open_swap
     );
 

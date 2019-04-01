@@ -13,6 +13,7 @@ entity next_stream is
         next_en : in std_logic;
         target_ready : out std_logic;
         target_out   : out std_logic_vector(CONFIG_WIDTH-1 downto 0);
+        target_is_last : out std_logic; 
 
         ask_src : out std_logic;
         s_ready : in std_logic;
@@ -64,5 +65,7 @@ ctrl_inst : semantics_controler
     );
 
 target_ready <= t_ready;
+target_is_last <= '1' when has_next = '0' and t_ready = '1' else '0'; 
+
 
 end architecture;

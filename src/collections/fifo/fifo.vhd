@@ -21,7 +21,7 @@ entity fifo is
 		data_ready		: out std_logic;
 		is_empty 		: out std_logic; 								-- is_empty is asserted when no elements are in
 		is_full			: out std_logic; 								-- is_full is asserted when data_count == CAPACITY
-		is_swapped 		: out std_logic; 
-		is_last 		: out std_logic
+		is_last 		: out std_logic;
+		is_swapped 		: out std_logic 
 	);
 end fifo;
