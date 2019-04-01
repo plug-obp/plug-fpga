@@ -59,7 +59,7 @@ state_update : process (clk) is
                 when S0 =>
                     start <= true;
                     if start_done then
-                        start <= false
+                        start <= false; 
                         state <= INITIALIZATION;
                     end if;
                 when INITIALIZATION =>
