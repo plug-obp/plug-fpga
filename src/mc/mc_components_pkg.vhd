@@ -62,7 +62,8 @@ component next_stream is
         ask_src : out std_logic;
         s_ready : in std_logic;
         s_in    : in std_logic_vector(CONFIG_WIDTH-1 downto 0);
-        
+        s_is_last : in std_logic; 
+
         is_deadlock : out std_logic
     );
 end component;
@@ -98,9 +99,12 @@ component scheduler is
         is_scheduled : in std_logic;
 
         t_in : in std_logic_vector(CONFIG_WIDTH-1 downto 0);
+        t_is_last : in std_logic; 
 
         ask_push : out std_logic;
-        t_out : out std_logic_vector(CONFIG_WIDTH-1 downto 0)
+        t_out : out std_logic_vector(CONFIG_WIDTH-1 downto 0); 
+        mark_last : out std_logic
+
     );
 end component;
 

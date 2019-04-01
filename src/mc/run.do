@@ -21,7 +21,14 @@ sim:/mc_top_v1/ask_src \
 sim:/mc_top_v1/source_in \
 sim:/mc_top_v1/ask_next \
 sim:/mc_top_v1/schedule_en \
-sim:/mc_top_v1/closed_inst/state_c.memory
+sim:/mc_top_v1/closed_inst/state_c.memory \
+sim:/mc_top_v1/next_inst/has_next \
+sim:/mc_top_v1/next_inst/target_is_last  \
+sim:/mc_top_v1/src_is_last \
+sim:/mc_top_v1/t_is_last \
+sim:/mc_top_v1/open_inst/state_r
+
+
 
 restart -f
 force -freeze sim:/mc_top_v1/clk 1 0, 0 {50 ns} -r 100

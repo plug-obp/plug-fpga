@@ -27,6 +27,7 @@ architecture mc_top_v1_a of mc_top_v1 is
     signal previous_is_added : std_logic;
     signal target : std_logic_vector(DATA_WIDTH-1 downto 0);
     signal t_ready : std_logic;
+    signal t_is_last : std_logic; 
 	signal c_is_full : std_logic; 
     signal ask_push : std_logic;
     signal t_out : std_logic_vector(DATA_WIDTH-1 downto 0);
@@ -35,7 +36,8 @@ architecture mc_top_v1_a of mc_top_v1 is
     signal is_scheduled : std_logic;
 	signal ask_src : std_logic;
 	signal source_in :std_logic_vector (DATA_WIDTH-1 downto 0);
-
+    signal swap : std_logic; 
+    signal src_is_last : std_logic; 
     --computed signals
     signal ask_next : std_logic;
     signal schedule_en : std_logic;
@@ -72,12 +74,12 @@ next_inst : next_stream
         next_en     => ask_next,
         target_ready => t_ready,
         target_out   => target,
-        target_is_last => open, 
+        target_is_last => t_is_last, 
 
         ask_src     => ask_src,
         s_ready     => s_ready,
         s_in        => source_in,
-        
+        s_is_last   => src_is_last,
         is_deadlock => is_deadlock
     );
 
@@ -94,9 +96,11 @@ sched_inst : scheduler
         is_scheduled    => is_scheduled,
 
         t_in            => target,
+        t_is_last       => t_is_last,
 
         ask_push        => ask_push,
-        t_out           => t_out
+        t_out           => t_out, 
+        mark_last       => swap
     );
 
 open_inst : open_stream
@@ -109,13 +113,13 @@ open_inst : open_stream
         pop_enable  => ask_src,
         push_enable => ask_push,
         data_in     => t_out,
-        mark_last   => '0', 
+        mark_last   => swap, 
         push_is_done=> is_scheduled,
         data_out    => source_in,
         data_ready  => s_ready,
         is_empty    => open_empty,
         is_full     => open_full,
-        is_last     => open, 
+        is_last     => src_is_last, 
         is_swapped  => open_swap
     );
 

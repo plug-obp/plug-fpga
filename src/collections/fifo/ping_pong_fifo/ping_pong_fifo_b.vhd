@@ -22,7 +22,8 @@ entity pingpong_fifo_b is
       is_full      : out std_logic;  -- is_full is asserted when data_count == CAPACITY
       is_last      : out std_logic;
       pop_is_done  : out std_logic;
-      push_is_done : out std_logic
+      push_is_done : out std_logic; 
+      is_swapped : out std_logic
       );
 end pingpong_fifo_b;
 

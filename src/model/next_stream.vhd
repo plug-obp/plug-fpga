@@ -18,7 +18,8 @@ entity next_stream is
         ask_src : out std_logic;
         s_ready : in std_logic;
         s_in    : in std_logic_vector(CONFIG_WIDTH-1 downto 0);
-        
+        s_is_last : in std_logic; 
+
         is_deadlock : out std_logic
     );
 end entity;
@@ -30,6 +31,7 @@ architecture a of next_stream is
     signal i_en : std_logic;
     signal n_en : std_logic;
     signal t_ready : std_logic;
+    signal src_was_last_r : std_logic; 
 begin
 
 semantics_inst : semantics
@@ -64,8 +66,20 @@ ctrl_inst : semantics_controler
         is_deadlock     => is_deadlock
     );
 
+    
+process(clk, reset) is 
+begin
+    if reset = '1' then
+        src_was_last_r <= '0'; 
+    elsif rising_edge(clk) then 
+        if s_ready= '1' then 
+        src_was_last_r <= s_is_last; 
+    end if; 
+end if; 
+end process; 
+
 target_ready <= t_ready;
-target_is_last <= '1' when has_next = '0' and t_ready = '1' else '0'; 
+target_is_last <= '1' when has_next = '0' and t_ready = '1' and src_was_last_r = '1' else '0'; 
 
 
 end architecture;
