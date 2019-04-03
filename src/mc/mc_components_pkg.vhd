@@ -108,4 +108,21 @@ component scheduler is
     );
 end component;
 
+component pop_controler is 
+    generic (
+        HAS_OUTPUT_REGISTER : boolean := true
+    ); 
+    port (
+        clk             : in std_logic;                                 -- clock
+        reset           : in std_logic;
+        reset_n         : in std_logic;
+
+        open_is_empty : in std_logic; 
+        ask_src : in std_logic; 
+        pop_en : out std_logic
+
+    ); 
+end component; 
+
+
 end package;

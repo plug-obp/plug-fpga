@@ -1,3 +1,7 @@
+vsim -voptargs=+acc work.mc_top_v1_exhaustive
+log * -r
+
+
 add wave -position insertpoint  \
 sim:/mc_top_v1/clk \
 sim:/mc_top_v1/open_empty \
@@ -18,9 +22,10 @@ sim:/mc_top_v1/source_in \
 sim:/mc_top_v1/src_is_last \
 sim:/mc_top_v1/start \
 sim:/mc_top_v1/start \
-sim:/mc_top_v1/open_inst/state_r.read_ptr \
-sim:/mc_top_v1/open_inst/state_r.write_ptr \
-sim:/mc_top_v1/open_inst/state_r.barrier_ptr
+sim:/mc_top_v1/open_is_empty \
+sim:/mc_top_v1/pop_en \
+sim:/mc_top_v1/pop_ctrl_inst/state_c \
+sim:/mc_top_v1/closed_inst/state_c.memory
 
 
 restart -f

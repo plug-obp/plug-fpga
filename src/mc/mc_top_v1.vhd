@@ -41,10 +41,27 @@ architecture mc_top_v1_a of mc_top_v1 is
     --computed signals
     signal ask_next : std_logic;
     signal schedule_en : std_logic;
+
+    -- added signals : 
+    signal open_is_empty : std_logic; 
+    signal pop_en : std_logic; 
+
 begin
 
 closed_is_full <= c_is_full;
 ask_next <= '1' when (c_is_full = '0' and previous_is_added = '1') or start = '1' else '0';
+open_empty <= open_is_empty; 
+
+pop_ctrl_inst : pop_controler 
+    port map (
+        clk         => clk,
+        reset       => reset,
+        reset_n     => reset_n,
+
+        open_is_empty => open_is_empty, 
+        ask_src => ask_src,
+        pop_en => pop_en
+    ); 
 
 
 --TODO: should be renamed to closed_set
@@ -110,14 +127,14 @@ open_inst : open_stream
         reset       => reset,
         reset_n     => reset_n,
 
-        pop_enable  => ask_src,
+        pop_enable  => pop_en,
         push_enable => ask_push,
         data_in     => t_out,
         mark_last   => swap, 
         push_is_done=> is_scheduled,
         data_out    => source_in,
         data_ready  => s_ready,
-        is_empty    => open_empty,
+        is_empty    => open_is_empty,
         is_full     => open_full,
         is_last     => src_is_last, 
         is_swapped  => open_swap

@@ -24,7 +24,7 @@ package model_pkg is
     pure function config2lv(c : T_CONFIGURATION) return std_logic_vector;
     pure function lv2config(lv : std_logic_vector) return T_CONFIGURATION;
 
-    constant AB_PARAMS : T_MODEL_PARAMS := (11, 17, 2, 6);
+    constant AB_PARAMS : T_MODEL_PARAMS := (11, 17, 1, 6);
     -- END ALICE BOB MODEL
 
     -- BEGIN GENERIC EXPLICIT MODEL
@@ -60,7 +60,7 @@ package model_pkg is
             9 => (CS,    true,   RETRY,  false),    -- B111100
            10 => (IDLE,  false,  RETRY,  false)     -- B000100
         ),
-        initial => (0 => 0, 1=>2),
+        initial => (0=>2),
         fanout_base => (0, 2, 4, 6, 7, 8, 10, 12, 13, 14, 15, 17),
         fanout => (
             1, 2,   -- fanout( 0)

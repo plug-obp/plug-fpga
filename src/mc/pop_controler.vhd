@@ -1,9 +1,11 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+    -- Tres crado : clk pour exciter le process de l'automate, 
 
-entity scheduler is 
+
+entity pop_controler is 
     generic (
-        HAS_OUTPUT_REGISTER : boolean := true
+        HAS_OUTPUT_REGISTER : boolean := false
     );
     port (
         clk             : in std_logic;                                 -- clock
@@ -16,7 +18,7 @@ entity scheduler is
     );
 end entity;
 
-architecture a of scheduler is
+architecture a of pop_controler is
 type T_CONTROL is (
         S0, W, ERR
     );
@@ -27,9 +29,9 @@ type T_CONTROL is (
     constant DEFAULT_STATE : T_STATE := (ctrl_state => S0);
 
     type T_OUTPUT is record
-        pop_en : std_logic;
+        pop: std_logic;
     end record;
-    constant DEFAULT_OUTPUT : T_OUTPUT := (pop_en => '0');
+    constant DEFAULT_OUTPUT : T_OUTPUT := (pop => '0');
     
     --next state
     signal state_c : T_STATE :=  DEFAULT_STATE;
@@ -52,7 +54,7 @@ begin
     end if;
 end process;
 
-next_update : process (ask_src, open_is_empty) is
+next_update : process (ask_src, open_is_empty, clk) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current : T_STATE := DEFAULT_STATE;
 begin
@@ -62,16 +64,18 @@ begin
     case current.ctrl_state is
     when S0   =>
         if (ask_src = '1' and open_is_empty = '0') then 
-            the_output.pop_en := '1'; 
+            the_output.pop := '1';  
         elsif (ask_src = '1' and open_is_empty = '1' ) then 
+            the_output.pop := '0'; 
             current.ctrl_state := W; 
         end if; 
     when W =>
-        if ask_src = '1' then 
-            current.ctrl_state := ERR; 
-        elsif open_is_empty = '0' then
-            the_output.pop_en := '1'; 
+        if open_is_empty = '0' then
+            the_output.pop := '1'; 
             current.ctrl_state := S0; 
+        elsif ask_src = '1' then 
+            current.ctrl_state := ERR; 
+            
         end if; 
     when ERR  => null;
     end case;
@@ -95,7 +99,7 @@ out_register : if HAS_OUTPUT_REGISTER generate
             if reset = '1' then
                 reset_output;
             else
-				pop_en <= output_c.pop_en;
+				pop_en <= output_c.pop;
             end if;
         end if;
     end process;
@@ -103,7 +107,8 @@ end generate;
 
 no_out_register : if not HAS_OUTPUT_REGISTER generate
     --non-registered output
-	pop_en <= output_c.pop_en;
+	pop_en <= output_c.pop;
 end generate;
 
 end architecture;
+

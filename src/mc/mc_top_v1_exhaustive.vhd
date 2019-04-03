@@ -19,7 +19,11 @@ configuration mc_top_v1_exhaustive of mc_top_v1 is
         end for;
 
         for open_inst : work.mc_components.open_stream
-            use entity work.pingpong_fifo_b(b);
+            use entity work.fifo(c);
         end for;
+
+        for pop_ctrl_inst : work.mc_components.pop_controler
+            use entity work.pop_controler(a); 
+        end for; 
     end for;
 end configuration;
