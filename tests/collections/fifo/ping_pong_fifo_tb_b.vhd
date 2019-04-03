@@ -160,7 +160,9 @@ begin
       else
         read_element(std_logic_vector(to_unsigned(i+1, DATA_WIDTH)));
       end if;
+
       assert is_full = '0' report "the fifo not full if element removed" severity error;
+      
       if i = CAPACITY - 1 then 
         assert is_last = '1' report "the barrier ptr is wring" severity error;
       else
