@@ -39,7 +39,8 @@ dut : entity work.fifo(d)
 		data_out => data_out,
 		data_ready => data_ready,
 		is_empty => is_empty,
-		is_full	=> is_full
+		is_full	=> is_full,
+		mark_last => '0'
 	);
 
 scenario : process
@@ -126,6 +127,7 @@ scenario : process
 		do_push <= '0';
 		data_in <= (others => '0');
 		wait until data_ready = '1';
+		--wait for CLK_PERIOD/2;
 		assert data_out = B"1111" report "read does not match expected" severity error;
 		wait for CLK_PERIOD/2;
 

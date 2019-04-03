@@ -67,10 +67,10 @@ ctrl_inst : semantics_controler
     );
 
     
-process(clk, reset) is 
+process(clk, reset_n) is 
 begin
-    if reset = '1' then
-        src_was_last_r <= '0'; 
+    if reset_n = '0' then
+        src_was_last_r <= '1'; 
     elsif rising_edge(clk) then 
         if s_ready= '1' then 
         src_was_last_r <= s_is_last; 

@@ -1,5 +1,5 @@
 architecture d of fifo is
-constant HAS_OUTPUT_REGISTER : boolean := false; 
+constant HAS_OUTPUT_REGISTER : boolean := true; 
     constant CAPACITY :integer := 2**ADDRESS_WIDTH;
     type T_MEMORY is array (0 to CAPACITY - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
     type T_STATE is record
@@ -18,8 +18,10 @@ constant HAS_OUTPUT_REGISTER : boolean := false;
         is_empty 		: std_logic; 								-- is_empty is asserted when no elements are in
         is_full			: std_logic; 								-- is_full is asserted when data_count == CAPACITY
         is_swapped 		: std_logic; 
+	pop_is_done : std_logic; 
+
     end record;
-    constant DEFAULT_OUTPUT : T_OUTPUT := ('0', (others => '0'), '0', '0', '0', '0');
+    constant DEFAULT_OUTPUT : T_OUTPUT := ('0', (others => '0'), '0', '0', '0', '0', '0');
     
     --next state
     signal state_c : T_STATE :=  DEFAULT_STATE;
@@ -56,7 +58,7 @@ begin
         o.data_out := c.memory(c.read_ptr);
         c.read_ptr := (c.read_ptr + 1) mod CAPACITY;
         o.data_ready := '1';
-    elsif push_enable = '1' and not full then
+    elsif push_enable = '1' and not c.full then
         c.memory(c.write_ptr) := data_in;
         c.write_ptr := (c.write_ptr + 1) mod CAPACITY;
         c.empty := false;
@@ -69,7 +71,7 @@ begin
         o.data_ready := '1';
         c.full := false;
         o.pop_is_done := '1';
-        if read_ptr = write_ptr then
+        if c.read_ptr = c.write_ptr then
             c.empty := true;
         end if;
     end if;
@@ -119,7 +121,7 @@ no_out_register : if not HAS_OUTPUT_REGISTER generate
     data_out		<= output_c.data_out;
     data_ready		<= output_c.data_ready;
     is_empty 		<= output_c.is_empty;
-    is_full			<= output_c.is_full;
+    is_full		<= output_c.is_full;
     is_swapped 		<= output_c.is_swapped;
 end generate;
 

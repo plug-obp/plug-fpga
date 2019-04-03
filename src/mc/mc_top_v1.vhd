@@ -79,7 +79,7 @@ next_inst : next_stream
         ask_src     => ask_src,
         s_ready     => s_ready,
         s_in        => source_in,
-        s_is_last   => '0', --src_is_last,
+        s_is_last   => src_is_last,
         is_deadlock => is_deadlock
     );
 
