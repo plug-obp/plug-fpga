@@ -1,4 +1,4 @@
-vsim -voptargs=+acc work.mc_top_v1_exhaustive
+vsim -voptargs=+acc work.mc_top_v2_exhaustive
 log * -r
 
 
