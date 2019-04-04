@@ -48,7 +48,7 @@ begin
             end if;
         end process;
 
-    next_update : process (ask_next, t_ready, t_produced, has_next, s_ready, current_state) is
+    next_update : process (clk,ask_next, t_ready, t_produced, has_next, s_ready, current_state) is
         variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
         variable phase_v : T_STATE := S0;
         begin

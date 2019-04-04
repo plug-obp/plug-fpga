@@ -60,7 +60,7 @@ package model_pkg is
             9 => (CS,    true,   RETRY,  false),    -- B111100
            10 => (IDLE,  false,  RETRY,  false)     -- B000100
         ),
-        initial => (0=>2),
+        initial => (0=>0),
         fanout_base => (0, 2, 4, 6, 7, 8, 10, 12, 13, 14, 15, 17),
         fanout => (
             1, 2,   -- fanout( 0)

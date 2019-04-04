@@ -91,12 +91,12 @@ next_inst : next_stream
         next_en     => ask_next,
         target_ready => t_ready,
         target_out   => target,
-        target_is_last => t_is_last, 
+        target_is_last => open, 
 
         ask_src     => ask_src,
         s_ready     => s_ready,
         s_in        => source_in,
-        s_is_last   => src_is_last,
+        s_is_last   => '0', --src_is_last,
         is_deadlock => is_deadlock
     );
 
