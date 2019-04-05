@@ -20,12 +20,11 @@ sim:/mc_top_v1/ask_src \
 sim:/mc_top_v1/s_ready \
 sim:/mc_top_v1/source_in \
 sim:/mc_top_v1/src_is_last \
-sim:/mc_top_v1/start \
-sim:/mc_top_v1/start \
 sim:/mc_top_v1/open_is_empty \
 sim:/mc_top_v1/pop_en \
 sim:/mc_top_v1/pop_ctrl_inst/state_c \
-sim:/mc_top_v1/closed_inst/state_c.memory
+sim:/mc_top_v1/closed_inst/state_c.memory \
+sim:/mc_top_v1/bound_is_reached \
 
 
 restart -f

@@ -1,6 +1,6 @@
 use WORK.ALL;
 configuration mc_top_v2_exhaustive of mc_top_v1 is
-    for mc_top_v1_a
+    for mc_top_v1_b
         for closed_inst : work.mc_components.closed_stream
             use entity work.set(linear_set_c);
         end for;
@@ -28,5 +28,19 @@ configuration mc_top_v2_exhaustive of mc_top_v1 is
         for pop_ctrl_inst : work.mc_components.pop_controler
             use entity work.pop_controler(a); 
         end for; 
-    end for;
+
+	   for term_chker_inst : work.mc_components.terminaison_checker
+            use entity work.terminaison_checker(a); 
+            for a 
+                for bound_chker_inst : work.term_components_pkg.bound_check
+                    use entity work.bound_checker(a); 
+                end for; 
+                for term_inst : work.term_components_pkg.terminaison_fsm_comp
+                    use entity work.terminaison_fsm(a); 
+                end for; 
+		end for; 
+    	end for; 
+   end for; 
+
+       
 end configuration;
