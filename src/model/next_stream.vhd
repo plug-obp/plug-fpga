@@ -127,6 +127,7 @@ ctrl_inst : semantics_controler
         reset_n         => reset_n,
         ask_next        => next_en,
         src_in          => s_in,  -- new 
+        -- src_is_last     => s_is_last, -- new 
         t_ready         => t_ready, 
         t_produced      => t_done,
         has_next        => has_next,

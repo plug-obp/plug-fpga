@@ -197,6 +197,7 @@ entity semantics_controler_v2 is
     reset_n     : in  std_logic;
     ask_next    : in  std_logic;
     src_in      : in  std_logic_vector(CONFIG_WIDTH-1 downto 0);
+    -- src_is_last : in  std_logic; 
     t_ready     : in  std_logic;
     t_produced  : in  std_logic;
     has_next    : in  std_logic;
@@ -326,10 +327,14 @@ begin
       when I_DEADLOCK => null;
       when T_END =>
         if ask_next = '1' and s_ready = '1' then
+          the_output.src_out := src_in; 
+          current.source := src_in; 
+
           the_output.n_en := '1';
           current.ctrl_state         := SERVED_REQ;
         elsif s_ready = '1' then
           current.ctrl_state := WAIT_REQ;
+          current.source := src_in; 
 
         elsif ask_next = '1' then
           current.ctrl_state := WAIT_SRC;
@@ -337,10 +342,13 @@ begin
       when WAIT_SRC =>
         if s_ready = '1' then
           the_output.n_en := '1';
+          the_output.src_out := src_in; 
+          current.source := src_in; 
           current.ctrl_state         := SERVED_REQ;
         end if;
       when WAIT_REQ =>
         if ask_next = '1' then
+          the_output.src_out := current.source; 
           the_output.n_en := '1';
           current.ctrl_state         := SERVED_REQ;
         end if;
@@ -363,6 +371,7 @@ begin
       when T_MORE =>
         if ask_next = '1' then
           the_output.n_en := '1';
+          the_output.src_out := current.source; 
           current.ctrl_state         := SERVED_REQ;
         end if;
     end case;
