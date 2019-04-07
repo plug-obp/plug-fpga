@@ -25,7 +25,7 @@ entity controler is
         start_done : in std_logic;
 
         start : out std_logic;
-        initialize : out std_logic
+        initialize : out std_logic;
         execution_ended : out std_logic;
         is_verified : out std_logic
     );

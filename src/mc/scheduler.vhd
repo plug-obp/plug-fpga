@@ -16,9 +16,12 @@ entity scheduler is
         is_scheduled : in std_logic;
 
         t_in : in std_logic_vector(CONFIG_WIDTH-1 downto 0);
+        t_is_last : in std_logic; 
 
         ask_push : out std_logic;
-        t_out : out std_logic_vector(CONFIG_WIDTH-1 downto 0)
+        t_out : out std_logic_vector(CONFIG_WIDTH-1 downto 0); 
+        mark_last : out std_logic 
+
     );
 end entity;
 
@@ -26,17 +29,24 @@ architecture a of scheduler is
 type T_CONTROL is (
         S0, T_OK, S_OK, ERR
     );
+    type T_CONFIG is record
+        data : std_logic_vector(CONFIG_WIDTH-1 downto 0); 
+        is_last : std_logic; 
+    end record; 
+
     type T_STATE is record
         ctrl_state  : T_CONTROL;
         target      : std_logic_vector(CONFIG_WIDTH-1 downto 0);
+	is_last : std_logic; 
     end record;
-    constant DEFAULT_STATE : T_STATE := (S0, (others => '0'));
+    constant DEFAULT_STATE : T_STATE := (S0, (others => '0'), '0');
 
     type T_OUTPUT is record
         ask_push : std_logic;
         t_out : std_logic_vector(CONFIG_WIDTH-1 downto 0);
+        mark_last : std_logic; 
     end record;
-    constant DEFAULT_OUTPUT : T_OUTPUT := ('0', (others => '0'));
+    constant DEFAULT_OUTPUT : T_OUTPUT := ('0', (others => '0'), '0');
     
     --next state
     signal state_c : T_STATE :=  DEFAULT_STATE;
@@ -59,7 +69,7 @@ begin
     end if;
 end process;
 
-next_update : process (t_ready,  t_in,schedule_en, is_scheduled, state_r) is
+next_update : process (clk, t_ready,  t_in,schedule_en, is_scheduled, state_r) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current : T_STATE := DEFAULT_STATE;
 begin
@@ -71,45 +81,58 @@ begin
         if t_ready = '1' and schedule_en = '1' and is_scheduled = '1' then
             the_output.ask_push := '1';
             the_output.t_out := t_in;
+            the_output.mark_last := t_is_last; 
             current.target := t_in;
+            current.is_last := t_is_last; 
         elsif schedule_en = '1' or is_scheduled = '1' then
             current.ctrl_state := ERR;
         elsif t_ready = '1' and schedule_en = '1' then
             the_output.ask_push := '1';
             the_output.t_out := t_in;
+            the_output.mark_last := t_is_last; 
             current.target := t_in;
+            current.is_last := t_is_last; 
             current.ctrl_state := S_OK;
         elsif t_ready = '1' then
             current.target := t_in;
+            current.is_last := t_is_last; 
             current.ctrl_state := T_OK;
         end if;
     when T_OK => 
         if t_ready = '1' and schedule_en = '1' and is_scheduled = '1' then
             the_output.ask_push := '1';
             the_output.t_out := current.target;
+            the_output.mark_last := current.is_last; 
             current.target := t_in;
+            current.is_last := t_is_last; 
         elsif is_scheduled = '1' and schedule_en = '0' then
             current.ctrl_state := ERR;
         elsif schedule_en = '1' and is_scheduled = '1' then
             the_output.ask_push := '1';
             the_output.t_out := current.target;
+            the_output.mark_last := current.is_last; 
             current.ctrl_state := S0;
         elsif schedule_en = '1' then 
             the_output.ask_push := '1';
             the_output.t_out := current.target;
+            the_output.mark_last := current.is_last; 
             current.ctrl_state := S_OK;
         elsif t_ready = '1' then
             current.target := t_in;
+            current.is_last := t_is_last; 
         end if;
     when S_OK =>
         if t_ready = '1' and schedule_en = '1' and is_scheduled = '1' then
             the_output.ask_push := '1';
             the_output.t_out := current.target;
+            the_output.mark_last := current.is_last; 
             current.target := t_in;
+            current.is_last := t_is_last; 
         elsif (t_ready = '1' or schedule_en = '1') and is_scheduled = '0' then
             current.ctrl_state := ERR;
         elsif t_ready = '1' and is_scheduled = '1' then
             current.target := t_in;
+            current.is_last := t_is_last; 
             current.ctrl_state := T_OK;
         elsif is_scheduled = '1' then
             current.ctrl_state := S0;
@@ -129,6 +152,7 @@ out_register : if HAS_OUTPUT_REGISTER generate
         begin
             ask_push <= '0';
             t_out <= (others => '0');
+             mark_last <= '0'; 
         end; 
     begin
         if reset_n = '0' then
@@ -138,7 +162,8 @@ out_register : if HAS_OUTPUT_REGISTER generate
                 reset_output;
             else
 				ask_push <= output_c.ask_push;
-            t_out <= output_c.t_out;
+                t_out <= output_c.t_out;
+                mark_last <= output_c.mark_last; 
             end if;
         end if;
     end process;
@@ -148,6 +173,7 @@ no_out_register : if not HAS_OUTPUT_REGISTER generate
     --non-registered output
     ask_push <= output_c.ask_push;
     t_out <= output_c.t_out;
+    mark_last <= output_c.mark_last; 
 end generate;
 
 end architecture;

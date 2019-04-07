@@ -41,6 +41,8 @@ begin
     elsif rising_edge(clk) then
         if reset = '1' then
             state_r <= DEFAULT_STATE;
+        elsif (clear_table = '1') then
+                
         else
             state_r <= state_c;
         end if;
@@ -51,9 +53,15 @@ next_update : process (add_enable, data_in, state_r) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current : T_STATE := DEFAULT_STATE;
 begin
-    current := state_r;
-	the_output := DEFAULT_OUTPUT;
+	
+    if clear_table = '1' then 
+		current := DEFAULT_STATE; 
+    else 	    
+        current := state_r; 
+    end if;
 
+	the_output := DEFAULT_OUTPUT;
+    
     case current.ctrl_state is
     when S0 =>
         if add_enable = '1' and not current.is_full then
