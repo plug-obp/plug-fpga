@@ -15,8 +15,8 @@ entity terminaison_checker is
 		t_is_last : in std_logic; 
 		open_is_empty : in std_logic; 
 		open_is_full : in std_logic; 
-        closed_is_full : in std_logic
-
+        closed_is_full : in std_logic; 
+        sim_end : out std_logic
 	);
 end terminaison_checker;
 
@@ -32,7 +32,7 @@ begin
             reset       => reset,
             reset_n     => reset_n,
             enabled => '1', 
-            bound => "00001000", 
+            bound => "00010000", 
             trig => t_is_last, 
             bound_is_reached => bound_is_reached
     ); 
@@ -49,7 +49,7 @@ begin
         closed_full_term => closed_is_full,
         open_full_term => open_is_full, 
         normal_term => '0',
-        sim_end => open,
+        sim_end => sim_end,
         err_code => open
     ); 
 

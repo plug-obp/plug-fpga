@@ -137,7 +137,8 @@ component terminaison_checker is
             t_is_last : in std_logic; 
             open_is_full    : in std_logic; 
             open_is_empty   : in std_logic;
-            closed_is_full : in std_logic
+            closed_is_full : in std_logic; 
+            sim_end : out std_logic
         );
 
 end component; 

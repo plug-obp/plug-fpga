@@ -18,7 +18,8 @@ entity mc_top_v1 is
         is_deadlock        : out std_logic;
         open_empty  : out std_logic;
         open_full : out std_logic;
-        open_swap : out std_logic
+        open_swap : out std_logic; 
+        sim_end : out std_logic
     );
 end entity;
 
@@ -278,7 +279,8 @@ open_inst : open_stream
             t_is_last       => t_is_last,
             open_is_empty   => open_is_empty,
             open_is_full    => open_is_full, 
-            closed_is_full  => c_is_full
+            closed_is_full  => c_is_full,
+            sim_end => sim_end
         ); 
 
 
