@@ -1,3 +1,5 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
 use WORK.model_structure.ALL;
 package explicit_structure is
     -- BEGIN GENERIC EXPLICIT MODEL
