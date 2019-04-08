@@ -1,5 +1,5 @@
 architecture d of fifo is
-constant HAS_OUTPUT_REGISTER : boolean := true; 
+    constant HAS_OUTPUT_REGISTER : boolean := true; 
     constant CAPACITY :integer := 2**ADDRESS_WIDTH;
     type T_MEMORY is array (0 to CAPACITY - 1) of std_logic_vector (DATA_WIDTH - 1 downto 0);
     type T_STATE is record

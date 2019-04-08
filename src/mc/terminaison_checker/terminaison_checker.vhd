@@ -23,6 +23,7 @@ end terminaison_checker;
 
 architecture a of terminaison_checker is
 	signal bound_is_reached : std_logic; 
+    signal normal_term : std_logic; 
 begin
 
 	bound_chker_inst : bound_check
@@ -37,6 +38,17 @@ begin
             bound_is_reached => bound_is_reached
     ); 
 
+    normal_term_chker_inst : normal_term_comp 
+        generic map (HAS_OUTPUT_REGISTER => false)
+        port map (
+            clk => clk, 
+            reset_n => reset_n, 
+            reset => reset,
+            open_empty => open_is_empty, 
+            timeout => "0000000000100000", 
+            normal_term => normal_term
+        ); 
+
     term_inst : terminaison_fsm_comp
     generic map ( 
         HAS_OUTPUT_REGISTER => false
@@ -48,7 +60,7 @@ begin
         bound_reached_term => bound_is_reached,
         closed_full_term => closed_is_full,
         open_full_term => open_is_full, 
-        normal_term => '0',
+        normal_term => normal_term,
         sim_end => sim_end,
         err_code => open
     ); 

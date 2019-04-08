@@ -23,7 +23,7 @@ end terminaison_fsm;
 
 architecture a of terminaison_fsm is
 
- type T_STATE is (S0, S_OPEN_FULL, S_CLOSED_FULL, S_BOUND_REACHED, S_DEFAULT); 
+ type T_STATE is (S0, S_OPEN_FULL, S_CLOSED_FULL, S_BOUND_REACHED, S_NORMAL_TERM, S_DEFAULT); 
 
  constant DEFAULT_STATE : T_STATE := S0; 
 
@@ -70,8 +70,11 @@ begin
       			current := S_CLOSED_FULL; 
       		elsif (open_full_term = '1') then
       			current := S_OPEN_FULL; 
+          elsif normal_term = '1' then 
+            current := S_NORMAL_TERM; 
       		end if;        				
       when S_DEFAULT =>
+      when S_NORMAL_TERM => 
       when S_BOUND_REACHED =>  
       when S_CLOSED_FULL => 
       when S_OPEN_FULL => 

@@ -38,6 +38,9 @@ configuration mc_top_v2_exhaustive of mc_top_v1 is
                 for term_inst : work.term_components_pkg.terminaison_fsm_comp
                     use entity work.terminaison_fsm(a); 
                 end for; 
+                for normal_term_chker_inst : work.term_components_pkg.normal_term_comp
+                    use entity work.normal_terminaison_check(a); 
+                end for; 
 		end for; 
     	end for; 
    end for; 
