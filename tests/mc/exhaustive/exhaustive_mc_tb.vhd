@@ -5,11 +5,11 @@ use work.all;
 
 
 
-entity bounded_mc_tb is 
+entity exhaustive_mc_tb is 
 end entity; 
 
 
-architecture bounded_mc_tb_arc of bounded_mc_tb is
+architecture exhaustive_mc_tb_arch of exhaustive_mc_tb is
 	constant CLK_PERIOD : time := 10 ns; 
 	constant DATA_WIDTH : integer := 6; 
 	constant OPEN_ADDRESS_WIDTH : integer := 4; 
@@ -54,7 +54,7 @@ begin
 end process; 
 
 
-mc_top : configuration work.mc_top_v2_bounded(mc_top_v1_bounded)
+mc_top : configuration work.mc_top_v2_exhaustive(mc_top_v1_exhaustive)
 	generic map (
 		DATA_WIDTH => DATA_WIDTH, 
 		OPEN_ADDRESS_WIDTH => OPEN_ADDRESS_WIDTH, 
@@ -77,4 +77,4 @@ mc_top : configuration work.mc_top_v2_bounded(mc_top_v1_bounded)
 
 
 
-end bounded_mc_tb_arc;
+end exhaustive_mc_tb_arch;
