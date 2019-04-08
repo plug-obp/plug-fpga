@@ -1,29 +1,3 @@
-<<<<<<< HEAD
-add wave -position insertpoint  \
-sim:/mc_top_v1/clk \
-sim:/mc_top_v1/reset \
-sim:/mc_top_v1/reset_n \
-sim:/mc_top_v1/start \
-sim:/mc_top_v1/closed_is_full \
-sim:/mc_top_v1/is_deadlock \
-sim:/mc_top_v1/open_empty \
-sim:/mc_top_v1/open_full \
-sim:/mc_top_v1/open_swap \
-sim:/mc_top_v1/previous_is_added \
-sim:/mc_top_v1/target \
-sim:/mc_top_v1/t_ready \
-sim:/mc_top_v1/c_is_full \
-sim:/mc_top_v1/ask_push \
-sim:/mc_top_v1/t_out \
-sim:/mc_top_v1/target_is_known \
-sim:/mc_top_v1/s_ready \
-sim:/mc_top_v1/is_scheduled \
-sim:/mc_top_v1/ask_src \
-sim:/mc_top_v1/source_in \
-sim:/mc_top_v1/ask_next \
-sim:/mc_top_v1/schedule_en \
-sim:/mc_top_v1/closed_inst/state_c.memory
-=======
 vsim -voptargs=+acc work.mc_top_v2_exhaustive
 log * -r
 
@@ -51,8 +25,6 @@ sim:/mc_top_v1/pop_en \
 sim:/mc_top_v1/pop_ctrl_inst/state_c \
 sim:/mc_top_v1/closed_inst/state_c.memory \
 sim:/mc_top_v1/bound_is_reached \
-
->>>>>>> dev_emilien
 
 restart -f
 force -freeze sim:/mc_top_v1/clk 1 0, 0 {50 ns} -r 100
