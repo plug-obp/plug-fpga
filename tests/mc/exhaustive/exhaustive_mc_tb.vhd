@@ -18,8 +18,6 @@ architecture exhaustive_mc_tb_arch of exhaustive_mc_tb is
 	signal reset : std_logic := '0'; 
 	signal reset_n : std_logic := '0'; 
 	signal start : std_logic; 
-	signal is_deadlock : std_logic; 
-	signal open_empty, open_full, open_swap : std_logic; 
 	signal simulation_end : std_logic := '0'; 
 
 
@@ -65,11 +63,6 @@ mc_top : configuration work.mc_top_v2_exhaustive(mc_top_v1_exhaustive)
 		reset => reset, 
 		reset_n => reset_n, 
 		start => start, 
-		closed_full => open, 
-		is_deadlock => open, 
-		open_empty => open, 
-		open_full => open, 
-		open_swap => open, 
 		sim_end => simulation_end
 	); 
 

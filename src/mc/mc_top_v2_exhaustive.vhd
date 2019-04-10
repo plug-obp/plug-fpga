@@ -1,6 +1,6 @@
 use WORK.ALL;
-configuration mc_top_v2_bounded of mc_top_v1 is
-    for mc_top_v1_bounded
+configuration mc_top_v2_bounded of mc_top_v2 is
+    for mc_top_v2_a
         for closed_inst : work.mc_components.closed_stream
             use entity work.set(linear_set_c);
         end for;
@@ -46,8 +46,9 @@ configuration mc_top_v2_bounded of mc_top_v1 is
    end for; 
 end configuration;
 
-configuration mc_top_v2_exhaustive of mc_top_v1 is 
-    for mc_top_v1_exhaustive
+
+configuration mc_top_v2_exhaustive of mc_top_v2 is 
+    for mc_top_v2_a
         for closed_inst : work.mc_components.closed_stream
             use entity work.set(linear_set_c);
         end for;

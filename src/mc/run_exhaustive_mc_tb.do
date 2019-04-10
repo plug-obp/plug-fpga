@@ -19,7 +19,6 @@ sim:/exhaustive_mc_tb/mc_top/is_scheduled \
 sim:/exhaustive_mc_tb/mc_top/ask_src \
 sim:/exhaustive_mc_tb/mc_top/s_ready \
 sim:/exhaustive_mc_tb/mc_top/source_in \
-sim:/exhaustive_mc_tb/mc_top/src_is_last \
 sim:/exhaustive_mc_tb/mc_top/open_is_empty \
 sim:/exhaustive_mc_tb/mc_top/pop_en \
 sim:/exhaustive_mc_tb/mc_top/pop_ctrl_inst/state_c \

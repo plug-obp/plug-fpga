@@ -18,8 +18,6 @@ architecture bounded_mc_tb_arc of bounded_mc_tb is
 	signal reset : std_logic := '0'; 
 	signal reset_n : std_logic := '0'; 
 	signal start : std_logic; 
-	signal is_deadlock : std_logic; 
-	signal open_empty, open_full, open_swap : std_logic; 
 	signal simulation_end : std_logic := '0'; 
 
 
@@ -54,7 +52,7 @@ begin
 end process; 
 
 
-mc_top : configuration work.mc_top_v2_bounded(mc_top_v1_bounded)
+mc_top : configuration work.mc_top_v2_bounded(mc_top_v2)
 	generic map (
 		DATA_WIDTH => DATA_WIDTH, 
 		OPEN_ADDRESS_WIDTH => OPEN_ADDRESS_WIDTH, 
@@ -65,11 +63,6 @@ mc_top : configuration work.mc_top_v2_bounded(mc_top_v1_bounded)
 		reset => reset, 
 		reset_n => reset_n, 
 		start => start, 
-		closed_full => open, 
-		is_deadlock => open, 
-		open_empty => open, 
-		open_full => open, 
-		open_swap => open, 
 		sim_end => simulation_end
 	); 
 
