@@ -1,5 +1,4 @@
 vsim -voptargs=+acc work.exhaustive_mc_tb
-log * -r 
 
 
 add wave -position insertpoint \

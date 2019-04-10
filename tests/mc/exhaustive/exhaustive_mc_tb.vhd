@@ -1,19 +1,19 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;  
-use work.all; 
-
 
 
 entity exhaustive_mc_tb is 
 end entity; 
 
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;  
+use work.all; 
+use work.model_structure.all; 
 
 architecture exhaustive_mc_tb_arch of exhaustive_mc_tb is
 	constant CLK_PERIOD : time := 10 ns; 
-	constant DATA_WIDTH : integer := 6; 
-	constant OPEN_ADDRESS_WIDTH : integer := 4; 
-	constant CLOSED_ADDRESS_WIDTH : integer := 4; 
+	constant DATA_WIDTH : integer := CONFIG_WIDTH; 
+	constant OPEN_ADDRESS_WIDTH : integer := 12; 
+	constant CLOSED_ADDRESS_WIDTH : integer := 12; 
 	signal clk : std_logic := '0';
 	signal reset : std_logic := '0'; 
 	signal reset_n : std_logic := '0'; 
@@ -52,7 +52,7 @@ begin
 end process; 
 
 
-mc_top : configuration work.mc_top_v2_exhaustive(mc_top_v1_exhaustive)
+mc_top : configuration work.mc_top_v2_exhaustive(mc_top_v2_a)
 	generic map (
 		DATA_WIDTH => DATA_WIDTH, 
 		OPEN_ADDRESS_WIDTH => OPEN_ADDRESS_WIDTH, 

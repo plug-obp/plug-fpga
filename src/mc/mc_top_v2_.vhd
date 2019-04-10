@@ -1,9 +1,10 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use work.model_structure.all; 
 
 entity mc_top_v2 is 
     generic (
-        DATA_WIDTH              : integer := 6;
+        DATA_WIDTH              : integer := CONFIG_WIDTH;
         OPEN_ADDRESS_WIDTH      : integer := 4;
         CLOSED_ADDRESS_WIDTH    : integer := 4
     );

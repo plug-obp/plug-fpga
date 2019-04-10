@@ -121,6 +121,7 @@ semantics_inst : semantics
     );
 
 ctrl_inst : semantics_controler
+    generic map (CONFIG_WIDTH => CONFIG_WIDTH)
     port map (
         clk             => clk,
         reset           => reset,
