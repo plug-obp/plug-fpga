@@ -55,7 +55,7 @@ begin
     end if;
   end process;
 
-  next_update : process (enabled, trig, state_r) is
+  next_update : process (bound, enabled, trig, state_r) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current    : T_STATE  := DEFAULT_STATE;
   begin

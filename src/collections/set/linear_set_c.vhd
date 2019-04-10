@@ -49,7 +49,7 @@ begin
     end if;
 end process;
 
-next_update : process (add_enable, data_in, state_r) is
+next_update : process (add_enable, data_in, clear_table, state_r) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current : T_STATE := DEFAULT_STATE;
 begin

@@ -60,7 +60,7 @@ begin
     end if;
   end process;
 
-  next_update : process (open_empty, state_r) is
+  next_update : process (timeout, open_empty, state_r) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current    : T_STATE  := DEFAULT_STATE;
   begin

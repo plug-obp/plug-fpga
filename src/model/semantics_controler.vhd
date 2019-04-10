@@ -281,7 +281,7 @@ begin
     end if;
   end process;
 
-  next_update : process (ask_next, t_ready, t_produced, has_next, s_ready, state_r) is
+  next_update : process (src_in, ask_next, t_ready, t_produced, has_next, s_ready, state_r) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current    : T_STATE  := DEFAULT_STATE;
   begin

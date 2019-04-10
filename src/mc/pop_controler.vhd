@@ -54,7 +54,7 @@ begin
     end if;
 end process;
 
-next_update : process (ask_src, open_is_empty, clk) is
+next_update : process (ask_src, open_is_empty, state_r) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current : T_STATE := DEFAULT_STATE;
 begin
