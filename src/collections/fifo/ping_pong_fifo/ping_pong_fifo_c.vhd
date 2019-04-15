@@ -1,6 +1,8 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use work.Config_type.all;
+ 
+ -- Old, not working properly. 
 
 
 entity pingpong_fifo_c is
