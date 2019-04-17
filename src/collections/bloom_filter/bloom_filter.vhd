@@ -49,6 +49,7 @@ architecture bloom_filter of set is
   signal r_addr   : std_logic_vector(ADDRESS_WIDTH-1 downto 0) := (others => '0');
   signal r_ret    : std_logic                                := '0';
   signal cont_ret : std_logic;
+  signal is_done_s : std_logic; 
 
 begin  -- architecture bloom_filter
 
@@ -79,13 +80,13 @@ begin  -- architecture bloom_filter
       w_en   => w_en,
       w_addr => w_key(ADDRESS_WIDTH-1 downto 0),
       W_ok   => w_ok_s,
-      w_done => is_done, 
+      w_done => is_done_s, 
       r_addr => (others => '0'),
       r_en   => '0',
       r_ret  => open);
 
-    is_in <= '1' when w_ok_s = '0' and is_done = '1' else '0'; 
-
-  is_full <= '0'; 
+    is_in <= '1' when w_ok_s = '0' and is_done_s = '1' else '0'; 
+    is_done <= is_done_s; 
+    is_full <= '0'; 
 
 end architecture bloom_filter;

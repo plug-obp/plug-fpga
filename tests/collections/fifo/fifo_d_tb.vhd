@@ -34,6 +34,7 @@ dut : entity work.fifo(d)
 		reset => rst,
 		reset_n => rst_n,
 		pop_enable => do_pop,
+		is_pingpong => '0', 
 		push_enable	=> do_push,
 		data_in => data_in,
 		data_out => data_out,
