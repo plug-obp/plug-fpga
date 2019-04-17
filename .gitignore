@@ -7,3 +7,6 @@ src/model/explicit/models/adding_2.vhd
 src/model/explicit/models/bakery_1.vhd
 src/model/explicit/models/bakery_2.vhd
 src/model/explicit/models/bakery_3.vhd
+ghdl/Makefile
+src/collections/fifo/wrapper/fifo_wrapper.vhd~
+src/mc/#mc_top_v1.vhd#
