@@ -110,7 +110,7 @@ begin
 	reg_file_isFilled : reg_file_ssdpRAM_cmp
 		generic map(
 			MEM_TYPE => "block", 
-			DATA_WIDTH => DATA_WIDTH, 
+			DATA_WIDTH => 1, 
 			ADDR_WIDTH => ADDR_WIDTH
 		)
 		port map(
