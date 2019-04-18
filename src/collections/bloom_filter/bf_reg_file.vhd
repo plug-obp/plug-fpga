@@ -35,7 +35,7 @@ begin  -- architecture reg_file
   begin  -- process
     if reset_n = '0' then                 -- asynchronous reset (active low)
       array_reg <= (others => '0');
-      val       <= '0';
+--      val       <= '0';
       r_ret <= '0';
       w_ok <= '0'; 
       
