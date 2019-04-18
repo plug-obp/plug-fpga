@@ -4,15 +4,18 @@ use IEEE.STD_LOGIC_1164.all;
 
 
 architecture a of hash_table_controler is
-  constant HAS_OUTPUT_REGISTER : boolean := false;
   
+  constant HAS_OUTPUT_REGISTER : boolean := false;
+  constant CAPACITY : integer := 2**ADDR_WIDTH; 
+
   type T_SELECT is (isIn, conf); 
 
-  type T_CONTROL is (S0, WAIT_HASH, S1 )
+  type T_CONTROL is (S0, S_WAIT_HASH, S_READ_NEXT, S_WAIT_READ, S_WAIT_W_ACK )
   type T_STATE is record
     ctrl_state  : T_CONTROL; 
-    hash : std_logic_vector(HASH_WIDTH-1 downto 0); 
-
+    hash : std_logic_vector(ADDR_WIDTH-1 downto 0); 
+    config : std_logic_vector(DATA_WIDTH -1 downto 0); 
+    index : std_logic_vector(ADDR_WIDTH-1 downto 0); 
   end record;
   constant DEFAULT_STATE : T_STATE := ((others => (others => '0')), 0, 0, 0, false, true);
 
@@ -45,7 +48,7 @@ architecture a of hash_table_controler is
 
 begin
 
-  procedure read_at_addr
+  procedure readAt
    (signal addr : in std_logic_vector(ADDR_WIDTH-1 downto 0); 
     variable o : inout T_OUTPUT) is 
   begin
@@ -53,7 +56,7 @@ begin
         o.rf_p_w_addr :=  addr; 
         o.rf_c_r := '1'; 
         o.rf_c_w_addr :=  addr; 
-  end read_at_addr;
+  end readAt;
 
 
 
@@ -79,23 +82,55 @@ begin
     o := DEFAULT_OUTPUT;
 
       case(c.ctrl_state) is
-        when S0 => 
-
+        when S0 =>
           if add_enable = '1' then 
-            c.ctrl_state := WAIT_HASH; 
+            c.config := data_in;
+            c.ctrl_state := S_WAIT_HASH; 
           end if; 
+        when S_WAIT_HASH => 
+          if hash_ok = '1' then 
+            c.hash := (ADDR_WIDTH-1 downto 0 => hash(ADDR_WIDTH-1 downto 0, others => '0'); 
+            c.index := c.hash; 
+            c.ctrl_state := S_READ_NEXT; 
+          end if; 
+        when S_READ_NEXT =>
+          readAt(c.index); 
+          c.ctrl_state := S_WAIT_READ; 
+        when S_WAIT_READ => 
+          if (rf_c_r_ok = '1' and rf_p_r_ok = '1' ) then 
+            if rf_p_r_data = '1' then 
+              if (c.index + 1) mod CAPACITY = c.hash   then 
+                o.isFull := '1';
+                o.isDone = '0'; 
+                if rf_c_r_data = c.config then 
+                  o.isIn = '1';  
+                else 
+                  o.isIn = '0'; 
+                end if; 
+                c.ctrl_state := S0; 
+              else
+                c.index := (c.index+1) mod CAPACITY; 
+                if rf_c_r_data = c.config then 
+                  o.isIn := '1'; 
+                  o.isFull := '0'; 
+                  o.isDone := '1'; 
+                else 
+                  c.ctrl_state := S_READ_NEXT
+                end if; 
+              end if; 
+            else 
+              writeAt(c.index, c.config); 
+              c.ctrl_state := S_WAIT_W_ACK; 
+              o.isDone := '1'; 
+              o.isIn := '0'; 
+              if (c.index +1) mod CAPACITY = c.hash then 
+                o.isFull := '1'; 
+              else 
+                o.isFull := '0'; 
+              end if; 
 
-        when WAIT_HASH => 
-            if (hash_ok = '1') then 
-              c.hash := hash; 
-              o = read_at_addr(hash, o); 
-              c.ctrl_state = S1; 
             end if; 
-        when S1 => 
-          ;
-        
-        when others =>
-          null;
+          end if; 
       end case;
 
     
