@@ -62,7 +62,7 @@ mc_top : configuration work.mc_top_v2_bounded(mc_top_v2)
 		clk => clk, 
 		reset => reset, 
 		reset_n => reset_n, 
-		is_bounded => '0',
+		is_bounded => '1',
 		start => start, 
 		sim_end => simulation_end
 	); 

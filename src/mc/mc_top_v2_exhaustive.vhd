@@ -177,7 +177,21 @@ use work.model_structure.all;
 configuration mc_top_v2_exhaustive_hashmap of mc_top_v2 is 
     for mc_top_v2_a
         for closed_inst : work.mc_components.closed_stream
-            use entity work.set(linear_probe_set_d);
+            use entity work.set(hash_table_a); 
+		for hash_table_a 
+            for hash_funct : work.hash_table_components.hash_block_cmp
+                use entity work.simple_hash(a); 
+            end for; 
+            for controler : work.hash_table_components.controler_cmp
+                use entity work.hash_table_controler(a); 
+            end for; 
+            for reg_file_configs : work.hash_table_components.reg_file_ssdpRAM_cmp
+                use entity work.reg_file_ssdpRAM(rtl); 
+            end for; 
+            for reg_file_isFilled : work.hash_table_components.reg_file_ssdpRAM_cmp
+                use entity work.reg_file_ssdpRAM(rtl); 
+            end for; 
+		end for; 
         end for;
 
         for next_inst : work.mc_components.next_stream
@@ -201,8 +215,8 @@ configuration mc_top_v2_exhaustive_hashmap of mc_top_v2 is
         end for;
 
         for open_inst : work.mc_components.open_stream
-            use entity work.fifo(d)
-		generic map(ADDRESS_WIDTH => 5, DATA_WIDTH => CONFIG_WIDTH); 
+            use entity work.pingpong_fifo(d)
+        generic map(ADDRESS_WIDTH => 5, DATA_WIDTH => CONFIG_WIDTH); 
         end for;
 
         for pop_ctrl_inst : work.mc_components.pop_controler

@@ -6,7 +6,7 @@ entity mc_top_v2 is
     generic (
         DATA_WIDTH              : integer := CONFIG_WIDTH;
         OPEN_ADDRESS_WIDTH      : integer := 6;
-        CLOSED_ADDRESS_WIDTH    : integer := 6
+        CLOSED_ADDRESS_WIDTH    : integer := 4
     );
     port (
         clk             : in  std_logic;                                 -- clock

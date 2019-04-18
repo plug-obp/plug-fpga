@@ -52,7 +52,7 @@ begin
 end process; 
 
 
-mc_top : configuration work.mc_top_v2_exhaustive(mc_top_v2_a)
+mc_top : configuration work.mc_top_v2_bounded(mc_top_v2_a)
 	generic map (
 		DATA_WIDTH => DATA_WIDTH, 
 		OPEN_ADDRESS_WIDTH => OPEN_ADDRESS_WIDTH, 

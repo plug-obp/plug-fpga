@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 entity simple_hash is
 
   generic (
-    HAS_OUTPUT_REGISTER : boolean := false; 
+    HAS_OUTPUT_REGISTER : boolean := true; 
     DATA_WIDTH          : natural := 416;
     HASH_WIDTH          : natural := 16 ;
     WORD_WIDTH          : natural := 8);
@@ -34,11 +34,12 @@ architecture a of simple_hash is
     );
     
     -- constant word_count : integer := DATA_WIDTH / HASH_WIDTH + 1; 
-
+    --constant log_data_width : integer := integer(ceil(log2(real(w_par))));
 
     type T_STATE is record
         ctrl_state      : T_CONTROL;
-        data            : std_logic_vector(DATA_WIDTH + ( DATA_WIDTH mod WORD_WIDTH) downto 0);
+        --data            : std_logic_vector(DATA_WIDTH + ( DATA_WIDTH mod WORD_WIDTH) downto 0);
+        data            : std_logic_vector(8*((DATA_WIDTH / WORD_WIDTH) +1 )-1 downto 0);
         idx             : integer; 
         hash            : std_logic_vector(HASH_WIDTH -1 downto 0); 
     end record;
@@ -84,12 +85,22 @@ begin
     when S0   =>
         if hash_en = '1' then 
             current.idx         := 0; 
-            current.hash        := "0000000000000111"; --(current_word'high downto 0 => current_word, others => '0');
+            current.hash        := (2 downto 0 => '1', others => '0');  --(current_word'high downto 0 => current_word, others => '0');
             current.data        := ( DATA_WIDTH -1 downto 0 => data, others => '0');  
 --            if DATA_WIDTH < HASH_WIDTH then 
 --                current.ctrl_state := FT; 
 --            else 
-            current.ctrl_state  := S1; 
+            current_word := current.data(7 downto 0);     
+            --current.hash    := shift_left(current.hash,5) - current.hash + current_word;  -- VHDL 2008 
+            current.idx := current.idx +1; 
+
+            if (current.idx >= DATA_WIDTH / WORD_WIDTH) then 
+                the_output.hash := shift_left(current.hash,5) - current.hash + current_word; 
+                the_output.hash_ok := '1'; 
+                
+            else 
+                current.ctrl_state  := S1; 
+            end if; 
             -- end if; 
 
         end if; 
@@ -105,7 +116,6 @@ begin
             the_output.hash_ok  := '1'; 
             current.ctrl_state  := S0; 
         else 
-    
             current.idx     := current.idx +1; 
         end if; 
   --  when FT => 
