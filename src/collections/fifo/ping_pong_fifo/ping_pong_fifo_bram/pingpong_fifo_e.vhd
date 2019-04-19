@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use work.open_components.all; 
 
 
-architecture a of stack is
+architecture e of pingpong_fifo is
 
 	signal rf_c_r		 	: std_logic; 
 	signal rf_c_w		 	: std_logic; 

@@ -4,7 +4,7 @@ use ieee.numeric_std_unsigned.all;
 use ieee.numeric_std.all; 
 
 
-architecture a of stack_controler is
+architecture stack_a of open_controler is
   
   --constant HAS_OUTPUT_REGISTER : boolean := false;
   constant CAPACITY : integer := 2**ADDR_WIDTH; 

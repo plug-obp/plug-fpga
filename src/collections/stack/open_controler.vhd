@@ -1,7 +1,7 @@
 	library ieee; 
 	use ieee.std_logic_1164.all; 
 	
-	entity stack_controler is 
+	entity open_controler is 
 		generic (
 			HAS_OUTPUT_REGISTER : boolean := true; 
 			ADDR_WIDTH : integer := 8; 

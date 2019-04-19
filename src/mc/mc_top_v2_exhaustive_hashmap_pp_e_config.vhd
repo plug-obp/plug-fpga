@@ -1,6 +1,6 @@
 use work.model_structure.all; 
 
-configuration mc_top_v2_exhaustive_dfs of mc_top_v2 is 
+configuration mc_top_v2_exhaustive_hasmap_pp_e of mc_top_v2 is 
     for mc_top_v2_a
         for closed_inst : work.mc_components.closed_stream
             use entity work.set(hash_table_a); 
@@ -41,11 +41,11 @@ configuration mc_top_v2_exhaustive_dfs of mc_top_v2 is
         end for;
 
         for open_inst : work.mc_components.open_stream
-            use entity work.stack(a)
+            use entity work.pingpong_fifo(e)
                 generic map(ADDRESS_WIDTH => 5, DATA_WIDTH => CONFIG_WIDTH); 
-                for a 
+                for e 
                     for controler : work.open_components.controler_cmp
-                        use entity work.open_controler(stack_a); 
+                        use entity work.open_controler(pingpong_fifo_controler_a); 
                     end for; 
                     for reg_file_configs : work.open_components.reg_file_ssdpRAM_cmp
                         use entity work.reg_file_ssdpRAM(rtl); 
