@@ -73,7 +73,7 @@ begin
     end if;
 end process;
 
-next_update : process (hash_en, state_r) is
+next_update : process (hash_en, data, state_r) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current : T_STATE := DEFAULT_STATE;
     variable current_word : std_logic_vector(WORD_WIDTH -1 downto 0); 

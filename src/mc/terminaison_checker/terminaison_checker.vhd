@@ -45,7 +45,7 @@ begin
             reset_n => reset_n, 
             reset => reset,
             open_empty => open_is_empty, 
-            timeout => "0000000100000000", 
+            timeout => "0000100000000000", 
             normal_term => normal_term
         ); 
 
