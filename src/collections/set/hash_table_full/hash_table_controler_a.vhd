@@ -93,7 +93,7 @@ begin
     end if;
   end process;
 
-  next_update : process (add_enable, hash_ok,rf_c_r_ok, rf_p_r_ok , state_r) is
+  next_update : process (add_enable, hash_ok,rf_c_r_ok, rf_p_r_ok, data, hash, rf_p_r_data, rf_c_r_data , state_r) is
     variable o : T_OUTPUT := DEFAULT_OUTPUT;
     variable c : T_STATE  := DEFAULT_STATE;
   begin

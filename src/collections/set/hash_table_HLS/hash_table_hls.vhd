@@ -503,7 +503,7 @@ begin
         elsif (((tmp_5_fu_252_p2 = ap_const_lv1_1) and (ap_const_logic_1 = ap_CS_fsm_state5))) then 
             mem_config_address0 <= tmp_2_reg_303(12 - 1 downto 0);
         else 
-            mem_config_address0 <= "XXXXXXXXXXXX";
+            mem_config_address0 <= "000000000000";--"XXXXXXXXXXXX";
         end if; 
     end process;
 
@@ -535,7 +535,7 @@ begin
         elsif ((ap_const_logic_1 = ap_CS_fsm_state4)) then 
             mem_isFilled_address0 <= tmp_2_fu_239_p1(12 - 1 downto 0);
         else 
-            mem_isFilled_address0 <= "XXXXXXXXXXXX";
+            mem_isFilled_address0 <= "000000000000";--"XXXXXXXXXXXX";
         end if; 
     end process;
 
