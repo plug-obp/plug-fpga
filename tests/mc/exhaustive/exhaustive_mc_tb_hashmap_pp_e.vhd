@@ -62,7 +62,7 @@ mc_top : configuration work.mc_top_v2_exhaustive_hasmap_pp_e(mc_top_v2_a)
 		clk => clk, 
 		reset => reset, 
 		reset_n => reset_n,
-		is_bounded => '1', 
+		is_bounded => '0', 
 		start => start, 
 		sim_end => simulation_end
 	); 

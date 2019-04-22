@@ -45,7 +45,7 @@ configuration mc_top_v2_exhaustive_hasmap_pp_e of mc_top_v2 is
                 generic map(ADDRESS_WIDTH => 5, DATA_WIDTH => CONFIG_WIDTH); 
                 for e 
                     for controler : work.open_components.controler_cmp
-                        use entity work.open_controler(pingpong_fifo_controler_a); 
+                        use entity work.open_controler(pingpong_fifo_controler_b); 
                     end for; 
                     for reg_file_configs : work.open_components.reg_file_ssdpRAM_cmp
                         use entity work.reg_file_ssdpRAM(rtl); 

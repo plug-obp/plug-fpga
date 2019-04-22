@@ -60,6 +60,7 @@ begin
 		port map(
 			clk => clk, 
 			reset => reset_n, 
+			clear => '0', 
 			
 			we 		=> rf_c_w,
 			addr_w 	=> rf_c_w_addr, 

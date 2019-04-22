@@ -22,23 +22,24 @@ architecture a of hash_table_controler is
   constant DEFAULT_STATE : T_STATE := (S0, (others => '0'), (others => '0'), (others => '0'));
 
   type T_OUTPUT is record
-    
+
+    rf_c_clear  : std_logic; 
     rf_c_r      : std_logic; 
     rf_c_r_addr : std_logic_vector(ADDR_WIDTH -1 downto 0);  
     rf_c_w      : std_logic; 
     rf_c_w_data : std_logic_vector(DATA_WIDTH -1 downto 0);  
     rf_c_w_addr : std_logic_vector(ADDR_WIDTH -1 downto 0);  
+    rf_p_clear  : std_logic; 
     rf_p_r      : std_logic; 
     rf_p_r_addr : std_logic_vector(ADDR_WIDTH -1 downto 0);  
     rf_p_w      : std_logic; 
     rf_p_w_data : std_logic_vector(0 downto 0);  
     rf_p_w_addr : std_logic_vector(ADDR_WIDTH -1 downto 0);  
-    
     isIn        : std_logic; 
     isFull      : std_logic; 
     isDone      : std_logic; 
   end record;
-  constant DEFAULT_OUTPUT : T_OUTPUT :=  ('0', (others => '0'), '0', (others => '0'), (others => '0'), '0', (others => '0'), '0', ( others => '0'), ( others => '0'), '0', '0', '0');
+  constant DEFAULT_OUTPUT : T_OUTPUT :=  ( '0', '0', (others =>'0'), '0', (others => '0'), (others => '0'), '0', '0', (others => '0'), '0', (others => '0'), (others => '0'), '0', '0', '0');
 
 
   --next state
@@ -102,7 +103,12 @@ begin
 
       case(c.ctrl_state) is
         when S0 =>
-          if add_enable = '1' then 
+          if add_enable = '1' and clear_table = '1' then 
+            c.config := data; 
+            c.ctrl_state := S_WAIT_HASH; 
+            o.rf_c_clear := '1'; 
+            o.rf_p_clear := '1'; 
+          elsif add_enable = '1' then 
             c.config := data;
             c.ctrl_state := S_WAIT_HASH; 
           end if; 
@@ -168,19 +174,21 @@ begin
     registered_output : process (clk, reset_n) is
       procedure reset_output is
       begin
-        rf_c_r      <= '0'; 
-        rf_c_r_addr <= (others => '0'); 
-        rf_c_w      <= '0'; 
-        rf_c_w_data <= (others => '0'); 
-        rf_c_w_addr <= (others => '0'); 
-        rf_p_r      <= '0';
-        rf_p_r_addr <= (others => '0'); 
-        rf_p_w      <= '0'; 
-        rf_p_w_data <= ( others => '0'); 
-        rf_p_w_addr <= ( others => '0'); 
-        isIn        <= '0'; 
-        isFull      <= '0'; 
-        isDone      <= '0'; 
+        rf_c_clear    <= '0'; 
+        rf_c_r        <= '0'; 
+        rf_c_r_addr   <= (others =>'0'); 
+        rf_c_w        <= '0'; 
+        rf_c_w_data   <= (others => '0'); 
+        rf_c_w_addr   <= (others => '0'); 
+        rf_p_clear    <= '0'; 
+        rf_p_r        <= '0'; 
+        rf_p_r_addr   <= (others => '0'); 
+        rf_p_w        <= '0'; 
+        rf_p_w_data   <= (others => '0'); 
+        rf_p_w_addr   <= (others => '0'); 
+        isIn          <= '0'; 
+        isFull        <= '0'; 
+        isDone        <= '0'; 
 
       end;
     begin
@@ -190,11 +198,13 @@ begin
         if reset = '1' then
           reset_output;
         else
+          rf_c_clear <= output_c.rf_c_clear; 
           rf_c_r <= output_c.rf_c_r; 
           rf_c_r_addr <= output_c.rf_c_r_addr; 
           rf_c_w <= output_c.rf_c_w; 
           rf_c_w_data <= output_c.rf_c_w_data; 
           rf_c_w_addr <= output_c.rf_c_w_addr; 
+          rf_p_clear <= output_c.rf_p_clear; 
           rf_p_r <= output_c.rf_p_r; 
           rf_p_r_addr <= output_c.rf_p_r_addr; 
           rf_p_w <= output_c.rf_p_w; 
@@ -205,7 +215,6 @@ begin
           isDone <= output_c.isDone; 
 
 
-
         end if;
       end if;
     end process;
@@ -213,11 +222,13 @@ begin
 
   no_out_register : if not HAS_OUTPUT_REGISTER generate
     --non-registered output
+        rf_c_clear <= output_c.rf_c_clear; 
         rf_c_r <= output_c.rf_c_r; 
         rf_c_r_addr <= output_c.rf_c_r_addr; 
         rf_c_w <= output_c.rf_c_w; 
         rf_c_w_data <= output_c.rf_c_w_data; 
         rf_c_w_addr <= output_c.rf_c_w_addr; 
+        rf_p_clear <= output_c.rf_p_clear; 
         rf_p_r <= output_c.rf_p_r; 
         rf_p_r_addr <= output_c.rf_p_r_addr; 
         rf_p_w <= output_c.rf_p_w; 

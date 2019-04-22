@@ -1,11 +1,11 @@
 vsim -voptargs=+acc work.exhaustive_mc_tb_hashmap_pp_e
 log * -r 
-run -all 
+run -all
 
 
 add wave -position insertpoint \
 sim:/exhaustive_mc_tb_hashmap_pp_e/* \
-sim:/exhaustive_mc_tb_hashmap_pp_e/mc_top/open_empty \
+
 sim:/exhaustive_mc_tb_hashmap_pp_e/mc_top/start \
 sim:/exhaustive_mc_tb_hashmap_pp_e/mc_top/next_inst/semantics_inst/state_r \
 sim:/exhaustive_mc_tb_hashmap_pp_e/mc_top/ask_next \
@@ -23,7 +23,6 @@ sim:/exhaustive_mc_tb_hashmap_pp_e/mc_top/source_in \
 sim:/exhaustive_mc_tb_hashmap_pp_e/mc_top/open_is_empty \
 sim:/exhaustive_mc_tb_hashmap_pp_e/mc_top/pop_en \
 sim:/exhaustive_mc_tb_hashmap_pp_e/mc_top/pop_ctrl_inst/state_c \
-sim:/exhaustive_mc_tb_hashmap_pp_e/mc_top/closed_inst/state_c.memory \
 
 add wave -position insertpoint  \
 sim:/exhaustive_mc_tb_hashmap_pp_e/mc_top/closed_inst/add_enable

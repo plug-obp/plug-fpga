@@ -12,6 +12,7 @@ entity reg_file_ssdpRAM is
   port (
     clk           : in std_logic;
     reset         : in std_logic; 
+    clear         : in std_logic; 
 
     we            : in std_logic; 
     addr_w        : in std_logic_vector(ADDR_WIDTH-1 downto 0); 
@@ -40,7 +41,9 @@ begin
   begin
 
     if (rising_edge(clk)) then
-      if (reset = '0') then 
+      if (reset = '0' ) then 
+        mem <= (others => (others => '0')); 
+      elsif (clear = '1') then
         mem <= (others => (others => '0')); 
       elsif (we = '1' and re = '1') then 
         mem(to_integer(unsigned(addr_w))) <= d_in;

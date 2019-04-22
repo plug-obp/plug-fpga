@@ -1,6 +1,6 @@
 vsim -voptargs=+acc work.exhaustive_mc_tb_dfs
 log * -r 
-run 20 us
+run 20 ms
 
 
 add wave -position insertpoint \

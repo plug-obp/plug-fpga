@@ -52,6 +52,7 @@ package open_components is
 	  port (
 	    clk           : in std_logic;
 	    reset         : in std_logic; 
+	    clear 		  : in std_logic; 
 
 	    we            : in std_logic; 
 	    addr_w        : in std_logic_vector(ADDR_WIDTH-1 downto 0); 
