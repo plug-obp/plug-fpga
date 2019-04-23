@@ -1,6 +1,6 @@
 
 
-entity exhaustive_mc_tb_dfs is 
+entity mc_top_exh_h_dfs_tb is 
 end entity; 
 
 library ieee;
@@ -9,7 +9,7 @@ use ieee.numeric_std.all;
 use work.all; 
 use work.model_structure.all; 
 
-architecture exhaustive_mc_tb_dfs_arch of exhaustive_mc_tb_dfs is
+architecture arch of mc_top_exh_h_dfs_tb is
 	constant CLK_PERIOD : time := 10 ns; 
 	constant DATA_WIDTH : integer := CONFIG_WIDTH; 
 	constant OPEN_ADDRESS_WIDTH : integer := 12; 
@@ -52,7 +52,7 @@ begin
 end process; 
 
 
-mc_top : configuration work.mc_top_v2_exhaustive_dfs(mc_top_v2_a)
+mc_top : configuration work.mc_top_exh_h_dfs_config(mc_top_a)
 	generic map (
 		DATA_WIDTH => DATA_WIDTH, 
 		OPEN_ADDRESS_WIDTH => OPEN_ADDRESS_WIDTH, 
@@ -71,4 +71,4 @@ mc_top : configuration work.mc_top_v2_exhaustive_dfs(mc_top_v2_a)
 
 
 
-end exhaustive_mc_tb_dfs_arch;
+end architecture;

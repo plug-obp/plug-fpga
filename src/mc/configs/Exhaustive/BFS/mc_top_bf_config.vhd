@@ -1,36 +1,30 @@
+
 use work.model_structure.all; 
 
-configuration mc_top_v2_exhaustive_dfs of mc_top_v2 is 
-    for mc_top_v2_a
+configuration mc_top_bf_config of mc_top is 
+    for mc_top_a
         for closed_inst : work.mc_components.closed_stream
-            use entity work.set(hash_table_a); 
-    		for hash_table_a 
-                for hash_funct : work.hash_table_components.hash_block_cmp
-                    use entity work.simple_hash(a); 
+            use entity work.set(bloom_filter) 
+            generic map(DATA_WIDTH => CONFIG_WIDTH); 
+            for bloom_filter
+                for hash_add : work.mc_components.hash
+                    use entity work.simple_hash(a)
+                    generic map(DATA_WIDTH => CONFIG_WIDTH); 
                 end for; 
-                for controler : work.hash_table_components.controler_cmp
-                    use entity work.hash_table_controler(a); 
-                end for; 
-                for reg_file_configs : work.hash_table_components.reg_file_ssdpRAM_cmp
-                    use entity work.reg_file_ssdpRAM(rtl); 
-                end for; 
-                for reg_file_isFilled : work.hash_table_components.reg_file_ssdpRAM_cmp
-                    use entity work.reg_file_ssdpRAM(rtl); 
-                end for; 
-    		end for; 
+            end for; 
         end for;
 
         for next_inst : work.mc_components.next_stream
             use entity work.next_stream(b)
 			generic map(CONFIG_WIDTH => CONFIG_WIDTH); 
             for b 
-                for semantics_inst : work.semantics_components_v2.semantics
-                    use entity work.explicit_interpreter(b)
-    			        generic map(CONFIG_WIDTH => CONFIG_WIDTH); 
+        for semantics_inst : work.semantics_components_v2.semantics
+                use entity work.explicit_interpreter(b)
+			        generic map(CONFIG_WIDTH => CONFIG_WIDTH); 
                 end for;
                 for ctrl_inst : work.semantics_components_v2.semantics_controler
                     use entity work.semantics_controler_v2(b)
-    			         generic map(CONFIG_WIDTH => CONFIG_WIDTH); 
+			            generic map(CONFIG_WIDTH => CONFIG_WIDTH); 
                 end for; 
             end for; 
         end for;
@@ -41,16 +35,8 @@ configuration mc_top_v2_exhaustive_dfs of mc_top_v2 is
         end for;
 
         for open_inst : work.mc_components.open_stream
-            use entity work.stack(a)
-                generic map(ADDRESS_WIDTH => 5, DATA_WIDTH => CONFIG_WIDTH); 
-                for a 
-                    for controler : work.open_components.controler_cmp
-                        use entity work.open_controler(stack_a); 
-                    end for; 
-                    for reg_file_configs : work.open_components.reg_file_ssdpRAM_cmp
-                        use entity work.reg_file_ssdpRAM(rtl); 
-                    end for; 
-                end for; 
+            use entity work.pingpong_fifo(d)
+		generic map(ADDRESS_WIDTH => 5, DATA_WIDTH => CONFIG_WIDTH); 
         end for;
 
         for pop_ctrl_inst : work.mc_components.pop_controler
@@ -77,3 +63,5 @@ configuration mc_top_v2_exhaustive_dfs of mc_top_v2 is
 
    end for;
 end configuration; 
+
+

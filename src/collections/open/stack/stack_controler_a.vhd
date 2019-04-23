@@ -117,7 +117,11 @@ begin
       end if;        
     end if; 
 
-    
+    if c.index = 0 then 
+      o.is_empty := '1'; 
+    elsif c.index = CAPACITY-1 then 
+      o.is_full := '1' ; 
+    end if; 
     --set the state_c
     state_c  <= c;
     --set the outputs
