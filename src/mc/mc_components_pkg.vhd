@@ -164,6 +164,17 @@ component hash is
 
 end component;
 
+component cycle_counter is 
+    port (
+        clk         : in  std_logic;
+        reset_n     : in  std_logic; 
+        reset       : in  std_logic; 
+        count       : out std_logic_vector(63 downto 0)
+    ); 
+
+
+end component; 
+
 
 
 end package;

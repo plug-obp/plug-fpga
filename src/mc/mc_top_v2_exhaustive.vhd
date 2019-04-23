@@ -46,8 +46,11 @@ configuration mc_top_v2_bounded of mc_top_v2 is
                 for normal_term_chker_inst : work.term_components_pkg.normal_term_comp
                     use entity work.normal_terminaison_check(a); 
                 end for; 
-		end for; 
+            end for; 
     	end for; 
+        for cycle_counter_inst : work.mc_components.cycle_counter
+            use entity work.cycle_counter(a); 
+        end for; 
    end for; 
 end configuration;
 
@@ -100,7 +103,10 @@ configuration mc_top_v2_exhaustive of mc_top_v2 is
                 for normal_term_chker_inst : work.term_components_pkg.normal_term_comp
                     use entity work.normal_terminaison_check(a); 
                 end for; 
+            end for; 
         end for; 
+        for cycle_counter_inst : work.mc_components.cycle_counter
+            use entity work.cycle_counter(a); 
         end for; 
    end for;
 end configuration; 
@@ -164,8 +170,12 @@ configuration mc_top_v2_BF of mc_top_v2 is
                 for normal_term_chker_inst : work.term_components_pkg.normal_term_comp
                     use entity work.normal_terminaison_check(a); 
                 end for; 
+            end for; 
         end for; 
+        for cycle_counter_inst : work.mc_components.cycle_counter
+            use entity work.cycle_counter(a); 
         end for; 
+
    end for;
 end configuration; 
 
@@ -235,7 +245,11 @@ configuration mc_top_v2_exhaustive_hashmap of mc_top_v2 is
                 for normal_term_chker_inst : work.term_components_pkg.normal_term_comp
                     use entity work.normal_terminaison_check(a); 
                 end for; 
+            end for; 
         end for; 
+        for cycle_counter_inst : work.mc_components.cycle_counter
+            use entity work.cycle_counter(a); 
         end for; 
+
    end for;
 end configuration; 

@@ -159,4 +159,14 @@ open_inst : open_stream
     ); 
 
 
+    cycle_counter_inst : cycle_counter
+    port map(
+        clk             => clk, 
+        reset           => reset,
+        reset_n         => reset_n,
+        count           => open
+    ); 
+
+
+
 end architecture;
