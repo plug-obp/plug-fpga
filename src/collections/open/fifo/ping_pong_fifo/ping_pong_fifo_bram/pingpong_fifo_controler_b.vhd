@@ -110,7 +110,7 @@ begin
     
           c.read_ptr            := (c.read_ptr + 1) mod CAPACITY;
           o.data_ready          := '1';
-          if c.read_ptr = c.barrier_ptr then
+          if c.read_ptr = c.barrier_ptr and is_pingpong = '1' then
             c.ctrl_state := S_IS_LAST; 
             -- o.is_last := '1';
           end if;
@@ -130,7 +130,7 @@ begin
           
           c.read_ptr            := (c.read_ptr + 1) mod CAPACITY;
           o.data_ready          := '1';
-          if c.read_ptr = c.barrier_ptr then
+          if c.read_ptr = c.barrier_ptr and is_pingpong = '1'  then
             c.ctrl_state := S_IS_LAST; 
             --o.is_last := '1';
           end if;
@@ -174,7 +174,7 @@ begin
           c.full        := false;
           o.pop_is_done := '1';
           c.barrier_ptr := c.write_ptr - 1;
-          if c.read_ptr = c.barrier_ptr then
+          if c.read_ptr = c.barrier_ptr and is_pingpong = '1'  then
             c.ctrl_state := S_IS_LAST; 
             --o.is_last := '1';
           end if;
@@ -193,7 +193,7 @@ begin
           o.data_ready  := '1';
           c.full        := false;
           o.pop_is_done := '1';
-          if c.read_ptr = c.barrier_ptr then
+          if c.read_ptr = c.barrier_ptr and is_pingpong = '1' then
             c.ctrl_state := S_IS_LAST; 
             --o.is_last := '1';
           end if;
@@ -216,7 +216,7 @@ begin
 
     o.is_empty := '1' when c.empty else '0';
     o.is_full  := '1' when c.full  else '0';
-
+    
     --set the state_c
     state_c  <= c;
     --set the outputs

@@ -1,10 +1,10 @@
 use work.model_structure.all; 
 
-configuration mc_top_v2_exhaustive_hasmap_pp_e of mc_top_v2 is 
-    for mc_top_v2_a
+configuration mc_top_exh_h_fifo_bram_config of mc_top is 
+    for mc_top_a
         for closed_inst : work.mc_components.closed_stream
-            use entity work.set(hash_table_a); 
-    		for hash_table_a 
+            use entity work.set(hash_table); 
+    		for hash_table 
                 for hash_funct : work.hash_table_components.hash_block_cmp
                     use entity work.simple_hash(a); 
                 end for; 
