@@ -4,6 +4,7 @@ use IEEE.NUMERIC_STD.ALL;
 use WORK.explicit_params.ALL;
 package model_structure is
     -- BEGIN USER MODEL
+    constant CONFIG_WIDTH : integer := 6; 
     type T_STATE is  (IDLE, WAITS, RETRY, CS);
     type T_CONFIGURATION is record
         alice : T_STATE;

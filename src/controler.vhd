@@ -25,7 +25,7 @@ entity controler is
         start_done : in std_logic;
 
         start : out std_logic;
-        initialize : out std_logic
+        initialize : out std_logic;
         execution_ended : out std_logic;
         is_verified : out std_logic
     );
@@ -59,7 +59,7 @@ state_update : process (clk) is
                 when S0 =>
                     start <= true;
                     if start_done then
-                        start <= false
+                        start <= false; 
                         state <= INITIALIZATION;
                     end if;
                 when INITIALIZATION =>

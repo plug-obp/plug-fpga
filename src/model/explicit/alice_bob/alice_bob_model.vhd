@@ -1,3 +1,4 @@
+use WORK.model_structure.ALL;
 use WORK.explicit_structure.ALL;
 package model is
     -- BEGIN ALICE BOB MODEL (state-space)
