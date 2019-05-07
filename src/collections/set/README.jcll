@@ -1,4 +1,0 @@
-ghdl -a --work=set_lib pkg.vhd 
-ghdl -a --work=set_lib set.vhd 
-ghdl -a --work=set_lib set_index_of.vhd
-ghdl -a --work=set_lib linear_probe_set_c.vhd
