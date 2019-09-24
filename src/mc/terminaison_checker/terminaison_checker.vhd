@@ -9,14 +9,15 @@ entity terminaison_checker is
 	HAS_OUTPUT_REGISTER : boolean := false
 );
 	port (
-		clk : in std_logic; 
-		reset : in std_logic; 
-		reset_n : in std_logic; 
-		t_is_last : in std_logic; 
-		open_is_empty : in std_logic; 
-		open_is_full : in std_logic; 
-        closed_is_full : in std_logic; 
-        sim_end : out std_logic
+		clk                  : in std_logic; 
+		reset                : in std_logic; 
+		reset_n              : in std_logic; 
+        start                : in std_logic; 
+		t_is_last            : in std_logic; 
+		open_is_empty        : in std_logic; 
+		open_is_full         : in std_logic; 
+        closed_is_full       : in std_logic; 
+        sim_end              : out std_logic
 	);
 end terminaison_checker;
 
@@ -32,7 +33,7 @@ begin
             clk => clk, 
             reset       => reset,
             reset_n     => reset_n,
-            enabled => '1', 
+            start => start, 
             bound => "00010000", 
             trig => t_is_last, 
             bound_is_reached => bound_is_reached
@@ -44,8 +45,9 @@ begin
             clk => clk, 
             reset_n => reset_n, 
             reset => reset,
+            start => start, 
             open_empty => open_is_empty, 
-            timeout => "0000000000011001", 
+            timeout => "0000000010011001", 
             normal_term => normal_term
         ); 
 

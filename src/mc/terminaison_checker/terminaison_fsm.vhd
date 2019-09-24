@@ -102,7 +102,12 @@ begin
         if reset = '1' then
           reset_output;
         else
-        	sim_end <= '0' when state_c = S0 else '1'; 
+          if state_c = S0 then 
+              sim_end <= '0'; 
+          else 
+            sim_end <= '1'; 
+          end if; 
+        	--sim_end <= '0' when state_c = S0 else '1'; 
         	err_code <= (others => '0') ; 
         end if;
       end if;

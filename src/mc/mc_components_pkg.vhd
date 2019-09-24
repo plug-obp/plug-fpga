@@ -66,7 +66,15 @@ component next_stream is
         s_in            : in  std_logic_vector(CONFIG_WIDTH-1 downto 0);
         s_is_last       : in  std_logic; 
 
-        is_deadlock     : out std_logic
+        is_deadlock     : out std_logic; 
+
+        i_en_next       : out std_logic; 
+        n_en_next       : out std_logic; 
+        source_next     : out std_logic_vector(CONFIG_WIDTH-1 downto 0); 
+        target_out_next : in std_logic_vector(CONFIG_WIDTH-1 downto 0); 
+        t_ready_next    : in std_logic; 
+        has_next_next   : in std_logic; 
+        t_done_next     : in std_logic
     );
 end component;
 
@@ -132,6 +140,7 @@ component terminaison_checker is
         clk             : in  std_logic;
         reset           : in  std_logic;
         reset_n         : in  std_logic;
+        start           : in  std_logic; 
         t_is_last       : in  std_logic; 
         open_is_full    : in  std_logic; 
         open_is_empty   : in  std_logic;

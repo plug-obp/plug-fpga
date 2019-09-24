@@ -6,12 +6,12 @@ use work.term_components_pkg.all;
 entity bound_checker is
 	generic ( HAS_OUTPUT_REGISTER : boolean := false );
   port (
-    clk : std_logic;
-    reset : std_logic; 
-    reset_n : std_logic; 
-    enabled : in std_logic; 
-    trig  : in std_logic; 
-    bound   : in std_logic_vector(7 downto 0); 
+    clk           : in std_logic;
+    reset         : in std_logic; 
+    reset_n       : in std_logic; 
+    start       : in std_logic; 
+    trig          : in std_logic; 
+    bound         : in std_logic_vector(7 downto 0); 
 
     bound_is_reached : out std_logic
 
@@ -55,7 +55,7 @@ begin
     end if;
   end process;
 
-  next_update : process (bound, enabled, trig, state_r) is
+  next_update : process (bound, start, trig, state_r) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current    : T_STATE  := DEFAULT_STATE;
   begin
@@ -64,11 +64,12 @@ begin
 
     case current.ctrl_state is
       when S0 =>
-      	if (enabled = '1') then 
+      	if (start = '1') then 
       		current.bound := to_integer(unsigned(bound)); 
+          current.cnt := 0; 
           current.ctrl_state := S_COUNT; 
-      	else 
-      		current.ctrl_state := S_END; 
+      	--else 
+      		--current.ctrl_state := S_END; 
       	end if; 
       when S_COUNT =>
       	if (trig = '1' and current.cnt = current.bound) then 
@@ -76,8 +77,14 @@ begin
       		elsif (trig = '1') then
       			current.cnt := current.cnt + 1; 
       	end if; 
-        when S_END => 
-        the_output.bound_is_reached := '1'; 
+      when S_END => 
+        if start = '1' then 
+          current.bound := to_integer(unsigned(bound)); 
+          current.cnt := 0; 
+          current.ctrl_state := S_COUNT; 
+        else 
+          the_output.bound_is_reached := '1'; 
+        end if; 
     end case;
 
 

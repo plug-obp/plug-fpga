@@ -42,15 +42,20 @@ begin
 
     if (rising_edge(clk)) then
       if (reset = '0' ) then 
-        mem <= (others => (others => '0')); 
+        mem <= (others => (others => '0'));
+        d_out <= (others => '0');
+        r_ok <= '0'; 
       elsif (clear = '1') then
         mem <= (others => (others => '0')); 
+        d_out <= (others => '0');
+        r_ok <= '0'; 
       elsif (we = '1' and re = '1') then 
         mem(to_integer(unsigned(addr_w))) <= d_in;
         d_out <= mem(to_integer(unsigned(addr_r))); 
         r_ok <= '1'; 
       elsif (we = '1' and re = '0') then 
         mem(to_integer(unsigned(addr_w))) <= d_in;
+        d_out  <= (others => '0');
         r_ok <= '0'; 
       elsif (we = '0' and re = '1') then 
         d_out <= mem(to_integer(unsigned(addr_r))); 

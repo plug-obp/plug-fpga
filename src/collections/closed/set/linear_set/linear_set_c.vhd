@@ -135,9 +135,24 @@ out_register : if HAS_OUTPUT_REGISTER generate
             if reset = '1' then
                 reset_output;
             else
-				is_in   <= '1' when output_c.is_in      else '0';
-    			is_full <= '1' when output_c.is_full    else '0';
-    			is_done <= '1' when output_c.is_done    else '0';
+				if output_c.is_in then 
+                    is_in   <= '1'; 
+                else 
+                    is_in <= '0';
+                end if; 
+
+    			if output_c.is_full then 
+                    is_full <= '1'; 
+                else 
+                    is_full <= '0';
+                end if; 
+
+    			if output_c.is_done then 
+                    is_done <= '1'; 
+                else 
+                    is_done <= '0';
+                end if; 
+
             end if;
         end if;
     end process;

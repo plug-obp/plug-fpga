@@ -142,9 +142,22 @@ begin
       c.barrier_ptr := c.write_ptr - 1;
     end if;
 
+    if c.empty then 
+      o.is_empty := '1'; 
+    else 
+      o.is_empty := '0'; 
+    end if; 
 
-    o.is_empty := '1' when c.empty else '0';
-    o.is_full  := '1' when c.full  else '0';
+    --o.is_empty := '1' when c.empty else '0';
+    
+    if c.full then 
+      o.is_full := '1'; 
+    else 
+      o.is_full := '0'; 
+    end if; 
+
+
+    --o.is_full  := '1' when c.full  else '0';
 
     --set the state_c
     state_c  <= c;
@@ -178,7 +191,12 @@ begin
           data_ready   <= output_c.data_ready;
           is_empty     <= output_c.is_empty;
           is_full      <= output_c.is_full;
-          is_last      <= output_c.is_last when is_pingpong = '1' else '0';
+          if is_pingpong = '1' then 
+            is_last <= output_c.is_last; 
+          else 
+            is_last <= '0'; 
+          end if; 
+          --is_last      <= output_c.is_last when is_pingpong = '1' else '0';
           push_is_done <= output_c.push_is_done;
           pop_is_done  <= output_c.pop_is_done;
         end if;

@@ -5,7 +5,8 @@ architecture mc_top_a of mc_top is
     signal previous_is_added    : std_logic;
     signal target               : std_logic_vector(DATA_WIDTH-1 downto 0);
     signal t_ready              : std_logic;
-    signal t_is_last            : std_logic; 
+    signal t_is_last            : std_logic;
+    signal clear_hash_table    : std_logic;  
     signal c_is_full            : std_logic; 
     signal ask_push             : std_logic;
     signal t_out                : std_logic_vector(DATA_WIDTH-1 downto 0);
@@ -23,12 +24,13 @@ architecture mc_top_a of mc_top is
     -- added signals : 
     signal open_is_empty        : std_logic; 
     signal pop_en               : std_logic; 
-    signal bound_is_reached     : std_logic; 
-    signal open_is_full         : std_logic; 
+    --signal bound_is_reached     : std_logic; 
+    --signal open_is_full         : std_logic; 
 
 begin
 
 ask_next <= '1' when (c_is_full = '0' and previous_is_added = '1') or start = '1' else '0';
+clear_hash_table <= '1' when t_is_last = '1' and is_bounded = '1' else '0'; 
 
 
 
@@ -51,7 +53,7 @@ closed_inst : closed_stream
         clk         => clk,
         reset       => reset,
         reset_n     => reset_n,
-        clear_table => t_is_last,
+        clear_table => clear_hash_table,
         add_enable  => t_ready,
         data_in     => target,
         is_in       => target_is_known,
@@ -77,7 +79,14 @@ next_inst : next_stream
         s_ready         => s_ready,
         s_in            => source_in,
         s_is_last       => src_is_last,
-        is_deadlock     => open
+        is_deadlock     => open, 
+        i_en_next       => i_en_next,
+        n_en_next       => n_en_next,
+        source_next     => source_next,
+        target_out_next => target_out_next,    
+        t_ready_next    => t_ready_next,
+        has_next_next   => has_next_next,    
+        t_done_next     => t_done_next
     );
 
 schedule_en <= '1' when previous_is_added = '1' and target_is_known = '0' else '0'; 
@@ -128,9 +137,10 @@ open_inst : open_stream
         clk             => clk, 
         reset           => reset,
         reset_n         => reset_n,
+        start           => start, 
         t_is_last       => t_is_last,
         open_is_empty   => open_is_empty,
-        open_is_full    => open_is_full, 
+        open_is_full    => '0', --open_is_full, 
         closed_is_full  => c_is_full,
         sim_end         => sim_end
     ); 

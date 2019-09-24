@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
-use ieee.numeric_std_unsigned.all; 
+use ieee.numeric_std.all; 
 
 
 architecture pingpong_fifo_controler_b of open_controler is
@@ -103,12 +103,12 @@ begin
           --c.memory(c.write_ptr) := data_in;
     
           c.barrier_ptr         := c.write_ptr;
-          c.write_ptr           := (c.write_ptr + 1) mod CAPACITY;
+          c.write_ptr           := std_logic_vector(to_unsigned(to_integer(unsigned(c.write_ptr) + 1) mod CAPACITY, c.write_ptr'length));
     
           readAt(c.read_ptr, o); 
           --o.data_out            := c.memory(c.read_ptr);
     
-          c.read_ptr            := (c.read_ptr + 1) mod CAPACITY;
+          c.read_ptr            := std_logic_vector(to_unsigned(to_integer(unsigned(c.read_ptr) + 1) mod CAPACITY, c.read_ptr'length));
           o.data_ready          := '1';
           if c.read_ptr = c.barrier_ptr and is_pingpong = '1' then
             c.ctrl_state := S_IS_LAST; 
@@ -123,12 +123,12 @@ begin
           writeAt(c.write_ptr, data_in, o); 
           --c.memory(c.write_ptr) := data_in;
           
-          c.write_ptr           := (c.write_ptr + 1) mod CAPACITY;
+          c.write_ptr           := std_logic_vector(to_unsigned(to_integer(unsigned(c.write_ptr) + 1) mod CAPACITY, c.write_ptr'length));
     
           readAt(c.read_ptr, o); 
           --o.data_out            := c.memory(c.read_ptr);
           
-          c.read_ptr            := (c.read_ptr + 1) mod CAPACITY;
+          c.read_ptr            := std_logic_vector(to_unsigned(to_integer(unsigned(c.read_ptr) + 1) mod CAPACITY, c.read_ptr'length));
           o.data_ready          := '1';
           if c.read_ptr = c.barrier_ptr and is_pingpong = '1'  then
             c.ctrl_state := S_IS_LAST; 
@@ -147,7 +147,7 @@ begin
           c.barrier_ptr         := c.write_ptr;
           c.empty               := false;
           o.push_is_done        := '1';
-          c.write_ptr           := (c.write_ptr + 1) mod CAPACITY;
+          c.write_ptr           := std_logic_vector(to_unsigned(to_integer(unsigned(c.write_ptr) + 1) mod CAPACITY, c.write_ptr'length));
     
           if c.read_ptr = c.write_ptr then
             c.full := true;
@@ -159,7 +159,7 @@ begin
           
           c.empty               := false;
           o.push_is_done        := '1';
-          c.write_ptr           := (c.write_ptr + 1) mod CAPACITY;
+          c.write_ptr           := std_logic_vector(to_unsigned(to_integer(unsigned(c.write_ptr) + 1) mod CAPACITY, c.write_ptr'length));
     
           if c.read_ptr = c.write_ptr then
             c.full := true;
@@ -173,13 +173,13 @@ begin
           o.data_ready  := '1';
           c.full        := false;
           o.pop_is_done := '1';
-          c.barrier_ptr := c.write_ptr - 1;
+          c.barrier_ptr := std_logic_vector(unsigned(c.write_ptr) - 1);
           if c.read_ptr = c.barrier_ptr and is_pingpong = '1'  then
             c.ctrl_state := S_IS_LAST; 
             --o.is_last := '1';
           end if;
     
-          c.read_ptr := (c.read_ptr + 1) mod CAPACITY;
+          c.read_ptr := std_logic_vector(to_unsigned(to_integer(unsigned(c.read_ptr) + 1) mod CAPACITY, c.read_ptr'length));
     
           if c.read_ptr = c.write_ptr then
             c.empty := true;
@@ -198,14 +198,14 @@ begin
             --o.is_last := '1';
           end if;
     
-          c.read_ptr := (c.read_ptr + 1) mod CAPACITY;
+          c.read_ptr := std_logic_vector(to_unsigned(to_integer(unsigned(c.read_ptr) + 1) mod CAPACITY, c.read_ptr'length));
     
           if c.read_ptr = c.write_ptr then
             c.empty := true;
           end if;
     
         elsif mark_last = '1' then
-          c.barrier_ptr := c.write_ptr - 1;
+          c.barrier_ptr := std_logic_vector(unsigned(c.write_ptr) - 1);
         end if;        
       when S_IS_LAST =>
         o.is_last := '1';
@@ -214,9 +214,17 @@ begin
 
 
 
-    o.is_empty := '1' when c.empty else '0';
-    o.is_full  := '1' when c.full  else '0';
-    
+    if c.empty then 
+      o.is_empty := '1'; 
+    else 
+      o.is_empty := '0';
+    end if; 
+    if c.full then 
+      o.is_full  := '1'; 
+    else 
+      o.is_full := '0';
+    end if; 
+
     --set the state_c
     state_c  <= c;
     --set the outputs

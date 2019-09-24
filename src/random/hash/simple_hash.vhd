@@ -24,7 +24,7 @@ end entity simple_hash;
 
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.numeric_std_unsigned.all; 
+--use ieee.numeric_std_unsigned.all; 
 use ieee.numeric_std.all; 
 
 
@@ -86,7 +86,9 @@ begin
         if hash_en = '1' then 
             current.idx         := 0; 
             current.hash        := (2 downto 0 => '1', others => '0');  --(current_word'high downto 0 => current_word, others => '0');
-            current.data        := ( DATA_WIDTH -1 downto 0 => data, others => '0');  
+            --current.data        := ( DATA_WIDTH -1 downto 0 => data, others => '0');  
+            current.data(DATA_WIDTH -1 downto 0 )        := data; 
+            current.data( downto DATA_WIDTH) := '0';  
 --            if DATA_WIDTH < HASH_WIDTH then 
 --                current.ctrl_state := FT; 
 --            else 

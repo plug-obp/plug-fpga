@@ -13,6 +13,7 @@ entity normal_terminaison_check is
 	port (
 		clk : in std_logic;
 		reset, reset_n : in std_logic; 
+    start : in std_logic; 
 		open_empty : in std_logic; 
 		timeout : in std_logic_vector(15 downto 0); 
 		normal_term : out std_logic
@@ -22,7 +23,7 @@ end normal_terminaison_check;
 
 architecture a of normal_terminaison_check is
 
- type T_CONTROL is (S0, S_COUNTING); 
+ type T_CONTROL is (S0, S_STARTED, S_COUNTING); 
 
  type T_STATE is record 
  	ctrl_state : T_CONTROL; 
@@ -60,7 +61,7 @@ begin
     end if;
   end process;
 
-  next_update : process (timeout, open_empty, state_r) is
+  next_update : process (timeout, open_empty, state_r, start) is
     variable the_output : T_OUTPUT := DEFAULT_OUTPUT;
     variable current    : T_STATE  := DEFAULT_STATE;
   begin
@@ -69,14 +70,21 @@ begin
 
     case current.ctrl_state is 
       when S0 =>
+          current.counter := 0; 
+        if start = '1' then 
+          current.ctrl_state := S_STARTED; 
+        end if; 
+      when S_STARTED => 
       	if open_empty = '1' then 
       		current.ctrl_state := S_COUNTING; 
       	end if; 
       when S_COUNTING =>
       	if current.counter =  to_integer(unsigned(timeout)) then 
-      		the_output.normal_term := '1'; 
+      		the_output.normal_term := '1';
+
+          current.ctrl_state := S0; 
       	elsif open_empty = '0' then 
-      		current.ctrl_state := S0; 
+      		current.ctrl_state := S_STARTED; 
       		current.counter := 0; 
       	else
       		current.counter := current.counter + 1; 

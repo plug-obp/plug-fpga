@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.all;
-use ieee.numeric_std_unsigned.all; 
+--use ieee.numeric_std_unsigned.all; 
 use ieee.numeric_std.all; 
 
 
@@ -114,7 +114,9 @@ begin
           end if; 
         when S_WAIT_HASH => 
           if hash_ok = '1' then 
-            c.hash := (ADDR_WIDTH-1 downto 0 => hash(ADDR_WIDTH-1 downto 0), others => '0'); 
+            --c.hash := (ADDR_WIDTH-1 downto 0 => hash(ADDR_WIDTH-1 downto 0), others => '0'); 
+            c.hash(ADDR_WIDTH-1 downto 0) := hash(ADDR_WIDTH-1 downto 0); 
+            --c.hash(ADD)
             c.index := c.hash; 
             c.ctrl_state := S_READ_NEXT; 
           end if; 
@@ -124,7 +126,7 @@ begin
         when S_WAIT_READ => 
           if (rf_c_r_ok = '1' and rf_p_r_ok = '1' ) then 
             if rf_p_r_data(0) = '1' then 
-              if (c.index + 1) mod CAPACITY = c.hash   then 
+              if std_logic_vector((unsigned(c.index)+1) mod CAPACITY) = c.hash   then 
                 o.isFull := '1';
                 o.isDone := '0'; 
                 if rf_c_r_data = c.config then 
@@ -134,7 +136,7 @@ begin
                 end if; 
                 c.ctrl_state := S0; 
               else
-                c.index := (c.index+1) mod CAPACITY; 
+                c.index := std_logic_vector((unsigned(c.index)+1) mod CAPACITY); 
                 if rf_c_r_data = c.config then 
                   o.isIn := '1'; 
                   o.isFull := '0'; 

@@ -14,7 +14,7 @@ package term_components_pkg is
 			clk : in std_logic;
 			reset : in std_logic; 
 			reset_n : in std_logic; 
-			enabled : in std_logic; 
+			start : in std_logic; 
 			bound  	: in std_logic_vector(7 downto 0); 
 			trig 	: in std_logic; 
 			bound_is_reached : out std_logic
@@ -29,6 +29,7 @@ package term_components_pkg is
 		port (
 				clk : in std_logic;
 				reset, reset_n : in std_logic; 
+				start : in std_logic; 
 				open_empty : in std_logic; 
 				timeout : in std_logic_vector(15 downto 0); 
 				normal_term : out std_logic

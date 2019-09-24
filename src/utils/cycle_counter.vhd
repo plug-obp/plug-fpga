@@ -14,7 +14,7 @@ end cycle_counter;
 
 library ieee; 
 use ieee.std_logic_1164.all; 
-use ieee.numeric_std_unsigned.all; 
+use ieee.NUMERIC_STD.all; 
 
 architecture a of cycle_counter is
 	signal count_reg : std_logic_vector(63 downto 0); 
@@ -27,7 +27,7 @@ begin
 			if reset = '1' then 
 				count_reg <= (others => '0');
 			else
-				count_reg <= count_reg + 1; 
+				count_reg <= std_logic_vector(unsigned(count_reg) + 1); 
 			end if; 
 	  end if;
 	end process;
