@@ -19,6 +19,7 @@ component open_stream is
         push_enable     : in  std_logic;                                     -- write enable 
         data_in         : in  std_logic_vector(DATA_WIDTH- 1 downto 0);   -- the data that is added when write_enable
         mark_last       : in  std_logic; 
+        pop_is_done     : out std_logic;
         push_is_done	: out std_logic;
         data_out        : out std_logic_vector(DATA_WIDTH- 1 downto 0);   -- the data that is read if read_enable
         data_ready      : out std_logic;
@@ -55,6 +56,7 @@ component next_stream is
         clk             : in  std_logic;                                 -- clock
         reset           : in  std_logic;
         reset_n         : in  std_logic;
+        start           : in  std_logic; 
         next_en         : in  std_logic;
 
         target_ready    : out std_logic;
@@ -74,7 +76,8 @@ component next_stream is
         target_out_next : in std_logic_vector(CONFIG_WIDTH-1 downto 0); 
         t_ready_next    : in std_logic; 
         has_next_next   : in std_logic; 
-        t_done_next     : in std_logic
+        t_done_next     : in std_logic; 
+        idle            : out std_logic
     );
 end component;
 
@@ -105,13 +108,16 @@ component scheduler is
         reset_n         : in  std_logic;
         t_ready         : in  std_logic;
         schedule_en     : in  std_logic;
+        closed_is_done  : in std_logic; 
+
         is_scheduled    : in  std_logic;
         t_in            : in  std_logic_vector(CONFIG_WIDTH-1 downto 0);
         t_is_last       : in  std_logic; 
 
         ask_push        : out std_logic;
         t_out           : out std_logic_vector(CONFIG_WIDTH-1 downto 0); 
-        mark_last       : out std_logic
+        mark_last       : out std_logic; 
+        idle            : out std_logic
 
     );
 end component;
@@ -137,15 +143,19 @@ component terminaison_checker is
         HAS_OUTPUT_REGISTER : boolean := false
     );
     port (
-        clk             : in  std_logic;
-        reset           : in  std_logic;
-        reset_n         : in  std_logic;
-        start           : in  std_logic; 
-        t_is_last       : in  std_logic; 
-        open_is_full    : in  std_logic; 
-        open_is_empty   : in  std_logic;
-        closed_is_full  : in  std_logic; 
-        sim_end         : out std_logic
+        clk                 : in  std_logic;
+        reset               : in  std_logic;
+        reset_n             : in  std_logic;
+        start               : in  std_logic; 
+        t_is_last           : in  std_logic; 
+        open_is_full        : in  std_logic; 
+        open_is_empty       : in  std_logic;
+        closed_is_full      : in  std_logic; 
+        idle_next_controler : in  std_logic; 
+        idle_scheduler      : in  std_logic; 
+        sim_end             : out std_logic; 
+        end_code            : out std_logic_vector(7 downto 0)
+
     );
 
 end component; 

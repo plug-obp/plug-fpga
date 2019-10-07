@@ -74,10 +74,18 @@ begin
             current := S_NORMAL_TERM; 
       		end if;        				
       when S_DEFAULT =>
-      when S_NORMAL_TERM => 
+      when S_NORMAL_TERM =>
+        the_output.sim_end := '1'; 
+        the_output.err_code := std_logic_vector(to_unsigned(1, 8));  
       when S_BOUND_REACHED =>  
+        the_output.sim_end := '1'; 
+        the_output.err_code := std_logic_vector(to_unsigned(2, 8)); 
       when S_CLOSED_FULL => 
+        the_output.sim_end := '1'; 
+        the_output.err_code := std_logic_vector(to_unsigned(3, 8)); 
       when S_OPEN_FULL => 
+        the_output.sim_end := '1'; 
+        the_output.err_code := std_logic_vector(to_unsigned(4, 8)); 
     end case;
 
 
@@ -102,13 +110,16 @@ begin
         if reset = '1' then
           reset_output;
         else
-          if state_c = S0 then 
-              sim_end <= '0'; 
-          else 
-            sim_end <= '1'; 
-          end if; 
+          --if state_c = S0 then 
+          --    sim_end <= '0'; 
+          --else 
+          --  sim_end <= '1'; 
+          --end if; 
         	--sim_end <= '0' when state_c = S0 else '1'; 
-        	err_code <= (others => '0') ; 
+        	--err_code <= (others => '0') ; 
+          sim_end   <= output_c.sim_end;
+          err_code  <= output_c.err_code;
+
         end if;
       end if;
     end process;
@@ -116,7 +127,9 @@ begin
 
   no_out_register : if not HAS_OUTPUT_REGISTER generate
     --non-registered output
-		sim_end <= '0' when state_c = S0 else '1'; 
-		err_code <= (others => '0') ; 
+		--sim_end <= '0' when state_c = S0 else '1'; 
+		--err_code <= (others => '0') ; 
+    sim_end   <= output_c.sim_end;
+    err_code  <= output_c.err_code;
   end generate;
 end architecture;

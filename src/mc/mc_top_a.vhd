@@ -25,11 +25,14 @@ architecture mc_top_a of mc_top is
     signal open_is_empty        : std_logic; 
     signal pop_en               : std_logic; 
     --signal bound_is_reached     : std_logic; 
-    --signal open_is_full         : std_logic; 
+    signal open_is_full         : std_logic; 
+    signal idle_next_controler  : std_logic;         
+    signal idle_scheduler       : std_logic;     
+    --signal end_code             : std_logic_vector(7 downto 0);
 
 begin
 
-ask_next <= '1' when (c_is_full = '0' and previous_is_added = '1') or start = '1' else '0';
+ask_next <= '1' when (c_is_full = '0' and previous_is_added = '1') else '0';
 clear_hash_table <= '1' when t_is_last = '1' and is_bounded = '1' else '0'; 
 
 
@@ -69,6 +72,7 @@ next_inst : next_stream
         clk             => clk,
         reset           => reset,
         reset_n         => reset_n,
+        start           => start, 
 
         next_en         => ask_next,
         target_ready    => t_ready,
@@ -86,7 +90,8 @@ next_inst : next_stream
         target_out_next => target_out_next,    
         t_ready_next    => t_ready_next,
         has_next_next   => has_next_next,    
-        t_done_next     => t_done_next
+        t_done_next     => t_done_next, 
+        idle            => idle_next_controler
     );
 
 schedule_en <= '1' when previous_is_added = '1' and target_is_known = '0' else '0'; 
@@ -99,6 +104,7 @@ sched_inst : scheduler
 
         t_ready         => t_ready,
         schedule_en     => schedule_en,
+        closed_is_done  => previous_is_added, 
         is_scheduled    => is_scheduled,
 
         t_in            => target,
@@ -106,7 +112,8 @@ sched_inst : scheduler
 
         ask_push        => ask_push,
         t_out           => t_out, 
-        mark_last       => swap
+        mark_last       => swap, 
+        idle            => idle_scheduler
     );
 
 open_inst : open_stream
@@ -124,7 +131,7 @@ open_inst : open_stream
         data_out        => source_in,
         data_ready      => s_ready,
         is_empty        => open_is_empty,
-        is_full         => open, --open_full,
+        is_full         => open_is_full,
         is_last         => src_is_last, 
         is_swapped      => open
     );
@@ -134,15 +141,19 @@ open_inst : open_stream
     term_chker_inst : terminaison_checker 
 	generic map ( HAS_OUTPUT_REGISTER => false)
     port map (
-        clk             => clk, 
-        reset           => reset,
-        reset_n         => reset_n,
-        start           => start, 
-        t_is_last       => t_is_last,
-        open_is_empty   => open_is_empty,
-        open_is_full    => '0', --open_is_full, 
-        closed_is_full  => c_is_full,
-        sim_end         => sim_end
+        clk                     => clk, 
+        reset                   => reset,
+        reset_n                 => reset_n,
+        start                   => start, 
+        t_is_last               => t_is_last,
+        open_is_empty           => open_is_empty,
+        open_is_full            => open_is_full, 
+        idle_next_controler     => idle_next_controler,       
+        idle_scheduler          => idle_scheduler,   
+        closed_is_full          => c_is_full,
+        sim_end                 => sim_end, 
+        end_code                => end_code
+
     ); 
 
 

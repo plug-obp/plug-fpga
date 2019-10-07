@@ -9,6 +9,7 @@ entity next_stream is
         clk             : in std_logic;                                 -- clock
         reset           : in std_logic;
         reset_n         : in std_logic;
+        start           : in std_logic; 
 
         next_en : in std_logic;
         target_ready : out std_logic;
@@ -30,12 +31,8 @@ entity next_stream is
         target_out_next  : in std_logic_vector(CONFIG_WIDTH-1 downto 0); 
         t_ready_next     : in std_logic; 
         has_next_next    : in std_logic; 
-        t_done_next      : in std_logic
-
-
-
-
-
+        t_done_next      : in std_logic; 
+        idle             : out std_logic
     );
 end entity;
 
@@ -190,6 +187,8 @@ architecture c of next_stream is
     --signal n_en : std_logic;
     --signal t_ready : std_logic;
     signal src_was_last_r : std_logic; 
+    signal start_s        : std_logic; 
+    signal ask_next_s     : std_logic; 
     --signal source : std_logic_vector(CONFIG_WIDTH-1 downto 0); 
 begin
 
@@ -215,7 +214,8 @@ ctrl_inst : semantics_controler
         clk             => clk,
         reset           => reset,
         reset_n         => reset_n,
-        ask_next        => next_en,
+        start           => start_s, 
+        ask_next        => ask_next_s,
         src_in          => s_in,  -- new 
         -- src_is_last     => s_is_last, -- new 
         t_ready         => t_ready_next, 
@@ -226,7 +226,8 @@ ctrl_inst : semantics_controler
         i_en            => i_en_next,
         src_out         => source_next,  -- new
         ask_src         => ask_src,
-        is_deadlock     => is_deadlock
+        is_deadlock     => is_deadlock, 
+        idle            => idle
     );
 
     
@@ -240,6 +241,10 @@ begin
     end if; 
 end if; 
 end process; 
+
+start_s <= start; 
+ask_next_s <= next_en or start_s; 
+
 
 target_ready <= t_ready_next;
 target_is_last <= '1' when has_next_next = '0' and t_ready_next = '1' and src_was_last_r = '1' else '0'; 

@@ -195,6 +195,7 @@ entity semantics_controler_v2 is
     clk         : in  std_logic;        -- clock
     reset       : in  std_logic;
     reset_n     : in  std_logic;
+    start       : in  std_logic; 
     ask_next    : in  std_logic;
     src_in      : in  std_logic_vector(CONFIG_WIDTH-1 downto 0);
     -- src_is_last : in  std_logic; 
@@ -206,7 +207,8 @@ entity semantics_controler_v2 is
     n_en        : out std_logic;
     src_out     : out std_logic_vector(CONFIG_WIDTH-1 downto 0);
     ask_src     : out std_logic;
-    is_deadlock : out std_logic
+    is_deadlock : out std_logic; 
+    idle        : out std_logic
     );
 end entity;
 
@@ -234,7 +236,8 @@ use IEEE.numeric_std.all;
 
 
 architecture b of semantics_controler_v2 is
-
+  type T_IDLE_CTRL is (AT_END, RUNNING); 
+  signal idle_ctrl_state : T_IDLE_CTRL; 
   type T_CONTROL is (S0, I_PHASE, I_MORE, I_DEADLOCK, T_END, WAIT_SRC, WAIT_REQ, SERVED_REQ, T_MORE);
 
   type T_CONFIG is record
@@ -257,8 +260,9 @@ architecture b of semantics_controler_v2 is
     src_out     : std_logic_vector(CONFIG_WIDTH-1 downto 0);
     ask_src     : std_logic;
     is_deadlock : std_logic;
+    idle        : std_logic; 
   end record;
-  constant DEFAULT_OUTPUT : T_OUTPUT := ('0', '0', (others => '0'), '0', '0');
+  constant DEFAULT_OUTPUT : T_OUTPUT := ('0', '0', (others => '0'), '0', '0', '0');
 
   --next state
   signal state_c  : T_STATE  := DEFAULT_STATE;
@@ -384,6 +388,32 @@ begin
     output_c <= the_output;
   end process;
 
+
+
+
+
+
+
+  assert_idle : process (clk, reset_n, s_ready, start, t_produced, has_next, idle_ctrl_state)
+  begin
+    if (reset_n = '0') then
+      idle_ctrl_state <= AT_END; 
+    elsif (rising_edge(clk)) then
+      if (idle_ctrl_state = AT_END and ( s_ready = '1' or start = '1')) then
+        idle_ctrl_state <= RUNNING; 
+      elsif (idle_ctrl_state = RUNNING and (t_produced = '1' and has_next = '0')) then 
+        idle_ctrl_state <= AT_END; 
+      else 
+        idle_ctrl_state <= idle_ctrl_state; 
+      end if; 
+    end if;
+  end process assert_idle;
+
+  --output_c.idle <= '1' when idle_ctrl_state = AT_END else '0'; 
+
+
+
+
   out_register : if HAS_OUTPUT_REGISTER generate
     registered_output : process (clk, reset_n) is
       procedure reset_output is
@@ -393,6 +423,7 @@ begin
         src_out     <= (others => '0');
         ask_src     <= '0'; 
         is_deadlock <= '0';
+        idle        <= '0'; 
       end;
     begin
       if reset_n = '0' then
@@ -406,6 +437,11 @@ begin
           src_out       <= output_c.src_out; 
           ask_src       <= output_c.ask_src; 
           is_deadlock   <= output_c.is_deadlock; 
+          if idle_ctrl_state = AT_END then 
+            idle          <= '1' ; 
+          else 
+            idle <= '0'; 
+          end if; 
         end if;
       end if;
     end process;
@@ -418,6 +454,8 @@ begin
     src_out       <= output_c.src_out; 
     ask_src       <= output_c.ask_src; 
     is_deadlock   <= output_c.is_deadlock; 
+    idle          <= '1' when idle_ctrl_state = AT_END else '0'; 
+
   end generate;
 
 end architecture;

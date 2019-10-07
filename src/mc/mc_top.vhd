@@ -15,6 +15,7 @@ entity mc_top is
         start           : in  std_logic;
         is_bounded      : in  std_logic; 
         sim_end         : out std_logic; 
+        end_code        : out std_logic_vector(7 downto 0); 
 
 
 
@@ -25,6 +26,7 @@ entity mc_top is
         t_ready_next     : in std_logic; 
         has_next_next    : in std_logic; 
         t_done_next      : in std_logic
+
     );
 end entity;
 

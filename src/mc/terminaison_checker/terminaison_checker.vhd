@@ -17,7 +17,11 @@ entity terminaison_checker is
 		open_is_empty        : in std_logic; 
 		open_is_full         : in std_logic; 
         closed_is_full       : in std_logic; 
-        sim_end              : out std_logic
+        idle_next_controler  : in std_logic; 
+        idle_scheduler       : in std_logic; 
+
+        sim_end              : out std_logic; 
+        end_code             : out std_logic_vector(7 downto 0)
 	);
 end terminaison_checker;
 
@@ -42,13 +46,15 @@ begin
     normal_term_chker_inst : normal_term_comp 
         generic map (HAS_OUTPUT_REGISTER => false)
         port map (
-            clk => clk, 
-            reset_n => reset_n, 
-            reset => reset,
-            start => start, 
-            open_empty => open_is_empty, 
-            timeout => "0000000010011001", 
-            normal_term => normal_term
+            clk                  => clk, 
+            reset_n              => reset_n, 
+            reset                => reset,
+            start                => start, 
+            open_empty           => open_is_empty, 
+            timeout              => "0000000010011001",
+            idle_next_controler  => idle_next_controler, 
+            idle_scheduler       => idle_scheduler,  
+            normal_term          => normal_term
         ); 
 
     term_inst : terminaison_fsm_comp
@@ -64,7 +70,7 @@ begin
         open_full_term => open_is_full, 
         normal_term => normal_term,
         sim_end => sim_end,
-        err_code => open
+        err_code => end_code
     ); 
 
 

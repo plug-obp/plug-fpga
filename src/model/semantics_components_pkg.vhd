@@ -68,17 +68,19 @@ component semantics_controler is
         clk             : in std_logic;                                 -- clock
         reset           : in std_logic;
         reset_n         : in std_logic;
+        start           : in std_logic; 
         ask_next        : in std_logic;
         t_ready         : in std_logic; 
         t_produced      : in std_logic;
         has_next        : in std_logic;
         s_ready         : in std_logic;
         src_in          : in std_logic_vector(CONFIG_WIDTH-1 downto 0); 
-        i_en        : out std_logic;
-        n_en        : out std_logic;
-        src_out     : out std_logic_vector(CONFIG_WIDTH-1 downto 0); 
-        ask_src     : out std_logic;
-        is_deadlock    : out std_logic
+        i_en            : out std_logic;
+        n_en            : out std_logic;
+        src_out         : out std_logic_vector(CONFIG_WIDTH-1 downto 0); 
+        ask_src         : out std_logic;
+        is_deadlock     : out std_logic; 
+        idle            : out std_logic
     );
 end component;
 

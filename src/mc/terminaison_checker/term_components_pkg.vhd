@@ -27,12 +27,14 @@ package term_components_pkg is
 				HAS_OUTPUT_REGISTER : boolean := false
 			);
 		port (
-				clk : in std_logic;
-				reset, reset_n : in std_logic; 
-				start : in std_logic; 
-				open_empty : in std_logic; 
-				timeout : in std_logic_vector(15 downto 0); 
-				normal_term : out std_logic
+				clk 				: in std_logic;
+				reset,reset_n 		: in std_logic; 
+				start 				: in std_logic; 
+				open_empty 			: in std_logic; 
+				timeout 			: in std_logic_vector(15 downto 0); 
+				idle_next_controler : in std_logic; 
+				idle_scheduler 		: in std_logic; 
+				normal_term 		: out std_logic
 			);
 	end component; 
 

@@ -11,21 +11,23 @@ entity scheduler is
         reset           : in std_logic;
         reset_n         : in std_logic;
 
-        t_ready : in std_logic;
-        schedule_en : in std_logic;
-        is_scheduled : in std_logic;
-
-        t_in : in std_logic_vector(CONFIG_WIDTH-1 downto 0);
-        t_is_last : in std_logic; 
-
-        ask_push : out std_logic;
-        t_out : out std_logic_vector(CONFIG_WIDTH-1 downto 0); 
-        mark_last : out std_logic 
+        t_ready         : in std_logic;
+        closed_is_done  : in std_logic; 
+        schedule_en     : in std_logic;
+        is_scheduled    : in std_logic;
+        t_in            : in std_logic_vector(CONFIG_WIDTH-1 downto 0);
+        t_is_last       : in std_logic; 
+        ask_push        : out std_logic;
+        t_out           : out std_logic_vector(CONFIG_WIDTH-1 downto 0); 
+        mark_last       : out std_logic; 
+        idle            : out std_logic
 
     );
 end entity;
 
 architecture a of scheduler is
+type T_IDLE_CTRL is  ( AT_END, RUNNING, WAITOPEN ); 
+signal idle_fsm_state : T_IDLE_CTRL; 
 type T_CONTROL is (
         S0, T_OK, S_OK, ERR
     );
@@ -42,9 +44,9 @@ type T_CONTROL is (
     constant DEFAULT_STATE : T_STATE := (S0, (others => '0'), '0');
 
     type T_OUTPUT is record
-        ask_push : std_logic;
-        t_out : std_logic_vector(CONFIG_WIDTH-1 downto 0);
-        mark_last : std_logic; 
+        ask_push    : std_logic;
+        t_out       : std_logic_vector(CONFIG_WIDTH-1 downto 0);
+        mark_last   : std_logic; 
     end record;
     constant DEFAULT_OUTPUT : T_OUTPUT := ('0', (others => '0'), '0');
     
@@ -146,13 +148,44 @@ begin
     output_c <= the_output;
 end process;
 
+
+    assert_idle : process (clk, reset_n, t_ready, closed_is_done, schedule_en, is_scheduled)
+    begin
+        if (reset_n = '0') then
+            idle_fsm_state <= AT_END; 
+        elsif (rising_edge(clk)) then
+            if ( idle_fsm_state = AT_END ) then 
+                if t_ready = '1' then 
+                    idle_fsm_state <= RUNNING; 
+                end if; 
+            elsif idle_fsm_state = RUNNING then 
+                if closed_is_done = '1' and schedule_en = '1' then 
+                    idle_fsm_state <= WAITOPEN; 
+                elsif closed_is_done = '1' and schedule_en = '0' then 
+                    idle_fsm_state <= AT_END; 
+                end if; 
+            elsif idle_fsm_state = WAITOPEN then 
+                if is_scheduled = '1' and t_ready = '1' then 
+                    idle_fsm_state <= RUNNING; 
+                elsif is_scheduled = '1' and t_ready = '0' then 
+                    idle_fsm_state <= AT_END; 
+                end if; 
+            else 
+                idle_fsm_state <= idle_fsm_state; 
+            end if; 
+        end if;
+    end process assert_idle;
+
+
+
 out_register : if HAS_OUTPUT_REGISTER generate
     registered_output : process (clk, reset_n) is
         procedure reset_output is
         begin
-            ask_push <= '0';
-            t_out <= (others => '0');
-             mark_last <= '0'; 
+            ask_push    <= '0';
+            t_out       <= (others => '0');
+             mark_last  <= '0'; 
+             idle       <= '0'; 
         end; 
     begin
         if reset_n = '0' then
@@ -161,9 +194,14 @@ out_register : if HAS_OUTPUT_REGISTER generate
             if reset = '1' then
                 reset_output;
             else
-				ask_push <= output_c.ask_push;
-                t_out <= output_c.t_out;
-                mark_last <= output_c.mark_last; 
+				ask_push    <= output_c.ask_push;
+                t_out       <= output_c.t_out;
+                mark_last   <= output_c.mark_last; 
+                if idle_fsm_state = AT_END  then 
+                    idle   <= '1';
+                else 
+                    idle <= '0'; 
+                end if; 
             end if;
         end if;
     end process;
@@ -171,9 +209,10 @@ end generate;
 
 no_out_register : if not HAS_OUTPUT_REGISTER generate
     --non-registered output
-    ask_push <= output_c.ask_push;
-    t_out <= output_c.t_out;
-    mark_last <= output_c.mark_last; 
+    ask_push    <= output_c.ask_push;
+    t_out       <= output_c.t_out;
+    mark_last   <= output_c.mark_last; 
+    idle        <= '1' when idle_fsm_state = AT_END else '0'; 
 end generate;
 
 end architecture;
