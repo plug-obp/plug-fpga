@@ -9,7 +9,7 @@ package binary_heap is
     pure function parent_index(i : integer) return integer;
 end package;
 package body binary_heap is
-begin
+
 
     pure function left_index(i : integer) return integer
     is begin
@@ -40,12 +40,13 @@ begin
     -- end;
 
 end package body;
-
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
 entity binary_heap is
     generic (
         ADDRESS_WIDTH : integer := 4;  -- address width in bits, maximum CAPACITY is 2^(ADDRESS_WIDTH)-1
         DATA_WIDTH : integer := 8
-    )
+    );
     port (
         reset_n    : in  std_logic;
         clk        : in  std_logic; 
@@ -61,5 +62,5 @@ entity binary_heap is
 
         remove_en : in std_logic;
         remove_done : out std_logic
-    )
+    );
 end entity;

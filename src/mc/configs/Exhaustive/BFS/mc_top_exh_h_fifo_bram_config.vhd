@@ -1,5 +1,3 @@
-use work.model_structure.all; 
-
 configuration mc_top_exh_h_fifo_bram_config of mc_top is 
     for mc_top_a
         for closed_inst : work.mc_components.closed_stream
@@ -21,28 +19,24 @@ configuration mc_top_exh_h_fifo_bram_config of mc_top is
         end for;
 
         for next_inst : work.mc_components.next_stream
-            use entity work.next_stream(b)
-			generic map(CONFIG_WIDTH => CONFIG_WIDTH); 
-            for b 
-                for semantics_inst : work.semantics_components_v2.semantics
-                    use entity work.explicit_interpreter(b)
-    			        generic map(CONFIG_WIDTH => CONFIG_WIDTH); 
-                end for;
+            use entity work.next_stream(c)
+			generic map(CONFIG_WIDTH => 32); 
+            for c 
                 for ctrl_inst : work.semantics_components_v2.semantics_controler
                     use entity work.semantics_controler_v2(b)
-    			         generic map(CONFIG_WIDTH => CONFIG_WIDTH); 
+    			         generic map(CONFIG_WIDTH => 32); 
                 end for; 
             end for; 
         end for;
 
         for sched_inst : work.mc_components.scheduler
             use entity work.scheduler(a)
-			generic map(CONFIG_WIDTH => CONFIG_WIDTH); 
+			generic map(CONFIG_WIDTH => 32); 
         end for;
 
         for open_inst : work.mc_components.open_stream
             use entity work.pingpong_fifo(e)
-                generic map(ADDRESS_WIDTH => 5, DATA_WIDTH => CONFIG_WIDTH); 
+                generic map(ADDRESS_WIDTH => 5, DATA_WIDTH => 32); 
                 for e 
                     for controler : work.open_components.controler_cmp
                         use entity work.open_controler(pingpong_fifo_controler_b); 

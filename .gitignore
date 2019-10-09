@@ -10,3 +10,5 @@ src/model/explicit/models/bakery_3.vhd
 ghdl/Makefile
 src/collections/fifo/wrapper/fifo_wrapper.vhd~
 src/mc/#mc_top_v1.vhd#
+**/*.jou
+**/*.log

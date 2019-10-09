@@ -151,7 +151,7 @@ begin
               c.ctrl_state := S0; 
               o.isDone := '1'; 
               o.isIn := '0'; 
-              if (c.index +1) mod CAPACITY = c.hash then 
+              if std_logic_vector((unsigned(c.index)+1) mod CAPACITY) = c.hash then 
                 o.isFull := '1'; 
               else 
                 o.isFull := '0'; 
