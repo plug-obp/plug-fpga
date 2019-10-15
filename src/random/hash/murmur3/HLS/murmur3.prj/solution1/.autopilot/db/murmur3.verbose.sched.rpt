@@ -1,0 +1,202 @@
+
+
+================================================================
+== Vivado HLS Report for 'murmur3'
+================================================================
+* Date:           Thu Oct 10 14:59:23 2019
+
+* Version:        2018.3 (Build 2405991 on Thu Dec 06 23:56:15 MST 2018)
+* Project:        murmur3.prj
+* Solution:       solution1
+* Product family: zynq
+* Target device:  xc7z020clg484-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing (ns): 
+    * Summary: 
+    +--------+-------+----------+------------+
+    |  Clock | Target| Estimated| Uncertainty|
+    +--------+-------+----------+------------+
+    |ap_clk  |  10.00|     8.510|        1.25|
+    +--------+-------+----------+------------+
+
++ Latency (clock cycles): 
+    * Summary: 
+    +-----+-----+-----+-----+----------+
+    |  Latency  |  Interval | Pipeline |
+    | min | max | min | max |   Type   |
+    +-----+-----+-----+-----+----------+
+    |    6|    6|    1|    1| function |
+    +-----+-----+-----+-----+----------+
+
+    + Detail: 
+        * Instance: 
+        N/A
+
+        * Loop: 
+        N/A
+
+============================================================
++ Verbose Summary: Synthesis Manager
+============================================================
+InlineROM: 1
+ExposeGlobal: 0
+============================================================
++ Verbose Summary: CDFG Model
+============================================================
+IsTopModel: 1
+ResetActiveHigh: 1
+IsCombinational: 0
+IsDatapathOnly: 0
+HasWiredReturn: 1
+HasMFsm: 2
+HasVarLatency: 0
+IsPipeline: 1
+IsRtlPipelined: 1
+IsInstanceOverlapped: 0
+IsDontTouch: 0
+HasImplIP: 0
+IsGatedGlobalClock: 0
+
++ Individual pipeline summary: 
+  * Pipeline-0: initiation interval (II) = 1, depth = 7
+
+
+============================================================
++ Verbose Summary: Schedule
+============================================================
+* Number of FSM states : 7
+* Pipeline : 1
+  Pipeline-0 : II = 1, D = 7, States = { 1 2 3 4 5 6 7 }
+* Dataflow Pipeline: 0
+
+* FSM state transitions: 
+1 --> 
+	2  / true
+2 --> 
+	3  / true
+3 --> 
+	4  / true
+4 --> 
+	5  / true
+5 --> 
+	6  / true
+6 --> 
+	7  / true
+7 --> 
+
+* FSM state operations: 
+
+State 1 <SV = 0> <Delay = 8.51>
+ST_1 : Operation 8 [1/1] (0.00ns)   --->   "%seed_read = call i32 @_ssdm_op_Read.ap_vld.i32(i32 %seed) nounwind" [src/murmur3.c:9]   --->   Operation 8 'read' 'seed_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 9 [1/1] (0.00ns)   --->   "%key_read = call i32 @_ssdm_op_Read.ap_vld.i32(i32 %key) nounwind" [src/murmur3.c:9]   --->   Operation 9 'read' 'key_read' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 10 [1/1] (8.51ns)   --->   "%k = mul i32 -862048943, %key_read" [src/murmur3.c:13]   --->   Operation 10 'mul' 'k' <Predicate = true> <Delay = 8.51> <Core = "Mul">   --->   Core 16 'Mul' <Latency = 0> <II = 1> <Delay = 8.51> <FuncUnit> <Opcode : 'mul'> <InPorts = 2> <OutPorts = 1>
+ST_1 : Operation 11 [1/1] (8.51ns)   --->   "%tmp = mul i32 380141568, %key_read" [src/murmur3.c:14]   --->   Operation 11 'mul' 'tmp' <Predicate = true> <Delay = 8.51> <Core = "Mul">   --->   Core 16 'Mul' <Latency = 0> <II = 1> <Delay = 8.51> <FuncUnit> <Opcode : 'mul'> <InPorts = 2> <OutPorts = 1>
+ST_1 : Operation 12 [1/1] (0.00ns)   --->   "%tmp_1 = call i15 @_ssdm_op_PartSelect.i15.i32.i32.i32(i32 %k, i32 17, i32 31)" [src/murmur3.c:14]   --->   Operation 12 'partselect' 'tmp_1' <Predicate = true> <Delay = 0.00>
+ST_1 : Operation 13 [1/1] (0.00ns)   --->   "%tmp_5 = call i17 @_ssdm_op_PartSelect.i17.i32.i32.i32(i32 %tmp, i32 15, i32 31)" [src/murmur3.c:14]   --->   Operation 13 'partselect' 'tmp_5' <Predicate = true> <Delay = 0.00>
+
+State 2 <SV = 1> <Delay = 8.51>
+ST_2 : Operation 14 [1/1] (0.00ns)   --->   "%k_1 = call i32 @_ssdm_op_BitConcatenate.i32.i17.i15(i17 %tmp_5, i15 %tmp_1)" [src/murmur3.c:14]   --->   Operation 14 'bitconcatenate' 'k_1' <Predicate = true> <Delay = 0.00>
+ST_2 : Operation 15 [1/1] (8.51ns)   --->   "%k_2 = mul i32 461845907, %k_1" [src/murmur3.c:15]   --->   Operation 15 'mul' 'k_2' <Predicate = true> <Delay = 8.51> <Core = "Mul">   --->   Core 16 'Mul' <Latency = 0> <II = 1> <Delay = 8.51> <FuncUnit> <Opcode : 'mul'> <InPorts = 2> <OutPorts = 1>
+
+State 3 <SV = 2> <Delay = 7.35>
+ST_3 : Operation 16 [1/1] (0.99ns)   --->   "%h = xor i32 %k_2, %seed_read" [src/murmur3.c:16]   --->   Operation 16 'xor' 'h' <Predicate = true> <Delay = 0.99> <Core = "LogicGate">   --->   Core 27 'LogicGate' <Latency = 0> <II = 1> <Delay = 0.99> <FuncUnit> <Opcode : 'and' 'or' 'xor'> <InPorts = 2> <OutPorts = 1>
+ST_3 : Operation 17 [1/1] (0.00ns)   --->   "%tmp_2 = trunc i32 %h to i19" [src/murmur3.c:16]   --->   Operation 17 'trunc' 'tmp_2' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 18 [1/1] (0.00ns)   --->   "%tmp_3 = call i13 @_ssdm_op_PartSelect.i13.i32.i32.i32(i32 %h, i32 19, i32 31)" [src/murmur3.c:17]   --->   Operation 18 'partselect' 'tmp_3' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 19 [1/1] (0.00ns)   --->   "%h_1 = call i32 @_ssdm_op_BitConcatenate.i32.i19.i13(i19 %tmp_2, i13 %tmp_3)" [src/murmur3.c:17]   --->   Operation 19 'bitconcatenate' 'h_1' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 20 [1/1] (0.00ns)   --->   "%tmp_4 = trunc i32 %h to i17" [src/murmur3.c:16]   --->   Operation 20 'trunc' 'tmp_4' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 21 [1/1] (0.00ns)   --->   "%p_shl = call i32 @_ssdm_op_BitConcatenate.i32.i17.i13.i2(i17 %tmp_4, i13 %tmp_3, i2 0)" [src/murmur3.c:18]   --->   Operation 21 'bitconcatenate' 'p_shl' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 22 [1/1] (0.00ns) (grouped into TernaryAdder)   --->   "%tmp1 = add i32 -430675100, %h_1" [src/murmur3.c:18]   --->   Operation 22 'add' 'tmp1' <Predicate = true> <Delay = 0.00> <Core = "TAddSub">   --->   Core 84 'TAddSub' <Latency = 0> <II = 1> <Delay = 2.18> <IPBlock> <Opcode : 'add' 'sub'> <InPorts = 3> <OutPorts = 1> <Sync> <CReg>
+ST_3 : Operation 23 [1/1] (4.37ns) (root node of TernaryAdder)   --->   "%h_2 = add i32 %tmp1, %p_shl" [src/murmur3.c:18]   --->   Operation 23 'add' 'h_2' <Predicate = true> <Delay = 4.37> <Core = "TAddSub">   --->   Core 84 'TAddSub' <Latency = 0> <II = 1> <Delay = 2.18> <IPBlock> <Opcode : 'add' 'sub'> <InPorts = 3> <OutPorts = 1> <Sync> <CReg>
+ST_3 : Operation 24 [1/1] (0.99ns)   --->   "%h_3 = xor i32 %h_2, 4" [src/murmur3.c:19]   --->   Operation 24 'xor' 'h_3' <Predicate = true> <Delay = 0.99> <Core = "LogicGate">   --->   Core 27 'LogicGate' <Latency = 0> <II = 1> <Delay = 0.99> <FuncUnit> <Opcode : 'and' 'or' 'xor'> <InPorts = 2> <OutPorts = 1>
+ST_3 : Operation 25 [1/1] (0.00ns)   --->   "%tmp_6 = call i16 @_ssdm_op_PartSelect.i16.i32.i32.i32(i32 %h_3, i32 16, i32 31)" [src/murmur3.c:20]   --->   Operation 25 'partselect' 'tmp_6' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 26 [1/1] (0.00ns)   --->   "%tmp_s = zext i16 %tmp_6 to i32" [src/murmur3.c:20]   --->   Operation 26 'zext' 'tmp_s' <Predicate = true> <Delay = 0.00>
+ST_3 : Operation 27 [1/1] (0.99ns)   --->   "%h_4 = xor i32 %tmp_s, %h_3" [src/murmur3.c:20]   --->   Operation 27 'xor' 'h_4' <Predicate = true> <Delay = 0.99> <Core = "LogicGate">   --->   Core 27 'LogicGate' <Latency = 0> <II = 1> <Delay = 0.99> <FuncUnit> <Opcode : 'and' 'or' 'xor'> <InPorts = 2> <OutPorts = 1>
+
+State 4 <SV = 3> <Delay = 8.51>
+ST_4 : Operation 28 [1/1] (8.51ns)   --->   "%h_5 = mul i32 -2048144789, %h_4" [src/murmur3.c:21]   --->   Operation 28 'mul' 'h_5' <Predicate = true> <Delay = 8.51> <Core = "Mul">   --->   Core 16 'Mul' <Latency = 0> <II = 1> <Delay = 8.51> <FuncUnit> <Opcode : 'mul'> <InPorts = 2> <OutPorts = 1>
+ST_4 : Operation 29 [1/1] (0.00ns)   --->   "%tmp_7 = call i19 @_ssdm_op_PartSelect.i19.i32.i32.i32(i32 %h_5, i32 13, i32 31)" [src/murmur3.c:22]   --->   Operation 29 'partselect' 'tmp_7' <Predicate = true> <Delay = 0.00>
+
+State 5 <SV = 4> <Delay = 0.99>
+ST_5 : Operation 30 [1/1] (0.00ns)   --->   "%tmp_9 = zext i19 %tmp_7 to i32" [src/murmur3.c:22]   --->   Operation 30 'zext' 'tmp_9' <Predicate = true> <Delay = 0.00>
+ST_5 : Operation 31 [1/1] (0.99ns)   --->   "%h_6 = xor i32 %tmp_9, %h_5" [src/murmur3.c:22]   --->   Operation 31 'xor' 'h_6' <Predicate = true> <Delay = 0.99> <Core = "LogicGate">   --->   Core 27 'LogicGate' <Latency = 0> <II = 1> <Delay = 0.99> <FuncUnit> <Opcode : 'and' 'or' 'xor'> <InPorts = 2> <OutPorts = 1>
+
+State 6 <SV = 5> <Delay = 8.51>
+ST_6 : Operation 32 [1/1] (8.51ns)   --->   "%h_7 = mul i32 -1028477387, %h_6" [src/murmur3.c:23]   --->   Operation 32 'mul' 'h_7' <Predicate = true> <Delay = 8.51> <Core = "Mul">   --->   Core 16 'Mul' <Latency = 0> <II = 1> <Delay = 8.51> <FuncUnit> <Opcode : 'mul'> <InPorts = 2> <OutPorts = 1>
+ST_6 : Operation 33 [1/1] (0.00ns)   --->   "%tmp_8 = call i16 @_ssdm_op_PartSelect.i16.i32.i32.i32(i32 %h_7, i32 16, i32 31)" [src/murmur3.c:24]   --->   Operation 33 'partselect' 'tmp_8' <Predicate = true> <Delay = 0.00>
+
+State 7 <SV = 6> <Delay = 0.99>
+ST_7 : Operation 34 [1/1] (0.00ns)   --->   "call void (...)* @_ssdm_op_SpecBitsMap(i32 %key) nounwind, !map !7"   --->   Operation 34 'specbitsmap' <Predicate = true> <Delay = 0.00>
+ST_7 : Operation 35 [1/1] (0.00ns)   --->   "call void (...)* @_ssdm_op_SpecBitsMap(i32 %seed) nounwind, !map !13"   --->   Operation 35 'specbitsmap' <Predicate = true> <Delay = 0.00>
+ST_7 : Operation 36 [1/1] (0.00ns)   --->   "call void (...)* @_ssdm_op_SpecBitsMap(i32 0) nounwind, !map !17"   --->   Operation 36 'specbitsmap' <Predicate = true> <Delay = 0.00>
+ST_7 : Operation 37 [1/1] (0.00ns)   --->   "call void (...)* @_ssdm_op_SpecTopModule([8 x i8]* @murmur3_str) nounwind"   --->   Operation 37 'spectopmodule' <Predicate = true> <Delay = 0.00>
+ST_7 : Operation 38 [1/1] (0.00ns)   --->   "call void (...)* @_ssdm_op_SpecInterface(i32 %key, [7 x i8]* @p_str, i32 0, i32 0, [1 x i8]* @p_str1, i32 0, i32 0, [1 x i8]* @p_str1, [1 x i8]* @p_str1, [1 x i8]* @p_str1, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @p_str1, [1 x i8]* @p_str1) nounwind" [src/murmur3.c:11]   --->   Operation 38 'specinterface' <Predicate = true> <Delay = 0.00>
+ST_7 : Operation 39 [1/1] (0.00ns)   --->   "call void (...)* @_ssdm_op_SpecInterface(i32 %seed, [7 x i8]* @p_str, i32 0, i32 0, [1 x i8]* @p_str1, i32 0, i32 0, [1 x i8]* @p_str1, [1 x i8]* @p_str1, [1 x i8]* @p_str1, i32 0, i32 0, i32 0, i32 0, [1 x i8]* @p_str1, [1 x i8]* @p_str1) nounwind" [src/murmur3.c:11]   --->   Operation 39 'specinterface' <Predicate = true> <Delay = 0.00>
+ST_7 : Operation 40 [1/1] (0.00ns)   --->   "call void (...)* @_ssdm_op_SpecPipeline(i32 -1, i32 1, i32 1, i32 0, [1 x i8]* @p_str1) nounwind" [src/murmur3.c:11]   --->   Operation 40 'specpipeline' <Predicate = true> <Delay = 0.00>
+ST_7 : Operation 41 [1/1] (0.00ns)   --->   "%tmp_10 = zext i16 %tmp_8 to i32" [src/murmur3.c:24]   --->   Operation 41 'zext' 'tmp_10' <Predicate = true> <Delay = 0.00>
+ST_7 : Operation 42 [1/1] (0.99ns)   --->   "%h_8 = xor i32 %tmp_10, %h_7" [src/murmur3.c:24]   --->   Operation 42 'xor' 'h_8' <Predicate = true> <Delay = 0.99> <Core = "LogicGate">   --->   Core 27 'LogicGate' <Latency = 0> <II = 1> <Delay = 0.99> <FuncUnit> <Opcode : 'and' 'or' 'xor'> <InPorts = 2> <OutPorts = 1>
+ST_7 : Operation 43 [1/1] (0.00ns)   --->   "ret i32 %h_8" [src/murmur3.c:25]   --->   Operation 43 'ret' <Predicate = true> <Delay = 0.00>
+
+
+============================================================
++ Verbose Summary: Timing violations
+============================================================
+Target clock period: 10ns, clock uncertainty: 1.25ns.
+
+ <State 1>: 8.51ns
+The critical path consists of the following:
+	wire read on port 'key' (src/murmur3.c:9) [8]  (0 ns)
+	'mul' operation ('k', src/murmur3.c:13) [12]  (8.51 ns)
+
+ <State 2>: 8.51ns
+The critical path consists of the following:
+	'mul' operation ('k', src/murmur3.c:15) [17]  (8.51 ns)
+
+ <State 3>: 7.35ns
+The critical path consists of the following:
+	'xor' operation ('h', src/murmur3.c:16) [18]  (0.993 ns)
+	'add' operation ('h', src/murmur3.c:18) [25]  (4.37 ns)
+	'xor' operation ('h', src/murmur3.c:19) [26]  (0.993 ns)
+	'xor' operation ('h', src/murmur3.c:20) [29]  (0.993 ns)
+
+ <State 4>: 8.51ns
+The critical path consists of the following:
+	'mul' operation ('h', src/murmur3.c:21) [30]  (8.51 ns)
+
+ <State 5>: 0.993ns
+The critical path consists of the following:
+	'xor' operation ('h', src/murmur3.c:22) [33]  (0.993 ns)
+
+ <State 6>: 8.51ns
+The critical path consists of the following:
+	'mul' operation ('h', src/murmur3.c:23) [34]  (8.51 ns)
+
+ <State 7>: 0.993ns
+The critical path consists of the following:
+	'xor' operation ('h', src/murmur3.c:24) [37]  (0.993 ns)
+
+
+============================================================
++ Verbose Summary: Binding
+============================================================
+N/A
+* FSMD analyzer results:
+  - Output states:
+ - Input state : 
+  - Chain level:
+	State 1
+	State 2
+	State 3
+	State 4
+	State 5
+	State 6
+	State 7
+
+
+============================================================
++ Verbose Summary: Datapath Resource usage 
+============================================================
+N/A

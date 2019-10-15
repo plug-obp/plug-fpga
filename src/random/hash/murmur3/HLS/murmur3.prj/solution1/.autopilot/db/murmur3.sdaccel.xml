@@ -1,0 +1,165 @@
+<profile>
+
+<section name = "Vivado HLS Report for 'murmur3'" level="0">
+<item name = "Date">Thu Oct 10 14:59:24 2019
+</item>
+<item name = "Version">2018.3 (Build 2405991 on Thu Dec 06 23:56:15 MST 2018)</item>
+<item name = "Project">murmur3.prj</item>
+<item name = "Solution">solution1</item>
+<item name = "Product family">zynq</item>
+<item name = "Target device">xc7z020clg484-1</item>
+</section>
+
+<section name = "Performance Estimates" level="0">
+<item name = "Timing (ns)">
+<section name = "" level="1">
+<item name = "Target clock period (ns)">10.00</item>
+<item name = "Clock uncertainty (ns)">1.25</item>
+<item name = "Target initiation interval">4294967295</item>
+<item name = "Estimated clock period (ns)">8.510</item>
+</section>
+</item>
+<item name = "Latency (clock cycles)">
+<section name = "" level="1">
+<item name = "Summary"><table name="" hasTotal="0">
+<keys size="6">, min, max, min, max, Type</keys>
+<column name="">6, 6, 1, 1, function</column>
+</table>
+</item>
+<item name = "Detail">
+<section name = "" level="1">
+<item name = "Instance"><table name="" hasTotal="0">
+<keys size="7">Instance, Module, min, max, min, max, Type</keys>
+</table>
+</item>
+<item name = "Loop"><table name="" hasTotal="0">
+<keys size="8">Loop Name, min, max, Latency, achieved, target, Count, Pipelined</keys>
+</table>
+</item>
+</section>
+</item>
+</section>
+</item>
+</section>
+
+<section name = "Utilization Estimates" level="0">
+<item name = "Summary"><table name="" hasTotal="1">
+<keys size="5">Name, BRAM_18K, DSP48E, FF, LUT</keys>
+<column name="DSP">-, -, -, -</column>
+<column name="Expression">-, 15, 0, 330</column>
+<column name="FIFO">-, -, -, -</column>
+<column name="Instance">-, -, -, -</column>
+<column name="Memory">-, -, -, -</column>
+<column name="Multiplexer">-, -, -, 72</column>
+<column name="Register">-, -, 364, -</column>
+<specialColumn name="Available">280, 220, 106400, 53200</specialColumn>
+<specialColumn name="Utilization (%)">0, 6, ~0, ~0</specialColumn>
+</table>
+</item>
+<item name = "Detail">
+<section name = "" level="1">
+<item name = "Instance"><table name="" hasTotal="1">
+<keys size="6">Instance, Module, BRAM_18K, DSP48E, FF, LUT</keys>
+</table>
+</item>
+<item name = "DSP48"><table name="" hasTotal="0">
+<keys size="3">Instance, Module, Expression</keys>
+</table>
+</item>
+<item name = "Memory"><table name="" hasTotal="1">
+<keys size="9">Memory, Module, BRAM_18K, FF, LUT, Words, Bits, Banks, W*Bits*Banks</keys>
+</table>
+</item>
+<item name = "FIFO"><table name="" hasTotal="1">
+<keys size="7">Name, BRAM_18K, FF, LUT, Depth, Bits, Size:D*B</keys>
+</table>
+</item>
+<item name = "Expression"><table name="" hasTotal="1">
+<keys size="7">Variable Name, Operation, DSP48E, FF, LUT, Bitwidth P0, Bitwidth P1</keys>
+<column name="h_5_fu_204_p2">*, 3, 0, 20, 32, 32</column>
+<column name="h_7_fu_227_p2">*, 3, 0, 20, 31, 32</column>
+<column name="k_2_fu_120_p2">*, 3, 0, 20, 29, 32</column>
+<column name="k_fu_82_p2">*, 3, 0, 20, 31, 32</column>
+<column name="tmp_fu_88_p2">*, 3, 0, 20, 29, 32</column>
+<column name="h_2_fu_172_p2">+, 0, 0, 32, 32, 32</column>
+<column name="tmp1_fu_166_p2">+, 0, 0, 32, 30, 32</column>
+<column name="ap_block_pp0_stage0_11001">and, 0, 0, 2, 1, 1</column>
+<column name="ap_block_state1_pp0_stage0_iter0">or, 0, 0, 2, 1, 1</column>
+<column name="ap_enable_pp0">xor, 0, 0, 2, 1, 2</column>
+<column name="ap_return">xor, 0, 0, 32, 32, 32</column>
+<column name="h_3_fu_178_p2">xor, 0, 0, 32, 32, 3</column>
+<column name="h_4_fu_198_p2">xor, 0, 0, 32, 32, 32</column>
+<column name="h_6_fu_222_p2">xor, 0, 0, 32, 32, 32</column>
+<column name="h_fu_126_p2">xor, 0, 0, 32, 32, 32</column>
+</table>
+</item>
+<item name = "Multiplexer"><table name="" hasTotal="1">
+<keys size="5">Name, LUT, Input Size, Bits, Total Bits</keys>
+<column name="key_ap_vld_in_sig">9, 2, 1, 2</column>
+<column name="key_ap_vld_preg">9, 2, 1, 2</column>
+<column name="key_blk_n">9, 2, 1, 2</column>
+<column name="key_in_sig">9, 2, 32, 64</column>
+<column name="seed_ap_vld_in_sig">9, 2, 1, 2</column>
+<column name="seed_ap_vld_preg">9, 2, 1, 2</column>
+<column name="seed_blk_n">9, 2, 1, 2</column>
+<column name="seed_in_sig">9, 2, 32, 64</column>
+</table>
+</item>
+<item name = "Register"><table name="" hasTotal="1">
+<keys size="5">Name, FF, LUT, Bits, Const Bits</keys>
+<column name="ap_CS_fsm">1, 0, 1, 0</column>
+<column name="ap_enable_reg_pp0_iter1">1, 0, 1, 0</column>
+<column name="ap_enable_reg_pp0_iter2">1, 0, 1, 0</column>
+<column name="ap_enable_reg_pp0_iter3">1, 0, 1, 0</column>
+<column name="ap_enable_reg_pp0_iter4">1, 0, 1, 0</column>
+<column name="ap_enable_reg_pp0_iter5">1, 0, 1, 0</column>
+<column name="ap_enable_reg_pp0_iter6">1, 0, 1, 0</column>
+<column name="h_4_reg_270">32, 0, 32, 0</column>
+<column name="h_5_reg_275">32, 0, 32, 0</column>
+<column name="h_6_reg_285">32, 0, 32, 0</column>
+<column name="h_7_reg_290">32, 0, 32, 0</column>
+<column name="k_2_reg_265">32, 0, 32, 0</column>
+<column name="key_ap_vld_preg">1, 0, 1, 0</column>
+<column name="key_preg">32, 0, 32, 0</column>
+<column name="seed_ap_vld_preg">1, 0, 1, 0</column>
+<column name="seed_preg">32, 0, 32, 0</column>
+<column name="seed_read_reg_250">32, 0, 32, 0</column>
+<column name="seed_read_reg_250_pp0_iter1_reg">32, 0, 32, 0</column>
+<column name="tmp_1_reg_255">15, 0, 15, 0</column>
+<column name="tmp_5_reg_260">17, 0, 17, 0</column>
+<column name="tmp_7_reg_280">19, 0, 19, 0</column>
+<column name="tmp_8_reg_295">16, 0, 16, 0</column>
+</table>
+</item>
+</section>
+</item>
+</section>
+
+<section name = "Interface" level="0">
+<item name = "Summary"><table name="" hasTotal="0">
+<keys size="6">RTL Ports, Dir, Bits, Protocol, Source Object, C Type</keys>
+<column name="ap_clk">in, 1, ap_ctrl_hs, murmur3, return value</column>
+<column name="ap_rst_n">in, 1, ap_ctrl_hs, murmur3, return value</column>
+<column name="ap_start">in, 1, ap_ctrl_hs, murmur3, return value</column>
+<column name="ap_done">out, 1, ap_ctrl_hs, murmur3, return value</column>
+<column name="ap_idle">out, 1, ap_ctrl_hs, murmur3, return value</column>
+<column name="ap_ready">out, 1, ap_ctrl_hs, murmur3, return value</column>
+<column name="ap_return">out, 32, ap_ctrl_hs, murmur3, return value</column>
+<column name="seed_ap_vld">in, 1, ap_vld, seed, scalar</column>
+<column name="seed">in, 32, ap_vld, seed, scalar</column>
+<column name="key_ap_vld">in, 1, ap_vld, key, scalar</column>
+<column name="key">in, 32, ap_vld, key, scalar</column>
+</table>
+</item>
+</section>
+
+<section name = "Critical Path" level="0">
+<item name = "Max Delay">8.51</item>
+<item name = "Critical Path Table"><table name="Critical Path Table" hasTotal="0">
+<keys size="15">Name, Operator, Delay, Accumulated Delay, Store Source, Resource, Core, Interface, Type, Port, Array, Scope, Pointer, Callee, Phi Node</keys>
+<column name="'key', src/murmur3.c:9">read, 0.00, 0.00, -, -, -, wire, read, &apos;key&apos;, -, -, -, -, -</column>
+<column name="'k', src/murmur3.c:13">mul, 8.51, 8.51, -, -, -, -, -, -, -, -, -, -, -</column>
+</table>
+</item>
+</section>
+</profile>
