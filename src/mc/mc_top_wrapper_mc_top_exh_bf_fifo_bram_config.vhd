@@ -34,7 +34,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity mc_top_wrapper is
 --  Port ( );
 	generic (
-			DATA_WIDTH				: integer := 32;
+			DATA_WIDTH				: integer := 512;
 			OPEN_ADDRESS_WIDTH		: integer := 10; 	
 			CLOSED_ADDRESS_WIDTH	: integer := 12  		
 		);
@@ -59,7 +59,7 @@ entity mc_top_wrapper is
     );
 end mc_top_wrapper;
 
-architecture Behavioral_mc_top_exh_h_fifo_bram_config of mc_top_wrapper is
+architecture Behavioral_mc_top_exh_bf_fifo_bram_config of mc_top_wrapper is
 --	constant DATA_WIDTH : integer := 32; --CONFIG_WIDTH; 
 --	constant OPEN_ADDRESS_WIDTH : integer := 6; 
 --	constant CLOSED_ADDRESS_WIDTH : integer := 4; 
@@ -92,7 +92,7 @@ architecture Behavioral_mc_top_exh_h_fifo_bram_config of mc_top_wrapper is
 	end component;
 
 
-	for mc_top_arch : mc_top_comp use configuration work.mc_top_exh_h_fifo_bram_config;
+	for mc_top_arch : mc_top_comp use configuration work.mc_top_exh_bf_fifo_bram_config;
 
 	signal is_started : std_logic; 
 	--signal start_s : std_logic; 
@@ -147,4 +147,4 @@ begin
 
 
 
-end;
+end architecture;

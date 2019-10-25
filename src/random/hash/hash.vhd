@@ -11,6 +11,7 @@ entity hash is
   port (
         clk      : in  std_logic;
         reset    : in  std_logic;
+        reset_n  : in  std_logic;
         data     : in  std_logic_vector(DATA_WIDTH - 1 downto 0);
         hash_en  : in  std_logic;
         hash_key : out std_logic_vector(HASH_WIDTH - 1 downto 0);

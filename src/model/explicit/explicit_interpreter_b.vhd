@@ -1,3 +1,10 @@
+use work.model_structure.all; 
+use work.explicit_params.all; 
+use work.explicit_structure.all; 
+use work.model.all; 
+
+
+
 architecture b of explicit_interpreter is
   type T_CONTROL is (
     S0, WAIT_INIT, SEARCH_SOURCE, WAIT_NEXT

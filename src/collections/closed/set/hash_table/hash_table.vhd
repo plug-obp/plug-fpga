@@ -4,7 +4,7 @@ use work.hash_table_components.all;
 
 
 architecture hash_table of set is
-	constant HASH_WIDTH : integer := 16; 
+	constant HASH_WIDTH : integer := 32; 
 
 	signal add_enable_s : std_logic; 
 	signal hash_s : std_logic_vector(HASH_WIDTH-1 downto 0); 

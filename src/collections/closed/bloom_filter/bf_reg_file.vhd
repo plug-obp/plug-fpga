@@ -10,11 +10,13 @@ entity bf_reg_file is
   port (
     clk         : in  std_logic;
     reset       : in  std_logic;
-reset_n : in std_logic; 
+    reset_n     : in std_logic; 
+    
     w_en        : in  std_logic;
     w_addr      : in  std_logic_vector(ADDR_WIDTH -1 downto 0);
     w_ok        : out std_logic;
     w_done      : out std_logic; 
+    
     r_addr      : in  std_logic_vector(ADDR_WIDTH -1 downto 0);
     r_en        : in  std_logic;
     r_ret       : out std_logic

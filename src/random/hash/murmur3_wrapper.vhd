@@ -40,7 +40,7 @@ begin
 	hash_inst : entity murmur3(behav)
 	port map(
 		ap_clk => clk,						-- : IN STD_LOGIC;
-		ap_rst_n => reset, 						-- : IN STD_LOGIC;
+		ap_rst_n => reset_n, 						-- : IN STD_LOGIC;
 		ap_start =>	ap_start, 					-- : IN STD_LOGIC;
 		ap_done => ap_done, 						-- : OUT STD_LOGIC;
 		ap_idle => 	open, 					-- : OUT STD_LOGIC;
@@ -86,9 +86,9 @@ begin
 
  	hash_ok <= '1' when ap_done = '1' and ap_start = '1' else '0'; 
  		
-	process (reset, clk, hash_en, ap_done)
+	process (reset_n, clk, hash_en, ap_done)
 	begin
-	  if (reset = '0') then
+	  if (reset_n = '0') then
 	  	ap_start <= '0'; 
 	  elsif (rising_edge(clk)) then
 		if hash_en = '1' then 
@@ -101,9 +101,9 @@ begin
 	  end if;
 	end process; 
 
-	process (reset, clk, hash_en)
+	process (reset_n, clk, hash_en)
 	begin
-	  if (reset = '0') then
+	  if (reset_n = '0') then
 	    key <= (others => '0');
 	    key_ap_vld <= '1'; 
 	  elsif (rising_edge(clk)) then
