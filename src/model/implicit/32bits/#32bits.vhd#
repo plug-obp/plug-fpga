@@ -1,0 +1,25 @@
+
+
+
+
+
+
+architecture a of model is
+  type s_state is
+    
+-- purpose: Register update 
+-- type   : sequential
+-- inputs : clk, reset_n
+-- outputs: 
+reg: process (clk, reset_n) is
+begin  -- process reg
+  if reset_n = '0' then                 -- asynchronous reset (active low)
+    
+  elsif clk'event and clk = '1' then    -- rising clock edge
+    
+  end if;
+end process reg;begin  -- architecture a
+
+  
+
+end architecture a;

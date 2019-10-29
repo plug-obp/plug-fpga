@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use WORK.explicit_params.ALL;
+use model.explicit_params.ALL;
 package model_structure is
     constant CONFIG_WIDTH : integer := 168;
     constant AB_PARAMS : T_MODEL_PARAMS := (10, 16, 1, CONFIG_WIDTH);

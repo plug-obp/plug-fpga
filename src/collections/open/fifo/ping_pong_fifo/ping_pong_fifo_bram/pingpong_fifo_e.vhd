@@ -59,7 +59,7 @@ begin
 		)
 		port map(
 			clk => clk, 
-			reset => reset_n, 
+			reset_n => reset_n, 
 			clear => '0', 
 			
 			we 		=> rf_c_w,

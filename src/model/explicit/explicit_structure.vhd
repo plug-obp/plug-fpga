@@ -1,6 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use WORK.model_structure.ALL;
+
+use work.model_structure.ALL;
 package explicit_structure is
     -- BEGIN GENERIC EXPLICIT MODEL
     type T_STATES is array (0 to AB_PARAMS.nb_states-1) of T_CONFIGURATION;

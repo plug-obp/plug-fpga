@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 
 
 
-architecture a of bloom_filter_controler is
+architecture a of bloom_filter_controler is -- @suppress "Unused port: data is not used in closed.bloom_filter_controler(a)"
   
   --constant HAS_OUTPUT_REGISTER : boolean := false;
   constant CAPACITY : integer := 2**ADDR_WIDTH; 
@@ -81,7 +81,7 @@ begin
     end if;
   end process;
 
-  next_update : process (add_enable, hash_ok, rf_p_r_ok, data, hash, rf_p_r_data, state_r) is
+  next_update : process (add_enable, hash_ok, rf_p_r_ok, hash, rf_p_r_data, state_r, clear_table) is
     variable o : T_OUTPUT := DEFAULT_OUTPUT;
     variable c : T_STATE  := DEFAULT_STATE;
   begin

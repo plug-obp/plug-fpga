@@ -3,7 +3,7 @@ use ieee.std_logic_1164.all;
 use work.open_components.all; 
 
 
-architecture a of stack is
+architecture stack_a of pingpong_fifo is
 
 	signal rf_c_r		 	: std_logic; 
 	signal rf_c_w		 	: std_logic; 
@@ -16,9 +16,9 @@ architecture a of stack is
 begin
 
 
-	controler : controler_cmp
+	controler : entity work.open_controler(stack_ctrl_a)
 		generic map (
-			HAS_OUTPUT_REGISTER => false, 
+			HAS_OUTPUT_REGISTER => true, 
 			ADDR_WIDTH => ADDRESS_WIDTH, 
 			DATA_WIDTH => DATA_WIDTH
 		)
@@ -51,7 +51,7 @@ begin
 		); 
 
 
-	reg_file_configs : reg_file_ssdpRAM_cmp
+	reg_file_configs : entity work.reg_file_ssdpRAM(syn) 
 		generic map(
 			MEM_TYPE => "block", 
 			DATA_WIDTH => DATA_WIDTH, 
@@ -59,7 +59,7 @@ begin
 		)
 		port map(
 			clk => clk, 
-			reset => reset_n, 
+			reset_n => reset_n, 
 			clear => '0', 
 			
 			we 		=> rf_c_w,
