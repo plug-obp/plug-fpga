@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.sigasi.hdt.shared.librarymapping.model:LibraryMappings xmlns:com.sigasi.hdt.shared.librarymapping.model="com.sigasi.hdt.vhdl.scoping.librarymapping" Version="2">
+  <Mappings Location="Common Libraries/IEEE" Library="ieee"/>
+  <Mappings Location="Common Libraries/IEEE Synopsys" Library="ieee"/>
+  <Mappings Location="Common Libraries" Library="not mapped"/>
+  <Mappings Location="doc" Library="not mapped"/>
+  <Mappings Location="src/collections/closed/bloom_filter/bloom_filter_a.vhd" Library="not mapped"/>
+  <Mappings Location="src/collections/closed/set/hash_table" Library="not mapped"/>
+  <Mappings Location="src/collections/closed/set/hash_table_HLS" Library="not mapped"/>
+  <Mappings Location="src/collections/closed/set/linear_probe_set" Library="not mapped"/>
+  <Mappings Location="src/collections/closed/set/linear_set" Library="not mapped"/>
+  <Mappings Location="src/controler.vhd" Library="not mapped"/>
+  <Mappings Location="src/examples" Library="not mapped"/>
+  <Mappings Location="src/mc/configs" Library="not mapped"/>
+  <Mappings Location="src/mc/mc_top_wrapper_mc_top_exh_h_fifo_bram_config.vhd" Library="not mapped"/>
+  <Mappings Location="src/mc_top_exh_lset_tb.vhd" Library="not mapped"/>
+  <Mappings Location="src/model/explicit/models" Library="not mapped"/>
+  <Mappings Location="src/model/implicit" Library="not mapped"/>
+  <Mappings Location="src/random/hash/fasthash" Library="not mapped"/>
+  <Mappings Location="src/random/hash/murmur3/HLS" Library="not mapped"/>
+  <Mappings Location="src/random/hash/murmur3_sa" Library="not mapped"/>
+  <Mappings Location="src/random/hash/murmur3_v2" Library="not mapped"/>
+  <Mappings Location="src/random/hash/simple_hash.vhd" Library="not mapped"/>
+  <Mappings Location="src/transition_relation" Library="not mapped"/>
+  <Mappings Location="src/utils/mc_mock_entities.vhd" Library="not mapped"/>
+  <Mappings Location="src/utils/mc_sem_and_closed_v1.vhd" Library="not mapped"/>
+  <Mappings Location="tests" Library="not mapped"/>
+  <Mappings Location="Common Libraries/STD" Library="std"/>
+  <Mappings Location="" Library="work"/>
+  <Mappings Location="src/mc/configs/Exhaustive/BFS/mc_top_exh_bf_fifo_bram_config.vhd" Library="work"/>
+  <Mappings Location="tests/collections/stack/tb_stack_a.vhd" Library="work"/>
+  <Mappings Location="tests/mc/exhaustive/mc_top_wrapper_exh_fifo_bram.vhd" Library="work"/>
+</com.sigasi.hdt.shared.librarymapping.model:LibraryMappings>

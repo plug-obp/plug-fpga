@@ -12,3 +12,11 @@ src/collections/fifo/wrapper/fifo_wrapper.vhd~
 src/mc/#mc_top_v1.vhd#
 **/*.jou
 **/*.log
+/compilation_order.csv
+/toplevel_order.csv
+**/murmur3_v2/hls_output/**
+**/murmur3_v2/proj.tmp/**
+**/murmur3_sa/build/**
+**/fasthash/sim_proj/**
+**/fasthash/build/**
+**/*.prefs

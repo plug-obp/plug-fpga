@@ -1,0 +1,37 @@
+[*]
+[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
+[*] Tue Oct 29 00:23:48 2019
+[*]
+[dumpfile] "/home/fourniem/Playground/GVE/Hardware/plug-fpga/out.ghw"
+[dumpfile_mtime] "Tue Oct 29 00:23:29 2019"
+[dumpfile_size] 3305
+[savefile] "/home/fourniem/Playground/GVE/Hardware/plug-fpga/out.sav"
+[timestart] 0
+[size] 1000 600
+[pos] -389 -240
+*-28.286180 1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.tb_stack_a.
+[treeopen] top.tb_stack_a.stack_inst.
+[sst_width] 225
+[signals_width] 126
+[sst_expanded] 1
+[sst_vpaned_height] 160
+@28
+top.tb_stack_a.beuhh
+top.tb_stack_a.is_swapped
+top.tb_stack_a.push_is_done
+top.tb_stack_a.pop_is_done
+top.tb_stack_a.is_last
+top.tb_stack_a.is_full
+top.tb_stack_a.is_empty
+top.tb_stack_a.data_ready
+top.tb_stack_a.mark_last
+top.tb_stack_a.push_enable
+top.tb_stack_a.pop_enable
+top.tb_stack_a.is_pingpong
+top.tb_stack_a.reset_n
+top.tb_stack_a.reset
+top.tb_stack_a.clk
+[pattern_trace] 1
+[pattern_trace] 0
