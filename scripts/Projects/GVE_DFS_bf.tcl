@@ -12,7 +12,7 @@ set hwdef_directory $::env(HWDEF_DIR)
 set hdf_name hdf_${open_type}_${closed_type}.hdf
 
 # Create project 
-create_project $project_name $project_directory/$project_name -part xc7z020clg484-1
+create_project -force $project_name $project_directory/$project_name -part xc7z020clg484-1
 # Set board 
 set_property board_part em.avnet.com:zed:part0:1.4 [current_project]
 # Set language : VHDL 
@@ -64,7 +64,16 @@ if { $closed_type == "bf" } then {
 
 
 } elseif { $closed_type == "hashtable" } then {
+	read_vhdl $plug_repo/src/collections/closed/set.vhd
+	read_vhdl $plug_repo/src/collections/closed/set/hash_table/hash_table_pkg.vhd
+	read_vhdl $plug_repo/src/collections/closed/set/hash_table/hash_table.vhd
 
+	read_vhdl $plug_repo/src/collections/closed/set/hash_table/hash_table_controler.vhd
+	read_vhdl $plug_repo/src/collections/closed/set/hash_table/hash_table_controler_a.vhd
+	
+	read_vhdl $plug_repo/src/random/hash/hash.vhd
+	read_vhdl $plug_repo/src/random/hash/murmur3/murmur3.vhd
+	read_vhdl $plug_repo/src/random/hash/murmur3/murmur3_wrapper.vhd
 
 	incr ctrl 2
 }
@@ -111,8 +120,8 @@ switch $ctrl {
 		add_files -fileset sim_1 -norecurse $plug_repo/tests/mc/exhaustive/mc_top_wrapper_bf_fifo_bram_tb.vhd
 	}
 	1 {			# Stack and bloom_filter 
-		puts " TODO : implement configurations and wrapper for stack with bf"
-		exit 
+		read_vhdl $plug_repo/src/mc/configs/Exhaustive/DFS/mc_top_bf_stack_bram_config.vhd
+		read_vhdl $plug_repo/src/mc/mc_top_wrapper_mc_top_bf_stack_bram_config.vhd
 	}
 	2 {			# Fifo and hashtable 
 		read_vhdl $plug_repo/src/mc/configs/Exhaustive/BFS/mc_top_h_fifo_bram_config.vhd
@@ -120,8 +129,9 @@ switch $ctrl {
 		add_files -fileset sim_1 -norecurse $plug_repo/tests/mc/exhaustive/mc_top_wrapper_h_fifo_bram_tb.vhd
 	}
 	3 {			# Stack and hashtable
-		puts " TODO : implement configurations and wrapper for stack with hashtable"
-		exit
+		read_vhdl $plug_repo/src/mc/configs/Exhaustive/DFS/mc_top_h_stack_bram_config.vhd
+		read_vhdl $plug_repo/src/mc/mc_top_wrapper_mc_top_h_stack_bram_config.vhd
+		add_files -fileset sim_1 -norecurse $plug_repo/tests/mc/exhaustive/mc_top_wrapper_h_stack_bram_tb.vhd
 
 	}
 	default { puts "Error, shouldn't happen "; exit}
@@ -204,8 +214,8 @@ create_ip_run [get_files -of_objects [get_fileset sources_1] ${project_directory
 launch_runs -jobs 8 {design_1_mc_top_wrapper_0_0_synth_1 design_1_processing_system7_0_0_synth_1 design_1_rst_ps7_0_100M_0_synth_1 design_1_xbar_0_synth_1 design_1_AXI4_sem_in_frontend_0_0_synth_1 design_1_AXI4_testIP_0_0_synth_1 design_1_auto_pc_0_synth_1}
 # export_simulation -of_objects [get_files ${project_directory}/${project_name}/project_1.srcs/sources_1/bd/design_1/design_1.bd] -directory ${project_directory}/${project_name}/project_1.ip_user_files/sim_scripts -ip_user_files_dir ${project_directory}/${project_name}/project_1.ip_user_files -ipstatic_source_dir ${project_directory}/${project_name}/project_1.ip_user_files/ipstatic -lib_map_path [list {modelsim=/home/fourniem/Playground/Zynq/GVE_mb_v2/GVE_mb_v2.cache/compile_simlib} {questa=/tmp/test/5/project_gve_dfs_bf/project_1.cache/compile_simlib/questa} {ies=/tmp/test/5/project_gve_dfs_bf/project_1.cache/compile_simlib/ies} {xcelium=/tmp/test/5/project_gve_dfs_bf/project_1.cache/compile_simlib/xcelium} {vcs=/tmp/test/5/project_gve_dfs_bf/project_1.cache/compile_simlib/vcs} {riviera=/tmp/test/5/project_gve_dfs_bf/project_1.cache/compile_simlib/riviera}] -use_ip_compiled_libs -force -quiet
 
-make_wrapper -files [get_files /tmp/test/6/test1/test1.srcs/sources_1/bd/design_1/design_1.bd] -top
-add_files -norecurse /tmp/test/6/test1/test1.srcs/sources_1/bd/design_1/hdl/design_1_wrapper.vhd
+make_wrapper -files [get_files ${project_directory}/${project_name}/${project_name}.srcs/sources_1/bd/design_1/design_1.bd] -top
+add_files -norecurse ${project_directory}/${project_name}/${project_name}.srcs/sources_1/bd/design_1/hdl/design_1_wrapper.vhd
 set_property top design_1_wrapper [current_fileset]
 
 update_compile_order -fileset sources_1

@@ -96,7 +96,7 @@ begin
 		)
 		port map(
 			clk    => clk,
-			reset  => reset_n,
+			reset_n  => reset_n,
 			clear  => rf_c_clear,
 			we     => rf_c_w,
 			addr_w => rf_c_w_addr,
@@ -115,7 +115,7 @@ begin
 		)
 		port map(
 			clk    => clk,
-			reset  => reset_n,
+			reset_n  => reset_n,
 			clear  => rf_p_clear,
 			we     => rf_p_w,
 			addr_w => rf_p_w_addr,
