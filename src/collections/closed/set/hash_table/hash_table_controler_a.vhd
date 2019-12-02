@@ -87,6 +87,7 @@ begin
 	next_update : process(add_enable, hash_ok, rf_c_r_ok, rf_p_r_ok, data, hash, rf_p_r_data, rf_c_r_data, state_r, clear_table) is
 		variable o : T_OUTPUT := DEFAULT_OUTPUT;
 		variable c : T_STATE  := DEFAULT_STATE;
+		variable toDelete : std_logic_vector(ADDR_WIDTH downto 0); 
 	begin
 		c := state_r;
 		o := DEFAULT_OUTPUT;
@@ -126,7 +127,10 @@ begin
 							end if;
 							c.ctrl_state := S0;
 						else
-							c.index := std_logic_vector((unsigned(c.index) + 1) mod CAPACITY);
+							toDelete := std_logic_vector((unsigned(c.index) + 1) mod CAPACITY);
+							c.index := toDelete(ADDR_WIDTH-1 downto 0); 
+							--c.index := std_logic_vector((unsigned(c.index) + 1) mod CAPACITY)(ADDR_WIDTH-1 downto 0); 
+							--c.index := std_logic_vector("mod"((unsigned(c.index) + 1),CAPACITY)(ADDR_WIDTH-1 downto 0)); 
 							if rf_c_r_data = c.config then
 								o.isIn       := '1';
 								o.isFull     := '0';
