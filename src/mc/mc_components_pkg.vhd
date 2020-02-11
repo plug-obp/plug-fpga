@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 package mc_components is
 
-	component open_stream is          
+	component open_stream is
 		generic(
 			ADDRESS_WIDTH : integer := 8; -- address width in bits, maximum CAPACITY is 2^(ADDRESS_WIDTH)-1
 			DATA_WIDTH    : integer := 8 -- data width in bits, the size of a configuration
@@ -28,7 +28,7 @@ package mc_components is
 		);
 	end component;
 
-	component closed_stream is          
+	component closed_stream is
 		generic(
 			ADDRESS_WIDTH : integer := 4; -- address width in bits, maximum CAPACITY is 2^(ADDRESS_WIDTH)-1
 			DATA_WIDTH    : integer := 16 -- data width in bits, the size of a configuration
@@ -42,7 +42,9 @@ package mc_components is
 			data_in     : in  std_logic_vector(DATA_WIDTH - 1 downto 0); -- the data that is added when write_enable
 			is_in       : out std_logic; -- already_in is asserted if the last data_in handled was already in the set   
 			is_full     : out std_logic; -- is_full is asserted when data_count == CAPACITY
-			is_done     : out std_logic
+			is_done     : out std_logic;
+			data_out    : out std_logic_vector(DATA_WIDTH - 1 downto 0);
+			idle        : out std_logic
 		);
 	end component;
 
@@ -139,6 +141,7 @@ package mc_components is
 			closed_is_full      : in  std_logic;
 			idle_next_controler : in  std_logic;
 			idle_scheduler      : in  std_logic;
+			idle_closed         : in  std_logic;
 			sim_end             : out std_logic;
 			end_code            : out std_logic_vector(7 downto 0)
 		);

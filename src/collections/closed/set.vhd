@@ -16,6 +16,8 @@ entity set is
 		clear_table : in  std_logic;
 		is_in       : out std_logic;    -- already_in is asserted if the last data_in handled was already in the set
 		is_full     : out std_logic;    -- is_full is asserted when data_count == CAPACITY
-		is_done     : out std_logic
+		is_done     : out std_logic;
+		data_out    : out std_logic_vector(DATA_WIDTH - 1 downto 0);
+		idle        : out std_logic
 	);
 end entity set;

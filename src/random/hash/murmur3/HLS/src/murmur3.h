@@ -13,7 +13,7 @@
 #define uint32 unsigned int
 #define uint8 char
 
-uint32 mumur3(const uint32 key, uint32 seed);
+uint32 murmur3(const uint32 key, uint32 seed);
 
 
 #endif /* MURMUR3_H_ */

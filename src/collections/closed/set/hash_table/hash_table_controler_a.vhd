@@ -87,7 +87,7 @@ begin
 	next_update : process(add_enable, hash_ok, rf_c_r_ok, rf_p_r_ok, data, hash, rf_p_r_data, rf_c_r_data, state_r, clear_table) is
 		variable o : T_OUTPUT := DEFAULT_OUTPUT;
 		variable c : T_STATE  := DEFAULT_STATE;
-		variable toDelete : std_logic_vector(ADDR_WIDTH downto 0); 
+		variable toDelete : std_logic_vector(c.index'length-1 downto 0); 
 	begin
 		c := state_r;
 		o := DEFAULT_OUTPUT;

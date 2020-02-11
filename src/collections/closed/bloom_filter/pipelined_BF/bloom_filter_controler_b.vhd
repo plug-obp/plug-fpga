@@ -1,0 +1,209 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+--use ieee.numeric_std_unsigned.all; 
+use ieee.numeric_std.all;
+
+architecture b of bloom_filter_controler is -- @suppress "Unused port: data is not used in closed.bloom_filter_controler(a)"
+
+	--constant HAS_OUTPUT_REGISTER : boolean := false;
+	constant CAPACITY : integer := 2**ADDR_WIDTH;
+
+	-- type T_SELECT is (isIn, conf); 
+
+	type T_CONTROL is (S0, S1, S_WAIT_HASH, S_READ_NEXT, S_WAIT_READ);
+	type T_STATE is record
+		ctrl_state      : T_CONTROL;
+		has_instant_req : boolean;
+		size            : std_logic_vector(ADDR_WIDTH - 1 downto 0);
+		index           : std_logic_vector(ADDR_WIDTH - 1 downto 0);
+		state           : std_logic_vector(DATA_WIDTH - 1 downto 0);
+	end record;
+	constant DEFAULT_STATE : T_STATE := (S0, false, (others => '0'), (others => '0'), (others => '0'));
+
+	type T_OUTPUT is record
+		rf_p_clear  : std_logic;
+		rf_p_r      : std_logic;
+		rf_p_r_addr : std_logic_vector(ADDR_WIDTH - 1 downto 0);
+		rf_p_w      : std_logic;
+		rf_p_w_data : std_logic_vector(0 downto 0);
+		rf_p_w_addr : std_logic_vector(ADDR_WIDTH - 1 downto 0);
+		isIn        : std_logic;
+		isFull      : std_logic;
+		isDone      : std_logic;
+		data_out    : std_logic_vector(DATA_WIDTH - 1 downto 0);
+	end record;
+	constant DEFAULT_OUTPUT : T_OUTPUT := ('0', '0', (others => '0'), '0', (others => '0'), (others => '0'), '0', '0', '0', (others => '0'));
+
+	--next state
+	signal state_c  : T_STATE  := DEFAULT_STATE;
+	signal output_c : T_OUTPUT := DEFAULT_OUTPUT;
+
+	--registers
+	signal state_r : T_STATE := DEFAULT_STATE;
+
+	procedure readAt(variable addr      : in std_logic_vector(ADDR_WIDTH-1 downto 0);
+	                 variable ouput_var : inout T_OUTPUT) is
+	begin
+		ouput_var.rf_p_r      := '1';
+		ouput_var.rf_p_r_addr := addr;
+	end procedure;
+
+	procedure writeAt(
+		variable addr      : in std_logic_vector(ADDR_WIDTH-1 downto 0);
+		variable ouput_var : inout T_OUTPUT
+	) is
+	begin
+		ouput_var.rf_p_w         := '1';
+		ouput_var.rf_p_w_addr    := addr;
+		ouput_var.rf_p_w_data(0) := '1';
+
+	end procedure;
+
+begin
+
+	state_update : process(clk, reset_n) is
+	begin
+		if reset_n = '0' then
+			state_r <= DEFAULT_STATE;
+		elsif rising_edge(clk) then
+			if reset = '1' then
+				state_r <= DEFAULT_STATE;
+			else
+				state_r <= state_c;
+			end if;
+		end if;
+	end process;
+
+	next_update : process(add_enable, hash_ok, rf_p_r_ok, hash, rf_p_r_data, state_r, clear_table) is
+		variable o : T_OUTPUT := DEFAULT_OUTPUT;
+		variable c : T_STATE  := DEFAULT_STATE;
+	begin
+		c := state_r;
+		o := DEFAULT_OUTPUT;
+
+		case (c.ctrl_state) is
+			when S0 =>
+
+				if c.has_instant_req then
+					o.isDone          := '1';
+					o.isIn            := rf_p_r_data(0);
+					o.data_out        := c.state;
+					c.has_instant_req := false;
+				end if;
+
+				if add_enable = '1' and hash_ok = '1' then
+					c.index(ADDR_WIDTH - 1 downto 0) := hash(ADDR_WIDTH - 1 downto 0);
+					readAt(c.index, o);
+					writeAt(c.index, o);
+					c.ctrl_state                     := S1;
+					c.state                          := data;
+					c.has_instant_req                := true;
+				elsif add_enable = '1' then
+					c.ctrl_state := S_WAIT_HASH;
+				end if;
+			when S1 =>
+
+				if c.has_instant_req then
+					if rf_p_r_ok = '0' then
+						report "Error, no response from bram" severity WARNING;
+					end if;
+
+					o.isDone          := '1';
+					o.isIn            := rf_p_r_data(0);
+					o.data_out        := c.state;
+					c.has_instant_req := false;
+				end if;
+				if add_enable = '1' and hash_ok = '1' then
+					c.index(ADDR_WIDTH - 1 downto 0) := hash(ADDR_WIDTH - 1 downto 0);
+					readAt(c.index, o);
+					writeAt(c.index, o);
+					c.ctrl_state                     := S0;
+					c.state                          := data;
+					c.has_instant_req                := true;
+				elsif add_enable = '1' then
+					c.ctrl_state := S_WAIT_HASH;
+				end if;
+
+			when S_WAIT_HASH =>
+				if hash_ok = '1' then
+					c.index(ADDR_WIDTH - 1 downto 0) := hash(ADDR_WIDTH - 1 downto 0);
+					c.ctrl_state                     := S_READ_NEXT;
+				end if;
+			when S_READ_NEXT =>
+				readAt(c.index, o);
+				c.ctrl_state := S_WAIT_READ;
+			when S_WAIT_READ =>
+				if (rf_p_r_ok = '1') then
+					if rf_p_r_data(0) = '1' then
+						o.isDone     := '1';
+						o.isIn       := '1';
+						c.ctrl_state := S0;
+					else
+						writeAt(c.index, o);
+						c.size       := std_logic_vector(unsigned(c.size) + 1);
+						c.ctrl_state := S0;
+						o.isDone     := '1';
+						o.isIn       := '0';
+
+					end if;
+				end if;
+		end case;
+
+		--set the state_c
+		state_c  <= c;
+		--set the outputs
+		output_c <= o;
+	end process;
+
+	out_register : if HAS_OUTPUT_REGISTER generate
+		registered_output : process(clk, reset_n) is
+			procedure reset_output is
+			begin
+				rf_p_clear  <= '0';
+				rf_p_r      <= '0';
+				rf_p_r_addr <= (others => '0');
+				rf_p_w      <= '0';
+				rf_p_w_data <= (others => '0');
+				rf_p_w_addr <= (others => '0');
+				isIn        <= '0';
+				isFull      <= '0';
+				isDone      <= '0';
+
+			end;
+		begin
+			if reset_n = '0' then
+				reset_output;
+			elsif rising_edge(clk) then
+				if reset = '1' then
+					reset_output;
+				else
+					rf_p_clear  <= output_c.rf_p_clear;
+					rf_p_r      <= output_c.rf_p_r;
+					rf_p_r_addr <= output_c.rf_p_r_addr;
+					rf_p_w      <= output_c.rf_p_w;
+					rf_p_w_data <= output_c.rf_p_w_data;
+					rf_p_w_addr <= output_c.rf_p_w_addr;
+					isIn        <= output_c.isIn;
+					isFull      <= output_c.isFull;
+					isDone      <= output_c.isDone;
+					data_out    <= output_c.data_out;
+
+				end if;
+			end if;
+		end process;
+	end generate;
+
+	no_out_register : if not HAS_OUTPUT_REGISTER generate
+		--non-registered output
+		rf_p_clear  <= output_c.rf_p_clear;
+		rf_p_r      <= output_c.rf_p_r;
+		rf_p_r_addr <= output_c.rf_p_r_addr;
+		rf_p_w      <= output_c.rf_p_w;
+		rf_p_w_data <= output_c.rf_p_w_data;
+		rf_p_w_addr <= output_c.rf_p_w_addr;
+		isIn        <= output_c.isIn;
+		isFull      <= output_c.isFull;
+		isDone      <= output_c.isDone;
+		data_out    <= output_c.data_out;
+	end generate;
+end architecture;

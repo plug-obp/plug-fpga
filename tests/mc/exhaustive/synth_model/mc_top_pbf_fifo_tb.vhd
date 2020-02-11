@@ -7,10 +7,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 
-entity mc_top_wrapper_h_fifo_bram_synth_model_tb is
-end entity mc_top_wrapper_h_fifo_bram_synth_model_tb;
+entity mc_top_wrapper_pbf_fifo_bram_synth_model_tb is
+end entity mc_top_wrapper_pbf_fifo_bram_synth_model_tb;
 
-architecture RTL of mc_top_wrapper_h_fifo_bram_synth_model_tb is
+architecture RTL of mc_top_wrapper_pbf_fifo_bram_synth_model_tb is
 	signal clk                    : std_logic                     := '0';
 	signal reset                  : std_logic                     := '0';
 	signal reset_n                : std_logic                     := '0';
@@ -82,12 +82,12 @@ begin
 		wait; 
 	end process main_p; 
 		
-	
-	a : entity work.mc_top_wrapper(Behavioral_mc_top_h_fifo_bram_config)
+
+	a : entity work.mc_top_wrapper(Behavioral_mc_top_pbf_fifo_bram_config)
 		generic map(
 			DATA_WIDTH           => DATA_WIDTH,
 			OPEN_ADDRESS_WIDTH   => OPEN_ADDRESS_WIDTH,
-			CLOSED_ADDRESS_WIDTH => CLOSED_ADDRESS_WIDTH
+			CLOSED_ADDRESS_WIDTH => 16
 		)
 		port map(
 			clk             => clk,

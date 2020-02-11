@@ -65,6 +65,11 @@ int main(){
 		}
 
 	}
+    int x = 1;
+
+    printf("hash(0x0) : %8x\n", murmur3(0, 42));
+
+    printf("hash(0x1) : %8x\n", murmur3(1, 42));
 
 	printf("Ok\n\n\n");
 

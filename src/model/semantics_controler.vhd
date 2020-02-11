@@ -188,7 +188,7 @@ use IEEE.STD_LOGIC_1164.all;
 
 entity semantics_controler_v2 is
   generic (
-    HAS_OUTPUT_REGISTER : boolean := true;
+    HAS_OUTPUT_REGISTER : boolean := false;
     CONFIG_WIDTH        : integer := 6
     );
   port (

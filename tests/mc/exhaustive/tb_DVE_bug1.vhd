@@ -7,10 +7,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 
-entity mc_top_wrapper_h_fifo_bram_synth_model_tb is
-end entity mc_top_wrapper_h_fifo_bram_synth_model_tb;
+entity tb_dve_bug1 is
+end entity tb_dve_bug1;
 
-architecture RTL of mc_top_wrapper_h_fifo_bram_synth_model_tb is
+architecture RTL of tb_dve_bug1 is
 	signal clk                    : std_logic                     := '0';
 	signal reset                  : std_logic                     := '0';
 	signal reset_n                : std_logic                     := '0';
@@ -30,24 +30,6 @@ architecture RTL of mc_top_wrapper_h_fifo_bram_synth_model_tb is
 	constant CLOSED_ADDRESS_WIDTH : integer                       := 16;
 
 begin
-
-	count : process(clk) is
-		variable is_started : boolean := False; 
-		variable counter : natural := 0; 
-	begin
-		if rising_edge(clk) then
-			if is_started = True then 
-				counter := counter + 1; 
-			elsif is_started = false and start = '1' then 
-				is_started := true; 
-			end if; 
-		end if; 
-		if sim_end = '1' then	
-			report "mambo " & natural'image(counter) & " tpt ";
-			-- wait; 
-		end if; 
-	end process; 
-
 
 	clk_p : process is
 	begin
@@ -106,20 +88,63 @@ begin
 			t_done_next     => t_done_next
 		);
 
-	m : entity work.synth_model(a)
-		generic map(
-			N_BITS => 15)
-		port map(
-			clk            => clk,
-			reset          => reset,
-			reset_n        => reset_n,
-			initial_enable => i_en_next,
-			next_enable    => n_en_next,
-			source_in      => source_next,
-			target_out     => target_out_next,
-			target_ready   => t_ready_next,
-			has_next       => has_next_next,
-			is_done        => t_done_next
-		);
+
+	init : process(clk) is
+		variable init_is_done : integer := 0;
+		variable cnt : integer := 0; 
+		
+	begin
+		if reset_n = '0' then
+			init_is_done := 0; 
+		elsif rising_edge(clk) then 
+			if i_en_next = '1' then
+				target_out_next <= (others => '0'); 
+				t_ready_next <= '1'; 
+				has_next_next <= '0'; 
+				t_done_next <= '1';
+			elsif n_en_next = '1' then 
+				if cnt < 2 then 
+				target_out_next <= std_logic_vector(to_unsigned(cnt, target_out_next'length)); 
+				t_ready_next <= '1'; 
+				has_next_next <= '1'; 
+				t_done_next <= '1';
+				cnt := cnt + 1; 
+				elsif cnt = 2 then 
+				target_out_next <= std_logic_vector(to_unsigned(cnt, target_out_next'length)); 
+				t_ready_next <= '0'; 
+				has_next_next <= '0'; 
+				t_done_next <= '1';
+				
+				end if; 	
+			
+			else  
+				target_out_next <= (others => '0'); 
+				t_ready_next <= '0'; 
+				has_next_next <= '0'; 
+				t_done_next <= '0';
+			end if;
+			
+		end if;
+		
+	end process init;
+	
+	
+
+--	m : entity work.synth_model(a)
+--		generic map(
+--			N_BITS => 12
+--		)
+--		port map(
+--			clk            => clk,
+--			reset          => reset,
+--			reset_n        => reset_n,
+--			initial_enable => i_en_next,
+--			next_enable    => n_en_next,
+--			source_in      => source_next,
+--			target_out     => target_out_next,
+--			target_ready   => t_ready_next,
+--			has_next       => has_next_next,
+--			is_done        => t_done_next
+--		);
 
 end architecture RTL;

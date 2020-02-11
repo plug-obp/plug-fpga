@@ -1,0 +1,130 @@
+/home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/pipelined_BF/bloom_filter_controler_b.vhd {1 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/pipelined_BF/bloom_filter_controler_b.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling architecture b of bloom_filter_controler
+-- Loading entity bloom_filter_controler
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/set.vhd {1 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/set.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity set
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/utils/reg_file.vhd {2 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/utils/reg_file.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity reg_file_ssdpRAM
+-- Compiling architecture syn of reg_file_ssdpRAM
+** Warning: /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/utils/reg_file.vhd(32): (vcom-1236) Shared variables must be of a protected type.
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/Thins_tried/setSystemCTestbench/main.cpp {0 {sccom -work work -stats=none /home/fourniem/Playground/GVE/Hardware/Thins_tried/setSystemCTestbench/main.cpp
+** Error: (sccom-95) Your installation directory does not contain the appropriate GNU C++ compiler. Download and install the tarball from the ftp site (modelsim-gcc-linux_x86_64.mis).
+Errors: 1, Warnings: 0
+
+} {2.0 3.0} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/tests/collections/pipelined_BF/pipelined_BF_tb.vhd {1 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/tests/collections/pipelined_BF/pipelined_BF_tb.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity pipelined_BF_tb
+-- Compiling architecture RTL of pipelined_BF_tb
+-- Loading entity set
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/random/hash/murmur3/murmur3_wrapper.vhd {1 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/random/hash/murmur3/murmur3_wrapper.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling architecture murmur3_wrapper of hash
+-- Loading entity hash
+-- Loading entity murmur3
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/random/hash/murmur3/murmur3.vhd {1 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/random/hash/murmur3/murmur3.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity murmur3
+-- Compiling architecture behav of murmur3
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/bloom_filter_controler_a.vhd {1 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/bloom_filter_controler_a.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling architecture a of bloom_filter_controler
+-- Loading entity bloom_filter_controler
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/bloom_filter.vhd {1 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/bloom_filter.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity bloom_filter
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/bloom_filter_pkg.vhd {1 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/bloom_filter_pkg.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling package bloom_filter_components
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/pipelined_BF/bloom_filter_c.vhd {2 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/pipelined_BF/bloom_filter_c.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Loading package bloom_filter_components
+-- Compiling architecture bloom_filter_c of set
+-- Loading entity set
+** Warning: /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/pipelined_BF/bloom_filter_c.vhd(38): (vcom-1236) Shared variables must be of a protected type.
+-- Loading entity hash
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/pipelined_BF/bloom_filter_d.vhd {1 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/pipelined_BF/bloom_filter_d.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Loading package bloom_filter_components
+-- Loading entity murmur3
+-- Compiling architecture pipelined_hash of set
+-- Loading entity set
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/random/hash/hash.vhd {1 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/random/hash/hash.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity hash
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/bf_reg_file.vhd {1 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/bf_reg_file.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity bf_reg_file
+-- Compiling architecture bf_reg_file of bf_reg_file
+
+} {} {}} /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/bloom_filter_controler.vhd {1 {vcom -work work -2002 -explicit -vopt -stats=none /home/fourniem/Playground/GVE/Hardware/plug-fpga/src/collections/closed/bloom_filter/bloom_filter_controler.vhd
+Model Technology ModelSim SE-64 vcom 2019.1 Compiler 2019.01 Jan  1 2019
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity bloom_filter_controler
+
+} {} {}}

@@ -6,11 +6,16 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+--library model;
+--use model.all;
 
-entity mc_top_wrapper_h_fifo_bram_synth_model_tb is
-end entity mc_top_wrapper_h_fifo_bram_synth_model_tb;
+library work;
+use work.all;
 
-architecture RTL of mc_top_wrapper_h_fifo_bram_synth_model_tb is
+entity pipelined_pbf_fifo_bram_tb is
+end entity pipelined_pbf_fifo_bram_tb;
+
+architecture RTL of pipelined_pbf_fifo_bram_tb is
 	signal clk                    : std_logic                     := '0';
 	signal reset                  : std_logic                     := '0';
 	signal reset_n                : std_logic                     := '0';
@@ -26,40 +31,14 @@ architecture RTL of mc_top_wrapper_h_fifo_bram_synth_model_tb is
 	signal has_next_next          : std_logic                     := '0';
 	signal t_done_next            : std_logic                     := '0';
 	constant DATA_WIDTH           : integer                       := 32;
-	constant OPEN_ADDRESS_WIDTH   : integer                       := 16;
-	constant CLOSED_ADDRESS_WIDTH : integer                       := 16;
+	constant OPEN_ADDRESS_WIDTH   : integer                       := 5;
+	constant CLOSED_ADDRESS_WIDTH : integer                       := 5;
 
 begin
 
-	count : process(clk) is
-		variable is_started : boolean := False; 
-		variable counter : natural := 0; 
+	clk_p : process(clk) is
 	begin
-		if rising_edge(clk) then
-			if is_started = True then 
-				counter := counter + 1; 
-			elsif is_started = false and start = '1' then 
-				is_started := true; 
-			end if; 
-		end if; 
-		if sim_end = '1' then	
-			report "mambo " & natural'image(counter) & " tpt ";
-			-- wait; 
-		end if; 
-	end process; 
-
-
-	clk_p : process is
-	begin
-		--clk <= not clk after 10 ns until sim_end = '1';
-		clk <= '1'; 
-		wait for 5 ns;
-		clk <= '0'; 
-		wait for 5 ns; 
-		if (sim_end = '1') then 
-			wait; 
-		end if; 
-		
+		clk <= not clk after 10 ns;
 	end process clk_p;
 
 	reset_p : process is
@@ -70,20 +49,19 @@ begin
 		wait;
 	end process reset_p;
 
-	main_p : process is 
+	main_p : process is
 	begin
 		wait for 200 ns;
 		wait until falling_edge(clk);
-		start <= '1'; 
-		wait until falling_edge(clk); 
-		start <= '0'; 
-		
-		wait until sim_end = '1'; 
-		wait; 
-	end process main_p; 
-		
-	
-	a : entity work.mc_top_wrapper(Behavioral_mc_top_h_fifo_bram_config)
+		start <= '1';
+		wait until falling_edge(clk);
+		start <= '0';
+
+		wait until sim_end = '1';
+		wait;
+	end process main_p;
+
+	a : entity work.mc_top_wrapper(Behavioral_mc_top_bf_fifo_bram_config)
 		generic map(
 			DATA_WIDTH           => DATA_WIDTH,
 			OPEN_ADDRESS_WIDTH   => OPEN_ADDRESS_WIDTH,
@@ -106,9 +84,10 @@ begin
 			t_done_next     => t_done_next
 		);
 
-	m : entity work.synth_model(a)
+	m : entity work.semantics(semantics_wrapper)
 		generic map(
-			N_BITS => 15)
+			CONFIG_WIDTH => DATA_WIDTH
+		)
 		port map(
 			clk            => clk,
 			reset          => reset,
